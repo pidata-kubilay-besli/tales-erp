@@ -6852,6 +6852,8 @@ if(location.hash.startsWith("#opp2"))readRoute();else renderNav();
 .mt-addform>button{flex:none}
 .mt-addbtn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border:1px solid #D9E0EA;border-radius:9px;background:#fff;color:#2D3B52;font-size:12.5px;font-weight:650}
 .mt-subhead em+.mt-addbtn{margin-left:10px}
+.mt-rec .r svg,.mt-rec .tail small svg{width:12px!important;height:12px!important;padding:5px;box-sizing:content-box;border-radius:50%;background:#EEF3FF;color:#3158C9!important;flex:none;vertical-align:middle}
+.mt-rec .r{gap:8px!important}
 .mt-compose .mt-attach{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border-radius:10px;background:#F3F5F9;color:#4A5568;font-size:12.5px;font-weight:650;cursor:pointer}
 .mt-compose .mt-send{margin-left:auto;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border:0;border-radius:10px;background:#3158C9;color:#fff;font-weight:700;font-size:13px}
 .mt-feed{display:grid;gap:12px}
@@ -7129,6 +7131,25 @@ select:has(option[value=""]:checked){color:#B3BCC9!important}
 .nf-empty span{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:#F1F4F8;color:#94A3B8}
 .nf-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 16px;border-top:1px solid #EEF1F5;background:#FAFBFD}
 .nf-foot a,.nf-foot button{border:0;background:none;color:#3158C9;font-size:12.5px;font-weight:700;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+/* Zaman çizelgesi ve ikon yok: onay kutulu sade liste */
+.nf-row{grid-template-columns:30px 1fr!important;align-items:center!important;padding-bottom:8px!important}
+.nf-row::before,.nf-row time,.nf-node,.nf-ico{display:none!important}
+.nf-card{grid-template-columns:1fr!important}
+.nf-check{display:grid;place-items:center;width:30px;height:30px;cursor:pointer;flex:none}
+.nf-check input{width:17px!important;height:17px!important;margin:0;accent-color:#3158C9;cursor:pointer}
+.nf-row.sel .nf-card{border-color:#3158C9!important;box-shadow:0 0 0 2px #3158C922}
+.nf-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#3158C9;margin-right:7px;vertical-align:1px}
+.nf-head .nf-check{margin-left:-6px}
+.nf-bulk{background:#EEF3FF;border-bottom:1px solid #D8E2F7}
+.nf-bulk h2{font-size:14.5px!important;color:#3158C9!important}
+.nf-bulk button{margin-left:0!important}.nf-bulk button:first-of-type{margin-left:auto!important}
+.nf-bulk button.red{color:#D23F4A}.nf-bulk button.red:hover{background:#FDEDEE}
+.nf-day{margin-left:34px!important}
+.nf-pop{background:#F3F5F9!important}
+.nf-pop::before{background:#F3F5F9!important}
+.nf-pop .nf-tabs{background:#E6EAF1!important}
+.nf-pop .nf-foot{background:#F3F5F9!important;border-top-color:#E3E8F0!important}
+.nf-pop .nf-card{background:#fff;border-color:#E3E8F0}
 .top-bell.nf-open{background:#EEF2FE!important;color:#3158C9!important}
 </style>
 <script>
@@ -7159,7 +7180,7 @@ let S;try{S=JSON.parse(localStorage.getItem(KEY)||"null");}catch{S=null;}
 if(!S||S.v!==1)S=seed();
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch{}};
 const unread=()=>S.items.filter(n=>!n.read).length;
-const N={open:false,tab:"unread"};
+const N={open:false,tab:"unread",sel:new Set()};
 const rel=iso=>{const m=Math.max(1,Math.round((Date.now()-new Date(iso))/6e4));return m<60?m+" dk önce":m<1440?Math.round(m/60)+" saat önce":Math.round(m/1440)+" gün önce";};
 const hm=iso=>{const d=new Date(iso);return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");};
 const dayLabel=iso=>{const d=new Date(iso),t=new Date();const k=x=>x.toDateString();if(k(d)===k(t))return "Bugün";const y=new Date(t);y.setDate(t.getDate()-1);if(k(d)===k(y))return "Dün";return new Intl.DateTimeFormat("tr-TR",{day:"numeric",month:"long",weekday:"long"}).format(d);};
@@ -7168,9 +7189,10 @@ function panel(){
   const list=S.items.filter(n=>N.tab==="all"||(N.tab==="unread"?!n.read:n.read)).sort((a,b)=>b.at.localeCompare(a.at));
   const groups=[];for(const n of list){const g=dayLabel(n.at);let x=groups.find(y=>y[0]===g);if(!x){x=[g,[]];groups.push(x);}x[1].push(n);}
   const u=unread(),r=S.items.length-u;
-  const row=(n,last)=>{const t=TYPES[n.type]||TYPES.system;return '<div class="nf-row'+(n.read?"":" unread")+(last?" last":"")+'"><time>'+hm(n.at)+'</time><span class="nf-node"></span><div class="nf-card" data-nf="go" data-v="'+e(n.id)+'" tabindex="0"><span class="nf-ico" style="--t:'+t[2]+'">'+svg(t[1],17)+'</span><div><b>'+e(n.title)+'</b><p>'+e(n.body)+'</p><div class="nf-meta"><span class="mod">'+e(n.mod)+'</span>'+e(t[0])+' · '+rel(n.at)+'</div></div>'+
+  const row=(n,last)=>{const t=TYPES[n.type]||TYPES.system,sel=N.sel.has(n.id);return '<div class="nf-row'+(n.read?"":" unread")+(sel?" sel":"")+'"><label class="nf-check" title="Seç"><input type="checkbox" data-nf-sel="'+e(n.id)+'" '+(sel?"checked":"")+' aria-label="Bildirimi seç"></label><div class="nf-card" data-nf="go" data-v="'+e(n.id)+'" tabindex="0"><div><b>'+(n.read?"":'<i class="nf-dot"></i>')+e(n.title)+'</b><p>'+e(n.body)+'</p><div class="nf-meta"><span class="mod">'+e(n.mod)+'</span>'+e(t[0])+' · '+hm(n.at)+' · '+rel(n.at)+'</div></div>'+
     '<span class="nf-acts"><button data-nf="toggle" data-v="'+e(n.id)+'" title="'+(n.read?"Okunmadı olarak işaretle":"Okundu olarak işaretle")+'" aria-label="'+(n.read?"Okunmadı yap":"Okundu yap")+'">'+svg(n.read?"mail":"check",15)+'</button><button class="del" data-nf="del" data-v="'+e(n.id)+'" title="Sil" aria-label="Sil">'+svg("close",15)+'</button></span></div></div>';};
-  return '<div class="nf-head"><h2>Bildirimler</h2>'+(u?'<span class="cnt">'+u+'</span>':"")+'<button data-nf="allread" '+(u?"":"disabled")+'>'+svg("check",14)+'Tümünü okundu say</button></div>'+
+  const vis=list.map(n=>n.id),allSel=vis.length&&vis.every(id=>N.sel.has(id));
+  return (N.sel.size?'<div class="nf-head nf-bulk"><label class="nf-check" title="Tümünü seç"><input type="checkbox" data-nf-all '+(allSel?"checked":"")+' aria-label="Görünenlerin tümünü seç"></label><h2>'+N.sel.size+' seçildi</h2><button data-nf="bread">'+svg("check",14)+'Okundu yap</button><button data-nf="bunread">'+svg("mail",14)+'Okunmadı yap</button><button data-nf="bdel" class="red">'+svg("close",14)+'Sil</button></div>':'<div class="nf-head"><label class="nf-check" title="Tümünü seç"><input type="checkbox" data-nf-all aria-label="Görünenlerin tümünü seç" '+(vis.length?"":"disabled")+'></label><h2>Bildirimler</h2>'+(u?'<span class="cnt">'+u+'</span>':"")+'<button data-nf="allread" '+(u?"":"disabled")+'>'+svg("check",14)+'Tümünü okundu say</button></div>')+
     '<div class="nf-tabs" role="tablist">'+[["unread","Okunmamış",u],["read","Okunmuş",r],["all","Tümü",S.items.length]].map(([k,l,c])=>'<button role="tab" aria-selected="'+(N.tab===k)+'" class="'+(N.tab===k?"on":"")+'" data-nf="tab" data-v="'+k+'">'+l+'<em>'+c+'</em></button>').join("")+'</div>'+
     '<div class="nf-list">'+(groups.length?groups.map(([g,items])=>'<div class="nf-day">'+e(g)+'</div>'+items.map((n,i)=>row(n,i===items.length-1)).join("")).join(""):'<div class="nf-empty"><span>'+svg(N.tab==="unread"?"check":"bell",24)+'</span><b style="color:#14243C">'+(N.tab==="unread"?"Okunmamış bildirim yok":"Bildirim yok")+'</b>'+(N.tab==="unread"?"Hepsini okudun. Eski bildirimler “Okunmuş” sekmesinde.":"")+'</div>')+'</div>'+
     '<div class="nf-foot"><button data-nf="clearread">'+svg("close",13)+'Okunmuşları temizle</button><a href="#workflows?view=inbox" data-nf="close">Onay kutusuna git '+svg("right",13)+'</a></div>';
@@ -7180,18 +7202,26 @@ function bell(){return [...document.querySelectorAll(".top-bell")].find(a=>/Bild
 function place(){const p=document.getElementById("nf-pop"),b=bell();if(!p||!b)return;const r=b.getBoundingClientRect(),w=p.offsetWidth;let left=Math.min(window.innerWidth-w-10,r.right-w+18);left=Math.max(10,left);p.style.left=left+"px";p.style.top=(r.bottom+12)+"px";p.style.setProperty("--arrow",Math.max(16,Math.min(w-28,(r.left+r.width/2)-left-6))+"px");}
 function draw(){if(!N.open)return;const p=el();p.innerHTML=panel();place();}
 function open(){N.open=true;N.tab=unread()?"unread":"all";draw();bell()?.classList.add("nf-open");}
-function close(){N.open=false;document.getElementById("nf-pop")?.remove();bell()?.classList.remove("nf-open");}
+function close(){N.open=false;N.sel.clear();document.getElementById("nf-pop")?.remove();bell()?.classList.remove("nf-open");}
 function badge(){const b=bell();if(!b)return;const u=unread();let dot=b.querySelector(".bell-dot");if(!u){dot?.remove();}else{if(!dot){dot=document.createElement("span");dot.className="bell-dot";b.appendChild(dot);}dot.textContent=u>99?"99+":u;}b.setAttribute("aria-label","Bildirimler"+(u?" ("+u+" okunmamış)":""));if(N.open)b.classList.add("nf-open");}
 
 document.addEventListener("click",ev=>{
   const b=ev.target.closest(".top-bell");
   if(b&&/Bildirim/.test(b.getAttribute("title")||"")){ev.preventDefault();ev.stopPropagation();N.open?close():open();return;}
+  const sb=ev.target.closest("[data-nf-sel],[data-nf-all],.nf-check");
+  if(sb&&ev.target.closest("#nf-pop")){ev.stopPropagation();const inp=sb.matches("input")?sb:sb.querySelector("input");if(!inp||ev.target!==inp)return;
+    if(inp.dataset.nfSel!==undefined){inp.checked?N.sel.add(inp.dataset.nfSel):N.sel.delete(inp.dataset.nfSel);}
+    else{const ids=S.items.filter(n=>N.tab==="all"||(N.tab==="unread"?!n.read:n.read)).map(n=>n.id);if(inp.checked)ids.forEach(i=>N.sel.add(i));else N.sel.clear();}
+    draw();return;}
   const t=ev.target.closest("[data-nf]");
   if(!t){if(N.open&&!ev.target.closest("#nf-pop"))close();return;}
   const a=t.dataset.nf,v=t.dataset.v,n=S.items.find(x=>x.id===v);
   if(a!=="close")ev.preventDefault();ev.stopPropagation();
   switch(a){
-    case "tab":N.tab=v;draw();break;
+    case "tab":N.tab=v;N.sel.clear();draw();break;
+    case "bread":S.items.forEach(x=>{if(N.sel.has(x.id))x.read=true;});N.sel.clear();save();draw();badge();break;
+    case "bunread":S.items.forEach(x=>{if(N.sel.has(x.id))x.read=false;});N.sel.clear();save();draw();badge();break;
+    case "bdel":{const c=N.sel.size;S.items=S.items.filter(x=>!N.sel.has(x.id));N.sel.clear();save();draw();badge();showSnackbar(c+" bildirim silindi.");break;}
     case "toggle":if(n){n.read=!n.read;save();draw();badge();}break;
     case "del":S.items=S.items.filter(x=>x.id!==v);save();draw();badge();break;
     case "allread":S.items.forEach(x=>x.read=true);save();N.tab="read";draw();badge();showSnackbar("Tüm bildirimler okundu olarak işaretlendi.");break;
