@@ -6708,5 +6708,84 @@ if(location.hash.startsWith("#opp2"))readRoute();else renderNav();
 })();
 </script>
 
+<style id="ux-clean">
+/* ══════════════════════════════════════════════════════════════════════
+   2.0 MODÜLLERİ — sadeleştirme: net buton hiyerarşisi, ince sekme çubuğu
+   Ana işlem: koyu dolu · İkincil: beyaz çerçeveli · Onay/ret: yumuşak renk
+   ══════════════════════════════════════════════════════════════════════ */
+.ik2 .ik2-btn,.ik2 .ik2-btn.sm,#ik2-layer .ik2-btn,#is2-layer .ik2-btn,#op2-layer .ik2-btn{
+  background:#fff!important;border:1px solid #D8DDE8!important;color:#1F2937!important;box-shadow:0 1px 2px #1018280d!important;font-weight:600!important}
+.ik2 .ik2-btn svg,#ik2-layer .ik2-btn svg,#is2-layer .ik2-btn svg,#op2-layer .ik2-btn svg{color:#6B7280!important}
+.ik2 .ik2-btn:hover,#ik2-layer .ik2-btn:hover,#is2-layer .ik2-btn:hover,#op2-layer .ik2-btn:hover{background:#F7F8FB!important;border-color:#C3CAD8!important}
+/* Ana işlem: koyu lacivert, tek */
+.ik2 .ik2-btn.primary,#ik2-layer .ik2-btn.primary,#is2-layer .ik2-btn.primary,#op2-layer .ik2-btn.primary{background:#312E81!important;border-color:#312E81!important;color:#fff!important;box-shadow:0 2px 6px #312E8133!important}
+.ik2 .ik2-btn.primary svg,#ik2-layer .ik2-btn.primary svg,#is2-layer .ik2-btn.primary svg,#op2-layer .ik2-btn.primary svg{color:#fff!important}
+.ik2 .ik2-btn.primary:hover,#ik2-layer .ik2-btn.primary:hover,#is2-layer .ik2-btn.primary:hover,#op2-layer .ik2-btn.primary:hover{background:#262361!important}
+/* Onay / ret: listelerde yumuşak, pencere altında dolu */
+.ik2 .ik2-btn.ok,#ik2-layer .ik2-btn.ok,#is2-layer .ik2-btn.ok,#op2-layer .ik2-btn.ok{background:#ECF8F3!important;border-color:#BFE6D3!important;color:#0E7A57!important}
+.ik2 .ik2-btn.ok svg,#ik2-layer .ik2-btn.ok svg,#is2-layer .ik2-btn.ok svg,#op2-layer .ik2-btn.ok svg{color:#0E7A57!important}
+.ik2 .ik2-btn.bad,#ik2-layer .ik2-btn.bad,#is2-layer .ik2-btn.bad,#op2-layer .ik2-btn.bad{background:#fff!important;border-color:#F2C9CD!important;color:#C2323D!important}
+.ik2 .ik2-btn.bad svg,#ik2-layer .ik2-btn.bad svg,#is2-layer .ik2-btn.bad svg,#op2-layer .ik2-btn.bad svg{color:#C2323D!important}
+.ik2-dfoot .ik2-btn.ok{background:#12936A!important;border-color:#12936A!important;color:#fff!important}
+.ik2-dfoot .ik2-btn.ok svg{color:#fff!important}
+.ik2-btn .ik2-count{background:#D23F4A!important;color:#fff!important}
+/* Başlıkta yalnız ana işlem kalsın; diğerleri sekmelerde zaten var */
+.ik2-head .ik2-actions .ik2-btn:not(.primary){display:none!important}
+.ik2-head{margin-bottom:10px}
+.ik2-eyebrow{display:none}
+/* Sekmeler: karo yerine ince, sarılan sekme çubuğu */
+.ik2 .ik2-nav{display:flex!important;flex-wrap:wrap;gap:2px 4px;padding:0 0 0!important;margin:0 0 18px!important;background:none!important;border:0!important;border-bottom:1px solid #E5E8EF!important;border-radius:0!important;overflow:visible!important;grid-template-columns:none!important}
+.ik2 .ik2-nav a{position:relative;display:inline-flex!important;align-items:center;gap:7px;padding:10px 12px 11px!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:#5B6475!important;font-size:13.5px!important;font-weight:600;white-space:nowrap;margin-bottom:-1px;border-bottom:2px solid transparent!important}
+.ik2 .ik2-nav a svg{width:16px!important;height:16px!important;padding:0!important;background:none!important;color:#9AA3B2!important}
+.ik2 .ik2-nav a:hover{color:#1F2937!important}
+.ik2 .ik2-nav a.on{color:#312E81!important;border-bottom-color:#312E81!important}
+.ik2 .ik2-nav a.on svg{color:#312E81!important}
+.ik2 .ik2-nav a em{position:static!important;border:0!important;background:#F1F2F6!important;color:#5B6475!important;font-size:11px;padding:1px 7px;border-radius:999px}
+.ik2 .ik2-nav a.on em{background:#EEF0FF!important;color:#312E81!important}
+/* Çekmece sekmeleri: sade alt çizgi */
+.ik2-tabs{padding:0 16px!important;gap:2px!important}
+.ik2-tabs button{height:44px!important;border:0!important;border-radius:0!important;background:none!important;color:#5B6475!important;border-bottom:2px solid transparent!important;padding:0 12px!important}
+.ik2-tabs button.on{color:#312E81!important;border-bottom-color:#312E81!important;background:none!important}
+/* Daha az görsel gürültü */
+.ik2-kpi{border-left-width:0!important;padding:14px 16px!important}
+.ik2-kpi b{font-size:1.45rem!important}
+.ik2-kpi em{font-size:12px!important}
+.ik2-chip{font-weight:600!important;height:21px!important}
+.ik2-chip i{width:5px!important;height:5px!important}
+.ik2-panel{box-shadow:none!important}
+.ik2-panel>header h2{font-size:14.5px!important}
+.ik2-seg{background:#F1F2F6!important}
+.ik2-seg button{color:#5B6475!important}
+.ik2-seg button.on{color:#1F2937!important}
+/* Dashboard: KPI'lar tek parça, bölmeli özet şeridi */
+.ik2 .ik2-kpis{gap:0!important;background:#fff;border:1px solid #E5E8EF;border-radius:14px;overflow:hidden;margin-bottom:18px!important;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))!important}
+.ik2 .ik2-kpis .ik2-kpi{border:0!important;border-radius:0!important;border-right:1px solid #EEF0F4!important;background:none!important;padding:16px 18px!important}
+.ik2 .ik2-kpis .ik2-kpi:last-child{border-right:0!important}
+.ik2 .ik2-kpi small{text-transform:none!important;letter-spacing:0!important;font-size:12.5px!important;color:#6B7280!important;font-weight:550!important}
+.ik2 .ik2-kpi b{font-size:1.55rem!important;font-weight:750!important;color:#111827!important;margin-top:6px!important}
+.ik2 .ik2-kpi em{color:#9AA3B2!important;font-weight:500!important;display:block;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Paneller: ferah, sakin */
+.ik2 .ik2-cols{gap:16px!important}
+.ik2 .ik2-panel{padding:18px 20px!important;border-color:#E5E8EF!important;border-radius:14px!important}
+.ik2 .ik2-panel>header{margin-bottom:14px!important}
+.ik2 .ik2-panel>header small{color:#9AA3B2!important}
+.ik2 .ik2-row{padding:11px 0!important}
+.ik2 .ik2-cols-chart i{background:#6366F1!important;border-radius:6px 6px 2px 2px!important}
+.ik2 .ik2-cols-chart b{color:#6B7280;font-weight:600}
+.ik2 .ik2-meter{height:8px!important;background:#F1F2F6!important}
+.ik2 .w2-matrix div{background:#FAFAFC!important;border:1px solid #EEF0F4!important;border-left:3px solid var(--t)!important;border-radius:10px!important}
+.ik2 .w2-matrix small{color:#374151!important}
+.ik2 .o2-funnel i{height:26px!important;border-radius:6px!important}
+.ik2 .ik2-donut{width:118px!important;height:118px!important;-webkit-mask:radial-gradient(circle,transparent 0 44px,#000 45px)!important;mask:radial-gradient(circle,transparent 0 44px,#000 45px)!important}
+.ik2 .ik2-legend{font-size:12.5px!important;color:#4B5563}
+.ik2 .w2-feed div{font-size:12.5px!important}
+/* Satır içi onay/ret butonları: küçük ve sade */
+.ik2-row .end .ik2-btn.sm,.ik2-table .ik2-btn.sm{height:28px!important;padding:0 9px!important;font-size:12px!important;box-shadow:none!important}
+/* Renkli satır içi butonları (müşteri kartındaki fırsatlar vb.) sakinleştir */
+.op2 .ik2-pcard .ik2-btn{background:#fff!important;border-color:#E2E6EE!important;color:#374151!important}
+/* Hızlı yorum önerileri: metin bağlantı gibi */
+#is2-layer [data-w="qc"]{background:#F4F5FA!important;border-color:#F4F5FA!important;color:#4F46E5!important}
+</style>
+
 </body>
 </html>
