@@ -7095,95 +7095,55 @@ select:has(option[value=""]:checked){color:#B3BCC9!important}
 
 <style id="notif-style">
 /* ══════════════════════════════════════════════════════════════════════
-   BİLDİRİMLER — mobil notifications_list düzeni, web'de ikonsuz
-   (sekmeler · gün başlığı · saat / düğüm / çizgi · 20px kart · alt çubuk)
+   BİLDİRİMLER — mobil düzen, ikonsuz, tek boşluk sistemi (4/8/12/16)
    ══════════════════════════════════════════════════════════════════════ */
-.nf-pop{position:fixed;z-index:90;width:min(440px,calc(100vw - 20px));height:min(660px,calc(100vh - 90px));display:flex;flex-direction:column;background:#F3F5F9;border:1px solid #DDE3EC;border-radius:22px;box-shadow:0 24px 60px #0F1F3D33,0 2px 6px #0F1F3D14;overflow:hidden;animation:nfIn .16s cubic-bezier(.22,1,.36,1)}
-@keyframes nfIn{from{opacity:0;transform:translateY(-6px) scale(.985)}}
-.nf-top{display:flex;align-items:center;gap:8px;padding:14px 16px 6px}
-.nf-top h2{margin:0;font-size:17px;font-weight:800;color:#14243C}
-.nf-top .nf-x{margin-left:auto;height:30px;padding:0 12px;border:0;border-radius:10px;background:#fff;color:#4A5568;font-size:12.5px;font-weight:700;cursor:pointer;box-shadow:0 1px 2px #0F1F3D14}
-.nf-toggle{display:flex;margin:6px 14px 4px;padding:4px;background:#fff;border:1px solid #E3E8F0;border-radius:14px}
-.nf-toggle button{flex:1;height:36px;border:0;border-radius:10px;background:none;color:#8592A6;font-size:13px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
-.nf-toggle button.on{color:#3158C9;font-weight:700;background:#EEF3FF}
-.nf-toggle button em{font-style:normal;min-width:20px;height:18px;padding:0 6px;border-radius:999px;background:#E3E8F0;color:#4A5568;font-size:11px;font-weight:800;display:grid;place-items:center}
-.nf-toggle button.on em{background:#3158C9;color:#fff}
-.nf-list{flex:1;overflow-y:auto;padding:6px 12px 86px 10px;overscroll-behavior:contain}
-.nf-day{display:flex;align-items:center;gap:8px;margin:12px 0 10px 4px;font-size:12px;font-weight:800;color:#14243C}
-.nf-day::after{content:"";flex:1;height:1px;background:#DDE3EC}
-.nf-row{position:relative;display:grid;grid-template-columns:36px 22px 1fr;align-items:start;padding-bottom:12px}
-.nf-row::before{content:"";position:absolute;left:46px;top:0;bottom:0;width:2px;background:#DCE3EC}
-.nf-row.first::before{top:20px}.nf-row.last::before{bottom:auto;height:20px}.nf-row.first.last::before{display:none}
-.nf-row time{padding-top:11px;text-align:right;font-size:12.5px;font-weight:800;color:#14243C;font-variant-numeric:tabular-nums}
-.nf-node{position:relative;z-index:1;justify-self:center;margin-top:13px;width:14px;height:14px;box-sizing:border-box;border-radius:50%;background:#fff;border:3px solid #22A06B;cursor:pointer;padding:0;transition:background .16s,border-color .16s}
-.nf-row.unread .nf-node{border-color:#3158C9}
-.nf-row.sel .nf-node{background:#3158C9;border-color:#3158C9;box-shadow:0 0 0 3px #3158C933}
-.nf-card{position:relative;padding:12px 14px;border-radius:20px;border:1px solid #D5DCE6;background:#fff;box-shadow:0 4px 12px #0F1F3D0a;cursor:pointer;transition:border-color .15s,box-shadow .15s}
-.nf-row.unread .nf-card{background:#EAF1FF;border-color:#B9CEF7;box-shadow:0 4px 12px #3158C914}
-.nf-row.sel .nf-card{border:1.4px solid #3158C9}
-.nf-card:hover{box-shadow:0 6px 16px #0F1F3D14}
-.nf-card b{display:block;font-size:14px;line-height:1.35;letter-spacing:-.1px;color:#14243C;font-weight:500;padding-right:4px}
-.nf-row.unread .nf-card b{font-weight:700}
-.nf-card p{margin:3px 0 0;font-size:12.5px;line-height:1.4;color:#5B6475}
-.nf-meta{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11.5px;font-weight:500;color:#8592A6}
-.nf-row.unread .nf-meta{color:#3158C9;font-weight:700}
-.nf-meta .mod{margin-left:auto;padding:1px 8px;border-radius:999px;background:#ffffffb3;border:1px solid #E3E8F0;color:#5B6475;font-weight:600}
-.nf-acts{display:flex;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed #D5DCE6;opacity:0;max-height:0;overflow:hidden;transition:opacity .15s}
-.nf-card:hover .nf-acts{opacity:1;max-height:40px}
-.nf-acts button{height:26px;padding:0 10px;border:0;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;color:#fff}
-.nf-acts .rd{background:#3158C9}.nf-acts .del{background:#D23F4A}
-.nf-empty{display:grid;justify-items:center;gap:6px;padding:52px 16px;color:#8592A6;font-size:13px;text-align:center}
-.nf-bar{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;padding:4px 6px;background:#fff;border:1px solid #E3E8F0;border-radius:40px;box-shadow:0 10px 28px #0F1F3D24}
-.nf-bar button{min-width:96px;height:36px;padding:0 12px;border:0;border-radius:24px;background:none;color:#2D3B52;font-size:12.5px;font-weight:700;cursor:pointer}
-.nf-bar button:hover{background:#F3F5F9}
-.nf-bar button.on{color:#3158C9}.nf-bar button.red{color:#D23F4A}
-.nf-bar button:disabled{opacity:.4;cursor:default;background:none}
-.nf-bar i{width:1px;height:22px;background:#E3E8F0}
-.nf-card{padding:9px 12px!important;border-radius:16px!important}
-.nf-card b{font-size:13.5px!important;line-height:1.3!important}
-.nf-card p{margin-top:2px!important;font-size:12px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nf-meta{margin-top:4px!important}
-.nf-row{padding-bottom:8px!important}
-.nf-row time{padding-top:8px!important}
-.nf-node{margin-top:10px!important}
-.nf-row.first::before{top:17px!important}.nf-row.last::before{height:17px!important}
-.nf-acts{position:absolute!important;top:7px;right:8px;margin:0!important;padding:0!important;border:0!important;max-height:none!important;overflow:visible!important;opacity:0}
-.nf-card:hover .nf-acts{opacity:1}
-.nf-card:hover b{padding-right:110px!important}
-/* Daha cilalı görünüm */
-.nf-pop{width:min(420px,calc(100vw - 20px))!important;background:#F4F6FA!important;border-color:#E2E7EF!important;border-radius:20px!important;box-shadow:0 30px 70px #0F1F3D2e,0 4px 12px #0F1F3D12!important}
-.nf-top{align-items:flex-start!important;padding:16px 16px 8px!important;background:#fff;border-bottom:1px solid #EDF0F5}
-.nf-top h2{font-size:16px!important;letter-spacing:-.2px}
-.nf-top small{display:block;margin-top:2px;font-size:12px;color:#8592A6;font-weight:500}
-.nf-allread{margin-left:auto;height:28px;padding:0 10px;border:0;border-radius:8px;background:none;color:#3158C9;font-size:12px;font-weight:700;cursor:pointer}
+.nf-pop{position:fixed;z-index:90;width:min(420px,calc(100vw - 24px));max-height:min(620px,calc(100vh - 88px));display:flex;flex-direction:column;background:#F4F6FA;border:1px solid #E2E7EF;border-radius:16px;box-shadow:0 24px 56px #0F1F3D29,0 2px 8px #0F1F3D0f;overflow:hidden;animation:nfIn .14s ease-out}
+@keyframes nfIn{from{opacity:0;transform:translateY(-4px)}}
+.nf-top{display:flex;align-items:center;gap:8px;padding:16px 16px 12px;background:#fff}
+.nf-top>div{flex:1;min-width:0}
+.nf-top h2{margin:0;font-size:15px;font-weight:700;color:#111827;line-height:20px}
+.nf-top small{display:block;font-size:12px;line-height:16px;color:#6B7280}
+.nf-allread{flex:none;height:28px;padding:0 8px;border:0;border-radius:6px;background:none;color:#3158C9;font-size:12px;font-weight:600;cursor:pointer}
 .nf-allread:hover{background:#EEF3FF}
-.nf-top .nf-x{margin-left:4px!important;width:28px;height:28px;padding:0!important;border-radius:8px!important;background:#F3F5F9!important;box-shadow:none!important;color:#64748B!important;font-size:12px!important}
-.nf-top .nf-allread+.nf-x{margin-left:4px!important}
-.nf-top>div+.nf-x{margin-left:auto!important}
-.nf-toggle{margin:10px 14px 2px!important;padding:3px!important;background:#E8ECF2!important;border:0!important;border-radius:12px!important}
-.nf-toggle button{height:32px!important;border-radius:9px!important;color:#5B6475!important;font-weight:600!important}
-.nf-toggle button.on{background:#fff!important;color:#14243C!important;box-shadow:0 1px 3px #0F1F3D1f}
-.nf-toggle button.on em{background:#3158C9!important}
-.nf-day{font-size:11px!important;font-weight:700!important;letter-spacing:.06em;text-transform:uppercase;color:#8592A6!important;margin:14px 0 8px 4px!important}
-.nf-row time{color:#64748B!important;font-weight:700!important;font-size:12px!important}
-.nf-card{background:#fff!important;border:1px solid #E3E8F0!important;box-shadow:0 1px 2px #0F1F3D0a!important;transition:transform .14s,box-shadow .14s,border-color .14s!important}
-.nf-card:hover{transform:translateY(-1px);border-color:#CDD7E6!important;box-shadow:0 6px 16px #0F1F3D14!important}
-.nf-row.unread .nf-card{background:#F2F6FF!important;border-color:#D2DEF8!important}
-.nf-row.unread .nf-card b{color:#0F1E3A!important}
-.nf-row.sel .nf-card{border:1.5px solid #3158C9!important;background:#EEF3FF!important}
-.nf-meta{font-size:11.5px!important;color:#94A3B8!important;font-weight:500!important}
-.nf-row.unread .nf-meta{color:#5B6B85!important;font-weight:500!important}
-.nf-new{display:inline-flex;align-items:center;height:18px;padding:0 7px;border-radius:999px;background:#3158C9;color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.02em}
-.nf-acts button{height:24px!important;border-radius:7px!important;font-size:11px!important}
-.nf-acts .rd{background:#fff!important;color:#3158C9!important;border:1px solid #D2DEF8!important}
-.nf-acts .del{background:#fff!important;color:#D23F4A!important;border:1px solid #F2C9CD!important}
-.nf-list{padding-bottom:20px!important}
-.nf-pop:has(.nf-bar) .nf-list{padding-bottom:80px!important}
-.nf-bar{background:#14243C!important;border:0!important;box-shadow:0 12px 30px #0F1F3D40!important}
-.nf-bar button{color:#E2E8F0!important}.nf-bar button:hover{background:#ffffff1a!important}
-.nf-bar button.on{color:#9DB8FF!important}.nf-bar button.red{color:#FCA5A5!important}
-.nf-bar i{background:#ffffff26!important}
-.nf-empty b{font-size:14px}
+.nf-x{flex:none;width:28px;height:28px;border:0;border-radius:6px;background:none;color:#6B7280;font-size:13px;cursor:pointer}
+.nf-x:hover{background:#F3F4F6;color:#111827}
+.nf-toggle{display:flex;gap:4px;padding:0 16px 12px;background:#fff;border-bottom:1px solid #E5E7EB}
+.nf-toggle button{flex:1;height:32px;border:1px solid transparent;border-radius:8px;background:#F3F4F6;color:#4B5563;font-size:13px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.nf-toggle button.on{background:#EEF3FF;border-color:#D4DEFA;color:#3158C9}
+.nf-toggle button em{font-style:normal;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#E5E7EB;color:#4B5563;font-size:11px;font-weight:700;display:grid;place-items:center}
+.nf-toggle button.on em{background:#3158C9;color:#fff}
+.nf-list{flex:1;overflow-y:auto;padding:4px 16px 16px;overscroll-behavior:contain}
+.nf-day{margin:16px 0 8px 52px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#6B7280}
+.nf-row{position:relative;display:grid;grid-template-columns:36px 16px 1fr;column-gap:0;align-items:start;padding-bottom:8px}
+.nf-row::before{content:"";position:absolute;left:43px;top:0;bottom:0;width:2px;background:#E1E6EE}
+.nf-row.first::before{top:18px}.nf-row.last::before{bottom:auto;height:18px}.nf-row.first.last::before{display:none}
+.nf-row time{padding:12px 8px 0 0;text-align:right;font-size:12px;line-height:16px;font-weight:600;color:#6B7280;font-variant-numeric:tabular-nums}
+.nf-node{position:relative;z-index:1;justify-self:center;margin-top:13px;width:12px;height:12px;padding:0;box-sizing:border-box;border-radius:50%;background:#fff;border:2.5px solid #22A06B;cursor:pointer}
+.nf-row.unread .nf-node{border-color:#3158C9}
+.nf-row.sel .nf-node{background:#3158C9;border-color:#3158C9;box-shadow:0 0 0 3px #3158C92e}
+.nf-card{position:relative;margin-left:8px;padding:10px 12px;border-radius:12px;border:1px solid #E5E7EB;background:#fff;cursor:pointer;transition:border-color .12s,box-shadow .12s}
+.nf-card:hover{border-color:#CBD5E1;box-shadow:0 2px 8px #0F1F3D0f}
+.nf-row.unread .nf-card{background:#F5F8FF;border-color:#D4DEFA}
+.nf-row.sel .nf-card{border-color:#3158C9;box-shadow:0 0 0 1px #3158C9}
+.nf-card b{display:block;font-size:13px;line-height:18px;font-weight:500;color:#1F2937;padding-right:0}
+.nf-row.unread .nf-card b{font-weight:700;color:#111827}
+.nf-card p{margin:2px 0 0;font-size:12px;line-height:16px;color:#6B7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nf-meta{margin-top:4px;font-size:11.5px;line-height:16px;color:#9CA3AF}
+.nf-row.unread .nf-meta{color:#3158C9;font-weight:600}
+.nf-acts{position:absolute;top:8px;right:8px;display:flex;gap:4px;opacity:0;transition:opacity .12s}
+.nf-card:hover .nf-acts{opacity:1}
+.nf-card:hover b{padding-right:96px}
+.nf-acts button{height:24px;padding:0 8px;border-radius:6px;border:1px solid #E5E7EB;background:#fff;font-size:11.5px;font-weight:600;cursor:pointer}
+.nf-acts .rd{color:#3158C9}.nf-acts .del{color:#DC2626}
+.nf-acts button:hover{background:#F9FAFB}
+.nf-empty{padding:48px 16px;text-align:center;color:#6B7280;font-size:13px;line-height:20px}
+.nf-empty b{display:block;color:#111827;font-size:14px}
+.nf-bar{display:flex;align-items:center;gap:4px;padding:8px 16px;background:#fff;border-top:1px solid #E5E7EB}
+.nf-bar span{flex:1;font-size:12.5px;font-weight:600;color:#111827}
+.nf-bar button{height:30px;padding:0 10px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;color:#374151;font-size:12.5px;font-weight:600;cursor:pointer}
+.nf-bar button:hover{background:#F9FAFB}
+.nf-bar button.red{color:#DC2626;border-color:#FAD4D4}
+.nf-bar button:disabled{opacity:.45;cursor:default}
 .top-bell.nf-open{background:#EEF2FE!important;color:#3158C9!important}
 </style>
 <script>
@@ -7224,12 +7184,12 @@ function panel(){
   let html="",prev="";
   list.forEach((n,i)=>{const d=dayLabel(n.at),first=d!==prev,last=i===list.length-1||dayLabel(list[i+1].at)!==d;if(first)html+='<div class="nf-day">'+e(d)+'</div>';prev=d;const sel=N.sel.has(n.id);
     html+='<div class="nf-row'+(n.read?"":" unread")+(sel?" sel":"")+(first?" first":"")+(last?" last":"")+'"><time>'+hm(n.at)+'</time><button class="nf-node" data-nf="sel" data-v="'+e(n.id)+'" aria-label="Seç"></button>'+
-      '<div class="nf-card" data-nf="go" data-v="'+e(n.id)+'" tabindex="0"><b>'+e(n.title)+'</b>'+(n.body?'<p>'+e(n.body)+'</p>':"")+'<div class="nf-meta">'+(n.read?"":'<span class="nf-new">Yeni</span>')+'<span>'+rel(n.at)+'</span></div>'+
+      '<div class="nf-card" data-nf="go" data-v="'+e(n.id)+'" tabindex="0"><b>'+e(n.title)+'</b>'+(n.body?'<p>'+e(n.body)+'</p>':"")+'<div class="nf-meta">'+rel(n.at)+'</div>'+
       '<div class="nf-acts">'+(n.read?"":'<button class="rd" data-nf="read" data-v="'+e(n.id)+'">Okundu</button>')+'<button class="del" data-nf="del" data-v="'+e(n.id)+'">Sil</button></div></div></div>';});
   return '<div class="nf-top"><div><h2>Bildirimler</h2><small>'+(u?u+" okunmamış bildirim":"Hepsini okudun")+'</small></div>'+(u?'<button class="nf-allread" data-nf="allread">Tümünü okundu say</button>':"")+'<button class="nf-x" data-nf="close" aria-label="Kapat">✕</button></div>'+
     '<div class="nf-toggle"><button class="'+(N.tab==="unread"?"on":"")+'" data-nf="tab" data-v="unread">Okunmamış<em>'+u+'</em></button><button class="'+(N.tab==="read"?"on":"")+'" data-nf="tab" data-v="read">Okunmuş<em>'+r+'</em></button></div>'+
     '<div class="nf-list">'+(html||'<div class="nf-empty"><b style="color:#14243C">'+(N.tab==="unread"?"Okunmamış bildirim yok":"Okunmuş bildirim yok")+'</b>'+(N.tab==="unread"?"Tüm bildirimleri okudun.":"")+'</div>')+'</div>'+
-    (list.length&&N.sel.size?'<div class="nf-bar"><button class="'+(allSel?"on":"")+'" data-nf="all">'+(allSel?"Seçimi kaldır":"Tümünü seç")+'</button><i></i><button data-nf="bread" '+(N.sel.size&&N.tab==="unread"?"":"disabled")+'>Okundu yap</button><i></i><button class="red" data-nf="bdel" '+(N.sel.size?"":"disabled")+'>Sil'+(N.sel.size?" ("+N.sel.size+")":"")+'</button></div>':"");
+    (list.length&&N.sel.size?'<div class="nf-bar"><span>'+N.sel.size+' seçildi</span><button data-nf="all">'+(allSel?"Seçimi kaldır":"Tümünü seç")+'</button><button data-nf="bread" '+(N.tab==="unread"?"":"disabled")+'>Okundu yap</button><button class="red" data-nf="bdel">Sil</button></div>':"");
 }
 function el(){let p=document.getElementById("nf-pop");if(!p){p=document.createElement("div");p.id="nf-pop";p.className="nf-pop";p.setAttribute("role","dialog");p.setAttribute("aria-label","Bildirimler");document.body.appendChild(p);}return p;}
 function bell(){return [...document.querySelectorAll(".top-bell")].find(a=>/Bildirim/.test(a.getAttribute("title")||""));}
