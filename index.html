@@ -7829,6 +7829,52 @@ function taskAnalytics(rows){
   if(!t){tip.style.display="none";return;}tip.innerHTML=t.getAttribute("data-tip");tip.style.display="block";const w=tip.offsetWidth;tip.style.left=Math.min(innerWidth-w-8,ev.clientX+14)+"px";tip.style.top=(ev.clientY+14)+"px";});})();
 if(typeof render==="function"&&location.hash.includes("view=insights"))render();
 </script>
+<style id="mob-ekler">
+.me-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+.me-top h3{margin:0;font-size:17px;font-weight:800;color:#0F172A}
+.me-acts{display:flex;gap:8px}
+.me-pill{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border:0;border-radius:999px;background:#EAF7EE;color:#1E293B;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.me-pill svg{color:var(--c)}
+.me-pill:hover{background:#DDF1E3}
+.me-tog{display:flex;height:40px;padding:3px;border-radius:12px;background:#E3E8EF;margin:0 0 12px}
+.me-tog button{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:9px;background:none;font:inherit;font-size:13.5px;font-weight:600;color:#64748B;cursor:pointer}
+.me-tog button.on{background:#fff;color:#0F172A;box-shadow:0 1px 4px #00000014}
+.me-tog em{font-style:normal;padding:1.5px 6px;border-radius:10px;background:#D5DCE6;color:#64748B;font-size:11.5px;font-weight:700}
+.me-tog button.on em{background:#3158C9;color:#fff}
+.me-list{background:#fff;border-radius:14px;overflow:hidden;border:1px solid #EEF1F6}
+.me-row{display:flex;align-items:center;gap:12px;width:100%;padding:12px 16px;border:0;background:#fff;font:inherit;text-align:left;cursor:pointer;position:relative}
+.me-row+.me-row::before{content:"";position:absolute;left:68px;right:0;top:0;height:1px;background:#F0F2F6}
+.me-row:hover{background:#FAFBFD}
+.me-th{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;flex:none;color:var(--c);background:color-mix(in srgb,var(--c) 8%,#fff);border:1px solid color-mix(in srgb,var(--c) 16%,#fff);overflow:hidden}
+.me-th.img{background:linear-gradient(135deg,#C7D7F2,#9DB6E0);color:#fff;border:0}
+.me-row>div{flex:1;min-width:0}
+.me-row b{display:flex;align-items:center;gap:4px;font-size:15px;font-weight:600;color:#0F172A;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.me-row small{display:block;margin-top:3px;font-size:12.5px;color:#64748B;line-height:1.35}
+.me-row>svg{color:#C4C4C9;flex:none}
+.me-row .del{width:32px;height:32px;border:0;border-radius:8px;background:none;color:#D23F4A;display:grid;place-items:center;cursor:pointer;opacity:0}
+.me-row:hover .del{opacity:1}
+.me-empty{padding:40px 10px;text-align:center;color:#94A3B8;font-size:13.5px}
+</style>
+<script id="mob-ekler-js">
+window.EKF="all";
+window.mobileEkler=function(files,opts){opts=opts||{};
+  const isImg=n=>/\.(png|jpe?g|gif|webp|heic)$/i.test(n||"");
+  const ext=n=>String(n||"").split(".").pop().toLowerCase();
+  const col=n=>({pdf:"#D23F4A",doc:"#2F80ED",docx:"#2F80ED",xls:"#1B9C6B",xlsx:"#1B9C6B",csv:"#1B9C6B",txt:"#64748B",zip:"#8A6A2E"})[ext(n)]||"#3158C9";
+  const imgs=files.filter(f=>isImg(f.name)),docs=files.filter(f=>!isImg(f.name));
+  const vis=window.EKF==="img"?imgs:window.EKF==="doc"?docs:files;
+  const ic=(n,s)=>svg(n,s);
+  return '<div class="me-top"><h3>Ekler</h3><div class="me-acts"><button class="me-pill" style="--c:#3B5BDB" data-ekadd="1">'+ic("image",16)+'Galeriden seç</button><button class="me-pill" style="--c:#1B9C6B" data-ekadd="1">'+ic("plus",16)+'Ekle</button></div></div>'+
+    '<div class="me-tog">'+[["all","Tümü",files.length],["img","Görseller",imgs.length],["doc","Belgeler",docs.length]].map(([k,l,n])=>'<button class="'+(window.EKF===k?"on":"")+'" data-ekf="'+k+'">'+l+'<em>'+n+'</em></button>').join("")+'</div>'+
+    (vis.length?'<div class="me-list">'+vis.map(f=>'<button class="me-row" data-ekopen="'+e(f.name)+'"><span class="me-th'+(isImg(f.name)?" img":"")+'" style="--c:'+col(f.name)+'">'+ic(isImg(f.name)?"image":"file",21)+'</span><div><b>'+e(f.name)+'</b><small>'+e(f.who||"Deniz Kaya")+' · '+e(f.date?dateText(f.date):dateText(shift(day(),-3)))+(f.size?" · "+e(f.size):"")+'</small></div>'+ic("right",22)+'</button>').join("")+'</div>':'<p class="me-empty">Kayıt bulunamadı</p>');
+};
+document.addEventListener("click",ev=>{
+  const f=ev.target.closest("[data-ekf]");if(f){ev.preventDefault();window.EKF=f.dataset.ekf;window.EKR&&window.EKR();return;}
+  if(ev.target.closest("[data-ekadd]")){ev.preventDefault();let i=document.getElementById("me-file");if(!i){i=document.createElement("input");i.type="file";i.multiple=true;i.id="me-file";i.hidden=true;document.body.appendChild(i);i.addEventListener("change",()=>{window.EKADD&&window.EKADD([...i.files].map(x=>({name:x.name,size:Math.max(1,Math.round(x.size/1024))+" KB",who:team[0],date:day()})));i.value="";});}i.click();return;}
+  if(ev.target.closest("[data-ekopen]")){ev.preventDefault();showSnackbar("Dosya önizlemesi açılıyor");}
+});
+</script>
+
 <style id="crm2-style">
 .c2{max-width:980px;margin:0 auto;padding:4px 0 90px;font-family:inherit}
 .c2-head{display:flex;align-items:center;gap:12px;margin:0 0 14px}
@@ -7862,7 +7908,7 @@ if(typeof render==="function"&&location.hash.includes("view=insights"))render();
 /* detay penceresi */
 #c2-layer{display:none}#c2-layer.open{display:block;position:fixed;inset:0;z-index:80}
 .c2-shade{position:absolute;inset:0;background:#0F172A55}
-.c2-drawer{position:absolute;right:0;top:0;bottom:0;width:min(860px,100%);background:#F4F6FA;display:flex;flex-direction:column;box-shadow:-20px 0 50px #0F172A30;animation:c2in .18s ease-out}
+.c2-drawer{position:absolute;right:0;top:0;bottom:0;width:min(860px,100%);background:#F4F6FA;display:flex;flex-direction:column;box-shadow:-20px 0 50px #0F172A30}
 @keyframes c2in{from{transform:translateX(30px);opacity:.6}}
 .c2-bar{display:flex;align-items:center;gap:10px;padding:14px 16px;background:#fff;border-bottom:1px solid #E8ECF3}
 .c2-bar h2{flex:1;margin:0;font-size:17px;font-weight:700;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -8003,7 +8049,7 @@ function projDrawer(){
   const row=(l,v)=>'<div class="c2-row"><div><small>'+l+'</small><b>'+v+'</b></div></div>';
   let body;
   if(t==="comment")body=p.comments.map(x=>rcard("",esc(x.who),[["chat",esc(x.text)],["calendar",dt(x.date)]])).join("")+'<form class="c2-cform" data-c2form="pcomment"><textarea name="t" required placeholder="Yorum yaz…"></textarea><button class="ik2-btn primary">Gönder</button></form>';
-  else if(t==="files")body=p.files.map(f=>rcard("",esc(f.name),[["file",esc(f.size)]])).join("");
+  else if(t==="files"){window.EKR=paint;window.EKADD=a=>{p.files.unshift(...a);save();paint();};body=mobileEkler(p.files.map((f,k)=>({...f,who:f.who||team[(k+2)%team.length],date:f.date||shift(T,-3-k*7)})));}
   else if(t==="other"){const back='<button class="c2-back" data-c2="pother" data-v="">'+ic("left",16)+'Diğer</button>';
     if(V.pother==="contract")body=back+p.contracts.map(k=>rcard(esc(k.no),esc(k.name),[],["Başlangıç",dt(k.start),"Bitiş",dt(k.end)])).join("");
     else if(V.pother==="history")body=back+p.history.map(h=>rcard("",esc(h.what),[["user",esc(h.who)],["calendar",dt(h.date)]])).join("");
@@ -8070,7 +8116,7 @@ function detail(c){
 }
 function other(c){
   const back='<button class="c2-back" data-c2="other" data-v="">'+ic("left",16)+'Diğer</button>';
-  if(V.other==="files")return back+c.files.map(f=>rcard("",esc(f.name),[["file",esc(f.size+" · "+f.who)],["calendar",dt(f.date)]])).join("");
+  if(V.other==="files"){window.EKR=paint;window.EKADD=a=>{c.files.unshift(...a);save();paint();};return back+mobileEkler(c.files);}
   if(V.other==="works")return back+c.works.map(w=>rcard(esc(w.code),esc(w.title),[["flag","Aşama: "+esc(w.stage)]])).join("");
   if(V.other==="history")return back+c.history.map(h=>rcard("",esc(h.what),[["user",esc(h.who)],["calendar",dt(h.date)]])).join("");
   const t=(k,l,i,col,n)=>'<button class="c2-tile" style="--t:'+col+'" data-c2="other" data-v="'+k+'"><span>'+ic(i,24)+'</span><b>'+l+(n!=null?'<em>'+n+'</em>':"")+'</b></button>';
@@ -8310,7 +8356,7 @@ function oppDrawer(){
           (open?'<div class="cy-fp"><div><span style="color:#2F80ED">'+ic("tag",18)+'</span><small>Birim fiyat</small><b>'+money(r.pr[1])+'</b></div><div><span style="color:#3B5BDB">'+ic("file",18)+'</span><small>Birim maliyet</small><b>'+money(r.pr[2])+'</b></div><div><span style="color:'+(neg?"#D23F4A":"#1B9C6B")+'">'+ic("chart",18)+'</span><small>Kâr</small><b>'+money(r.profit)+'</b></div></div>':"")+'</div>';}).join("")+'</div>';}
   else if(V.tab==="act"){const m=SECS.find(x=>x[0]===V.actTab);body='<div class="c2-toggle">'+SECS.map(x=>'<button class="'+(V.actTab===x[0]?"on":"")+'" data-cy="acttab" data-v="'+x[0]+'">'+ic(x[3],16)+x[1]+'</button>').join("")+'</div>'+(o.acts[V.actTab].map(x=>item(x,m)).join("")||'<p class="c2-empty">Kayıt yok</p>');}
   else if(V.tab==="comment")body=o.comments.map(c=>'<div class="c2-rc"><div class="h"><div><b>'+esc(c.who)+'</b><span class="c2-ln"><i>'+ic("chat",13)+'</i>'+esc(c.text)+'</span><span class="c2-ln"><i>'+ic("calendar",13)+'</i>'+dt(c.date)+'</span></div></div></div>').join("")+'<form class="c2-cform" data-cyform="comment"><textarea name="t" required placeholder="Yorum yaz…"></textarea><button class="ik2-btn primary">Gönder</button></form>';
-  else if(V.tab==="files")body=o.files.map(f=>'<div class="c2-rc"><div class="h"><div><b>'+esc(f.name)+'</b><span class="c2-ln"><i>'+ic("file",13)+'</i>'+esc(f.size)+'</span></div>'+ic("download",20)+'</div></div>').join("");
+  else if(V.tab==="files"){window.EKR=paint;window.EKADD=a=>{o.files.unshift(...a);save();paint();showSnackbar(a.length+" dosya eklendi.");};body=mobileEkler(o.files.map((f,k)=>({...f,who:f.who||team[(k+1)%team.length],date:f.date||shift(T,-2-k*5)})).concat([{name:"Toplanti_fotografi.jpg",size:"1,1 MB",who:team[2],date:shift(T,-6)},{name:"Fiyat_listesi.xlsx",size:"64 KB",who:team[3],date:shift(T,-11)}]));}
   else if(V.tab==="other"){const back='<button class="c2-back" data-cy="other" data-v="">'+ic("left",16)+'Diğer</button>';
     if(V.other==="hist")body=back+o.history.map(h=>'<div class="c2-rc"><div class="h"><div><b>'+esc(h.what)+'</b><span class="c2-ln"><i>'+ic("user",13)+'</i>'+esc(h.who)+'</span><span class="c2-ln"><i>'+ic("calendar",13)+'</i>'+dt(h.date)+'</span></div></div></div>').join("");
     else if(V.other==="dist")body=back+[0,1,2].map(k=>'<div class="c2-rc"><div class="h"><div><b>'+esc(team[(k+1)%team.length])+'</b><span class="c2-ln"><i>'+ic("mail",13)+'</i>'+["Bilgi","Onay","Bilgi"][k]+'</span></div></div></div>').join("");
