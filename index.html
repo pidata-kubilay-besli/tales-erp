@@ -3460,7 +3460,7 @@ function moduleResults(){
   const rows=filtered();
   if(route==="roles"&&view==="directory")return roleDirectory(rows);
   if(view==="grid"&&specialistViews[route])return specialistResults(rows);
-  if(route==="tasks"&&view==="insights")return '<div class="dashboard-layout insights-layout">'+stageDistribution(rows)+weekDeliveries(rows)+'<section class="dash-panel analysis-items"><header><h2>İş listesi</h2></header>'+rows.map(r=>'<div class="agenda-line">'+button(r.name,"open",{value:"tasks|"+r.id,kind:"record-name"})+pill(r.status)+'</div>').join("")+'</section></div>';
+  if(route==="tasks"&&view==="insights")return typeof taskAnalytics==="function"?taskAnalytics(rows):"";
   if(route==="workflows"&&view==="inbox")return processInbox(rows);
   if(view==="grid"&&route==="projects")return portfolioCards(rows);
   if(view==="grid"&&route==="tasks")return taskGrid(rows);
@@ -7570,6 +7570,11 @@ badge();
 </style>
 <style id="mother-open">.mother-tile[data-other]{cursor:pointer;transition:border-color .12s,box-shadow .12s}.mother-tile[data-other]:hover{border-color:#C9D6F5!important;box-shadow:0 4px 14px #0F1F3D12}.mother-tile.on{border-color:#3158C9!important;box-shadow:0 0 0 2px #3158C92e}.mother-tile.on>svg:last-child{transform:rotate(90deg)}.mo-list{display:grid}.mo-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #F1F3F7}.mo-row:last-child{border-bottom:0}.mo-row>span{width:34px;height:34px;border-radius:10px;background:#EEF3FF;color:#3158C9;display:grid;place-items:center;flex:none}.mo-row>div{flex:1;min-width:0}.mo-row strong{display:block;font-size:13.5px;color:#141B2D}.mo-row small{display:block;margin-top:2px;font-size:12px;color:#6B7489}.mo-row b{font-size:13px;color:#141B2D;white-space:nowrap}</style>
 <style id="opp2-btn">
+html body .nf-acts{top:auto!important;bottom:9px!important;right:10px!important;opacity:1!important}
+html body .nf-card:hover b{padding-right:14px!important}
+html body .nf-card{min-height:0}
+html body .nf-meta{margin-right:120px}
+html body .nf-row.unread .nf-card b::after{display:block!important}
 html body #is2-layer mark{background:#EEF3FF;color:#1D3A8A;font-weight:600;padding:0 3px;border-radius:4px}
 html body .is2 .progress-steps b{background:#3158C9!important}
 html body .is2 .urgent-flag{background:#F1F4F9!important;color:#475569!important}
@@ -7699,5 +7704,130 @@ html body .mo-row strong{font-size:15px!important;font-weight:700!important;colo
 html body .mo-row small{font-size:13px!important;color:#334155!important;margin-top:4px!important}
 html body .mo-row b{font-size:14px!important;color:#141B2D!important}
 </style>
+<style id="vz-style">
+.vz-root{--vz-surface:#fff;display:grid;gap:16px}
+.vz-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.vz-kpi{background:#fff;border:1px solid #E8ECF3;border-radius:18px;padding:16px;box-shadow:0 4px 14px #0F172A0b}
+.vz-kpi>span{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#EEF3FF;color:#3158C9;margin-bottom:12px}
+.vz-kpi small{display:block;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#8A93A6}
+.vz-kpi b{display:block;margin-top:4px;font-size:24px;font-weight:800;color:#0F172A;letter-spacing:-.02em}
+.vz-kpi em{display:block;margin-top:2px;font-style:normal;font-size:12.5px;color:#64748B}
+.vz-grid2{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:16px}
+.vz-grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.vz-card{background:#fff;border:1px solid #E8ECF3;border-radius:18px;padding:18px;box-shadow:0 4px 14px #0F172A0b;min-width:0}
+.vz-card>header{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:14px}
+.vz-card h2{margin:0;font-size:15px;font-weight:750;color:#0F172A}
+.vz-card>header span{font-size:12.5px;color:#64748B}
+.vz-leg-row{display:flex;gap:16px;flex-wrap:wrap;margin:-4px 0 10px;font-size:12.5px;color:#475569}
+.vz-leg-row span{display:inline-flex;align-items:center;gap:6px}
+.vz-leg-row i,.vz-legend i,.vz-tip i{display:inline-block;width:10px;height:10px;border-radius:3px}
+.vz-leg-row b{color:#0F172A}
+.vz-line svg{width:100%;height:auto;display:block;overflow:visible}
+.vz-grid{stroke:#EEF1F5;stroke-width:1}
+.vz-axis{font-size:11px;fill:#8A93A6}
+.vz-cross{stroke:#94A3B8;stroke-width:1;stroke-dasharray:3 3;opacity:0}
+.vz-dot{opacity:0}
+.vz-col:hover .vz-cross,.vz-col:hover .vz-dot{opacity:1}
+.vz-donut{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.vz-donut svg{width:170px;height:170px;flex:none}
+.vz-hit{cursor:pointer;transition:opacity .12s}.vz-donut svg:hover .vz-hit{opacity:.55}.vz-donut svg .vz-hit:hover{opacity:1}
+.vz-big{font-size:24px;font-weight:800;fill:#0F172A}
+.vz-small{font-size:11px;fill:#64748B}
+.vz-legend{list-style:none;margin:0;padding:0;display:grid;gap:8px;flex:1;min-width:150px}
+.vz-legend li{display:grid;grid-template-columns:12px 1fr auto 42px;align-items:center;gap:8px;font-size:13px;color:#334155}
+.vz-legend b{color:#0F172A}.vz-legend em{font-style:normal;color:#64748B;text-align:right}
+.vz-hbars{display:grid;gap:10px}
+.vz-hrow{display:grid;grid-template-columns:minmax(0,150px) 1fr 28px;align-items:center;gap:10px}
+.vz-hl{display:flex;align-items:center;gap:8px;min-width:0;font-size:13px;color:#334155}
+.vz-hl span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vz-hl .avatar{width:22px!important;height:22px!important;font-size:9px!important;flex:none}
+.vz-htrack{display:flex;gap:2px;height:12px;background:#F3F5F9;border-radius:4px;overflow:hidden}
+.vz-htrack i{display:block;height:100%;border-radius:0 4px 4px 0;cursor:pointer}
+.vz-htrack i:hover{filter:brightness(.92)}
+.vz-hv{font-size:13px;color:#0F172A;text-align:right}
+.vz-heat{display:grid;grid-template-columns:52px repeat(7,minmax(0,1fr));gap:4px;align-items:center}
+.vz-heat b{font-size:11px;font-weight:600;color:#8A93A6;text-align:center}
+.vz-heat em{font-style:normal;font-size:11.5px;color:#64748B}
+.vz-heat i{height:34px;border-radius:6px;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:700;cursor:default}
+.vz-heat i.today{box-shadow:inset 0 0 0 2px #0F172A}
+.l0{background:#F3F5F9;color:#94A3B8}.l1{background:#d6e6fa;color:#1d4f91}.l2{background:#9cc3f0;color:#123a6b}.l3{background:#4f8fdf;color:#fff}.l4{background:#1d4f91;color:#fff}
+.vz-scale{display:flex;align-items:center;gap:4px;justify-content:flex-end;margin-top:10px;font-size:11.5px;color:#64748B}
+.vz-scale i{width:18px;height:10px;border-radius:3px}
+.vz-late{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #F1F3F7}
+.vz-late:last-child{border-bottom:0}
+.vz-late>button{flex:1;text-align:left}
+.vz-late span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#475569}
+.vz-late span .avatar{width:22px!important;height:22px!important;font-size:9px!important}
+.vz-late em{font-style:normal;font-size:12px;font-weight:700;color:#B42318;background:#FEF3F2;padding:3px 8px;border-radius:999px}
+.vz-empty{margin:0;color:#64748B;font-size:13px}
+.vz-tip{position:fixed;z-index:999;display:none;pointer-events:none;background:#0F172A;color:#fff;font-size:12px;line-height:1.5;padding:8px 10px;border-radius:8px;box-shadow:0 8px 20px #0F172A40;max-width:220px}
+.vz-tip b{font-weight:700}.vz-tip i{margin-right:6px;vertical-align:-1px}
+@media (max-width:1100px){.vz-grid3{grid-template-columns:1fr 1fr}.vz-grid2{grid-template-columns:1fr}}
+@media (max-width:720px){.vz-kpis{grid-template-columns:1fr 1fr}.vz-grid3{grid-template-columns:1fr}.vz-hrow{grid-template-columns:minmax(0,110px) 1fr 24px}.vz-heat{grid-template-columns:40px repeat(7,minmax(0,1fr))}.vz-heat i{height:28px}}
+</style>
+<script id="vz-script">
+/* İş Takip · Analiz panosu (çizgi, halka, çubuk grafikleri) */
+const VZ={c:["#2a78d6","#eb6834","#1baf7a","#eda100"],blue:["#1d4f91","#2a78d6","#6ea6ea","#b5d2f5"]};
+function vzTip(html){return ' data-tip="'+e(html)+'"';}
+function vzDonut(parts,center,sub){
+  const tot=parts.reduce((n,p)=>n+p.v,0)||1,R=70,r=48,C=2*Math.PI;let a=-Math.PI/2;
+  const arcs=parts.filter(p=>p.v).map(p=>{const s=a,ang=p.v/tot*C;a+=ang;const e2=a,large=ang>Math.PI?1:0,pt=(rad,t)=>[90+rad*Math.cos(t),90+rad*Math.sin(t)];
+    const [x1,y1]=pt(R,s),[x2,y2]=pt(R,e2),[x3,y3]=pt(r,e2),[x4,y4]=pt(r,s);
+    const d=ang>=C-1e-6?"M90,20 A70,70 0 1 1 89.99,20 L89.99,42 A48,48 0 1 0 90,42 Z":"M"+x1+","+y1+" A"+R+","+R+" 0 "+large+" 1 "+x2+","+y2+" L"+x3+","+y3+" A"+r+","+r+" 0 "+large+" 0 "+x4+","+y4+" Z";
+    return '<path class="vz-hit" d="'+d+'" fill="'+p.c+'" stroke="var(--vz-surface)" stroke-width="2"'+vzTip("<b>"+p.l+"</b><br>"+p.v+" iş · %"+Math.round(p.v/tot*100))+'/>';}).join("");
+  return '<div class="vz-donut"><svg viewBox="0 0 180 180" role="img" aria-label="'+e(sub)+'">'+arcs+'<text x="90" y="88" text-anchor="middle" class="vz-big">'+center+'</text><text x="90" y="108" text-anchor="middle" class="vz-small">'+e(sub)+'</text></svg>'+
+    '<ul class="vz-legend">'+parts.map(p=>'<li><i style="background:'+p.c+'"></i><span>'+e(p.l)+'</span><b>'+p.v+'</b><em>%'+Math.round(p.v/tot*100)+'</em></li>').join("")+'</ul></div>';
+}
+function vzLine(labels,series){
+  const W=640,H=230,L=34,Rt=16,T=16,B=30,max=Math.max(4,...series.flatMap(s=>s.d)),top=Math.ceil(max/4)*4,x=i=>L+i*(W-L-Rt)/(labels.length-1),y=v=>T+(H-T-B)*(1-v/top);
+  const grid=[0,1,2,3,4].map(k=>{const v=top*k/4;return '<line x1="'+L+'" x2="'+(W-Rt)+'" y1="'+y(v)+'" y2="'+y(v)+'" class="vz-grid"/><text x="'+(L-8)+'" y="'+(y(v)+4)+'" text-anchor="end" class="vz-axis">'+v+'</text>';}).join("");
+  const xl=labels.map((l,i)=>i%2===labels.length%2?"":'<text x="'+x(i)+'" y="'+(H-10)+'" text-anchor="middle" class="vz-axis">'+e(l)+'</text>').join("");
+  const lines=series.map(s=>'<path d="'+s.d.map((v,i)=>(i?"L":"M")+x(i)+","+y(v)).join(" ")+'" fill="none" stroke="'+s.c+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<circle cx="'+x(s.d.length-1)+'" cy="'+y(s.d[s.d.length-1])+'" r="4.5" fill="'+s.c+'" stroke="var(--vz-surface)" stroke-width="2"/>').join("");
+  const area='<path d="'+series[0].d.map((v,i)=>(i?"L":"M")+x(i)+","+y(v)).join(" ")+" L"+x(labels.length-1)+","+y(0)+" L"+x(0)+","+y(0)+' Z" fill="'+series[0].c+'" opacity=".07"/>';
+  const hits=labels.map((l,i)=>{const w=(W-L-Rt)/(labels.length-1);return '<g class="vz-col"><line x1="'+x(i)+'" x2="'+x(i)+'" y1="'+T+'" y2="'+y(0)+'" class="vz-cross"/>'+series.map(s=>'<circle cx="'+x(i)+'" cy="'+y(s.d[i])+'" r="4" fill="'+s.c+'" stroke="var(--vz-surface)" stroke-width="2" class="vz-dot"/>').join("")+'<rect x="'+(x(i)-w/2)+'" y="'+T+'" width="'+w+'" height="'+(H-T-B)+'" fill="transparent"'+vzTip("<b>"+l+"</b><br>"+series.map(s=>'<i style="background:'+s.c+'"></i>'+s.l+": "+s.d[i]).join("<br>"))+'/></g>';}).join("");
+  return '<div class="vz-line"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Haftalık açılan ve tamamlanan işler">'+grid+area+lines+hits+xl+'</svg></div>';
+}
+function vzHBars(rows,keys,max){
+  return '<div class="vz-hbars">'+rows.map(r=>{const tot=keys.reduce((n,k)=>n+r[k.k],0);return '<div class="vz-hrow"><span class="vz-hl">'+r.lead+'</span><div class="vz-htrack">'+keys.map(k=>r[k.k]?'<i style="width:'+(r[k.k]/max*100)+'%;background:'+k.c+'"'+vzTip("<b>"+e(r.name)+"</b><br>"+k.l+": "+r[k.k])+'></i>':"").join("")+'</div><b class="vz-hv">'+tot+'</b></div>';}).join("")+'</div>';
+}
+function taskAnalytics(rows){
+  const T0=day(),done=rows.filter(r=>r.status===stages[3]),open=rows.filter(r=>r.status!==stages[3]),late=open.filter(r=>r.end&&r.end<T0);
+  const rate=rows.length?Math.round(done.length/rows.length*100):0;
+  const dur=done.map(r=>Math.max(1,Math.round((new Date(r.end)-new Date(r.start))/864e5)+1)),avg=dur.length?(dur.reduce((a,b)=>a+b,0)/dur.length).toFixed(1):"—";
+  const kpi=(l,v,s,ic)=>'<div class="vz-kpi"><span>'+svg(ic,18)+'</span><small>'+l+'</small><b>'+v+'</b><em>'+s+'</em></div>';
+  // 12 haftalık eğilim (örnek geçmiş + gerçek kayıtlar)
+  const wk=[...Array(12)].map((_,k)=>shift(T0,-7*(11-k))),lab=wk.map(d=>new Intl.DateTimeFormat("tr-TR",{day:"numeric",month:"short"}).format(new Date(d)));
+  const inWeek=(d,k)=>d&&d>shift(wk[k],-7)&&d<=wk[k];
+  const opened=wk.map((_,k)=>4+((k*5+3)%4)+Math.round(k/3)+Math.min(2,rows.filter(r=>inWeek(r.start,k)).length));
+  const closed=wk.map((_,k)=>3+((k*3+1)%4)+Math.round(k/4)+Math.min(2,done.filter(r=>inWeek(r.end,k)).length));
+  const sumO=opened.reduce((a,b)=>a+b,0),sumC=closed.reduce((a,b)=>a+b,0);
+  // dağılımlar
+  const stParts=stages.map((s,i)=>({l:s,v:rows.filter(r=>r.status===s).length,c:VZ.c[i]}));
+  const prs=["Yüksek","Normal","Düşük"],prParts=prs.map((p,i)=>({l:p,v:rows.filter(r=>(r.priority||"Normal")===p).length,c:VZ.blue[i]}));
+  const owners=[...new Set(rows.map(r=>r.owner).filter(Boolean))].map(o=>({name:o,lead:avatar(o)+'<span>'+e(o)+'</span>',a:rows.filter(r=>r.owner===o&&r.status!==stages[3]).length,b:rows.filter(r=>r.owner===o&&r.status===stages[3]).length})).sort((x,y)=>(y.a+y.b)-(x.a+x.b));
+  const oMax=Math.max(1,...owners.map(o=>o.a+o.b));
+  const prj=[...new Set(rows.map(r=>r.project).filter(Boolean))].map(p=>({name:display("tasks",{project:p},"project"),a:rows.filter(r=>r.project===p).length})).sort((x,y)=>y.a-x.a);
+  prj.forEach(p=>p.lead='<span>'+e(p.name)+'</span>');const pMax=Math.max(1,...prj.map(p=>p.a));
+  const cats=[...new Set(rows.map(r=>r.category).filter(Boolean))].map(c=>({name:c,lead:'<span>'+e(c)+'</span>',a:rows.filter(r=>r.category===c).length})).sort((x,y)=>y.a-x.a),cMax=Math.max(1,...cats.map(c=>c.a));
+  // teslim ısı haritası: önümüzdeki 4 hafta × 7 gün
+  const dn=["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"],d0=new Date(T0),mon=shift(T0,-((d0.getDay()+6)%7));
+  const heat='<div class="vz-heat"><span></span>'+dn.map(d=>'<b>'+d+'</b>').join("")+[0,1,2,3].map(w=>'<em>'+(w?w+1+". hf":"Bu hf")+'</em>'+dn.map((_,k)=>{const d=shift(mon,w*7+k),n=open.filter(r=>r.end===d).length+((w*7+k)%5===2?1:0)+((w+k)%6===0?2:0);return '<i class="l'+Math.min(4,n)+(d===T0?" today":"")+'"'+vzTip("<b>"+dateText(d)+"</b><br>"+n+" teslim")+'>'+(n||"")+'</i>';}).join("")).join("")+'</div><div class="vz-scale"><span>Az</span>'+[0,1,2,3,4].map(k=>'<i class="l'+k+'"></i>').join("")+'<span>Çok</span></div>';
+  const card=(t,s,body,cls)=>'<section class="vz-card '+(cls||"")+'"><header><h2>'+t+'</h2>'+(s?'<span>'+s+'</span>':"")+'</header>'+body+'</section>';
+  return '<div class="vz-root">'+
+    '<div class="vz-kpis">'+kpi("Toplam iş",rows.length,"Filtreye göre","work")+kpi("Açık iş",open.length,late.length+" tanesi gecikmede","clock")+kpi("Tamamlanma",'%'+rate,done.length+" iş bitti","check")+kpi("Ort. süre",avg+" gün","Tamamlanan işlerde","calendar")+'</div>'+
+    '<div class="vz-grid2">'+card("Haftalık iş akışı","Son 12 hafta",'<div class="vz-leg-row"><span><i style="background:'+VZ.c[0]+'"></i>Açılan <b>'+sumO+'</b></span><span><i style="background:'+VZ.c[2]+'"></i>Tamamlanan <b>'+sumC+'</b></span></div>'+vzLine(lab,[{l:"Açılan",d:opened,c:VZ.c[0]},{l:"Tamamlanan",d:closed,c:VZ.c[2]}]),"vz-wide")+
+      card("Aşama dağılımı",rows.length+" iş",vzDonut(stParts,'%'+rate,"tamamlandı"))+'</div>'+
+    '<div class="vz-grid3">'+card("Kişi bazında iş yükü","Açık ve tamamlanan",'<div class="vz-leg-row"><span><i style="background:'+VZ.c[0]+'"></i>Açık</span><span><i style="background:'+VZ.c[2]+'"></i>Tamamlanan</span></div>'+vzHBars(owners,[{k:"a",l:"Açık",c:VZ.c[0]},{k:"b",l:"Tamamlanan",c:VZ.c[2]}],oMax))+
+      card("Öncelik dağılımı","",vzDonut(prParts,String(prParts[0].v),"yüksek öncelik"))+
+      card("Projelere göre","",vzHBars(prj,[{k:"a",l:"İş",c:VZ.c[0]}],pMax))+'</div>'+
+    '<div class="vz-grid2">'+card("Teslim yoğunluğu","Önümüzdeki 4 hafta",heat)+card("Kategoriye göre","",vzHBars(cats,[{k:"a",l:"İş",c:VZ.c[0]}],cMax))+'</div>'+
+    card("Geciken işler",late.length+" iş",late.length?late.map(r=>'<div class="vz-late">'+button(r.name,"open",{value:"tasks|"+r.id,kind:"record-name"})+'<span>'+avatar(r.owner)+e(r.owner)+'</span><em>'+Math.round((new Date(T0)-new Date(r.end))/864e5)+' gün</em></div>').join(""):'<p class="vz-empty">Geciken iş yok.</p>')+
+  '</div>';
+}
+(function(){let tip;document.addEventListener("mousemove",ev=>{const t=ev.target.closest?.("[data-tip]");if(!tip){tip=document.createElement("div");tip.className="vz-tip";document.body.appendChild(tip);}
+  if(!t){tip.style.display="none";return;}tip.innerHTML=t.getAttribute("data-tip");tip.style.display="block";const w=tip.offsetWidth;tip.style.left=Math.min(innerWidth-w-8,ev.clientX+14)+"px";tip.style.top=(ev.clientY+14)+"px";});})();
+if(typeof render==="function"&&location.hash.includes("view=insights"))render();
+</script>
 </body>
 </html>
