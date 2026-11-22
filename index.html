@@ -8545,5 +8545,22 @@ html body .mo-list{gap:8px!important}
 </style>
 <style id="table-gaps">html body #screen table:has(tbody tr){border-collapse:separate!important;border-spacing:0 2px!important;padding:0 6px 2px!important;background:#F4F6FA!important}html body #screen table thead th{background:#F4F6FA!important;border:0!important}html body #screen table tbody td{background:#fff!important;border-bottom:0!important;border-top:0!important}html body #screen table tbody td:first-child{border-radius:10px 0 0 10px}html body #screen table tbody td:last-child{border-radius:0 10px 10px 0}html body #screen table tbody tr:hover td{background:#F8FAFF!important}</style>
 <style id="tight-cards">html body .mp-body{gap:8px!important}html body .mp-body>.c2-rc,html body .mp-body>.hr-card,html body .c2-body>.c2-rc,html body .c2-body>.cy-opp,html body .c2-body>.cy-item{margin:0 0 8px!important}html body .mp-body>.c2-rc{margin:0!important}html body .c2-rc{padding:10px 12px 10px 14px!important}html body .c2-rc .o{margin-bottom:3px!important}html body .c2-rc .h>div{gap:4px!important}html body .c2-rc .h b{font-size:15px!important}</style>
+<script id="ekler-mt">
+window.mobileEkler=function(files){
+  const ext=n=>String(n||"").split(".").pop().toLowerCase();
+  const ty=n=>{const x=ext(n);return x==="pdf"?["pdf","PDF","file","#D23F4A"]:["jpg","jpeg","png","webp","heic","gif"].includes(x)?["img","Görsel","image","#7C3AED"]:["doc","docx","txt","rtf"].includes(x)?["doc","Belge","note","#2F80ED"]:["xls","xlsx","csv"].includes(x)?["xls","Tablo","chart","#1B9C6B"]:["doc","Belge","file","#64748B"];};
+  const f0=["all","img","pdf","doc","xls"].includes(window.EKF)?window.EKF:"all";
+  const list=files.filter(f=>f0==="all"||ty(f.name)[0]===f0);
+  const types=[["all","Tümü"],["img","Görsel"],["pdf","PDF"],["doc","Belge"],["xls","Tablo"]];
+  return '<label class="mt-drop ek-drop">'+svg("upload",26)+'<b>Dosyaları buraya sürükleyip bırak</b><small>veya bilgisayarından seç · Görsel, PDF, belge, tablo · en fazla 1 MB</small><span class="mt-drop-btn">Dosya seç</span><input type="file" data-ekin="1" hidden multiple></label>'+
+    '<div class="mt-subhead"><h3>Belgeler</h3><em>'+files.length+' dosya</em></div><div class="mt-chips">'+types.map(([k,l])=>'<button data-ekf="'+k+'" class="'+(f0===k?"on":"")+'">'+l+'<em>'+(k==="all"?files.length:files.filter(f=>ty(f.name)[0]===k).length)+'</em></button>').join("")+'</div>'+
+    '<div class="mt-docs">'+list.map(f=>{const t=ty(f.name);return '<a class="mt-doc" style="--t:'+t[3]+'" href="#" data-ekopen="'+e(f.name)+'"><span class="thumb">'+svg(t[2],30)+'</span><b title="'+e(f.name)+'">'+e(f.name)+'</b><small>'+t[1]+(f.size?" · "+e(f.size):"")+'</small><small>'+e(f.who||team[0])+' · '+e(dateText(f.date||shift(day(),-3)))+'</small></a>';}).join("")+'</div>'+(list.length?"":'<p class="mempty">Bu türde dosya yok.</p>');
+};
+(function(){const take=fl=>{if(!fl||!fl.length||!window.EKADD)return;window.EKADD([...fl].map(x=>({name:x.name,size:Math.max(1,Math.round(x.size/1024))+" KB",who:team[0],date:day()})));};
+document.addEventListener("change",ev=>{if(ev.target.matches?.("[data-ekin]")){take(ev.target.files);ev.target.value="";}});
+document.addEventListener("dragover",ev=>{const z=ev.target.closest?.(".ek-drop");if(z){ev.preventDefault();z.classList.add("over");}});
+document.addEventListener("dragleave",ev=>{const z=ev.target.closest?.(".ek-drop");if(z&&!z.contains(ev.relatedTarget))z.classList.remove("over");});
+document.addEventListener("drop",ev=>{const z=ev.target.closest?.(".ek-drop");if(z){ev.preventDefault();z.classList.remove("over");take(ev.dataTransfer.files);}});})();
+</script>
 </body>
 </html>
