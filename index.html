@@ -8304,7 +8304,7 @@ function seed(){
 let S;try{S=JSON.parse(localStorage.getItem(KEY)||"null");}catch{S=null;}if(!S||S.v!==1)S=seed();
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch{}};
 const V={layout:(()=>{try{return localStorage.getItem("cy-layout")||"list";}catch{return "list";}})(),sec:"cal",date:T,open:null,tab:"detail",actTab:"meet",other:"",q:"",cust:null,person:null,form:null};
-const TABS=[["cal","Takvim","calendar"],["opps","Fırsatlarım","target"],["cust","Müşteri","people"],["person","Kişi","user"],["meet","Toplantılar","people"],["task","Görevler","check"],["call","Aramalar","phone"],["kpi","KPI","chart"]];
+const TABS=[["cal","Takvim","calendar"],["opps","Fırsatlarım","target"],["cust","Müşteri","people"],["person","Kişi","user"],["kpi","KPI","chart"]];
 const money=v=>new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY",maximumFractionDigits:0}).format(v);
 const amount=o=>o.lines.reduce((n,l)=>n+l.qty*PROD[l.p][1],0);
 const stg=n=>STG.find(s=>s[0]===n)||STG[0];
