@@ -7058,6 +7058,11 @@ document.addEventListener("click",ev=>{const t=ev.target.closest('[data-action="
 #screen .calendar article.today>time{color:#3158C9!important}
 #screen .calendar .more-events{font-size:12px!important;color:#64748B!important;padding:2px 8px!important}
 </style><style id="form-clean">
+/* Gri grup sarmalayıcısı yok: yalnız başlık + beyaz alan kartları */
+.desk-editor .form-block,.dialog form .form-block,.grouped-form .gform,.ik2-fgroup,.work-wizard [data-wstep]>.form-grid,.desk-editor .gform{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
+.desk-editor .form-block,.grouped-form .gform,.ik2-fgroup{margin:0 0 18px!important}
+.desk-editor .form-block>h3,.grouped-form .gform h3,.ik2-fgroup h3,.work-wizard [data-wstep]>h3{margin:0 0 10px!important;padding:0 0 8px!important;border-bottom:1px solid #E6EAF0!important;font-size:13.5px!important;color:#14243C!important}
+
 #screen[data-module="tasks"] .desk-identity .desk-symbol{width:34px!important;height:34px!important;border-radius:50%!important;background:#3158C9!important;color:#fff!important;border:0!important;box-shadow:0 2px 6px #3158C93d!important;display:grid!important;place-items:center}
 #screen[data-module="tasks"] .desk-identity .desk-symbol svg{color:#fff!important;width:16px;height:16px}
 
