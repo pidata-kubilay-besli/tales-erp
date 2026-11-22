@@ -3520,8 +3520,9 @@ function progressSteps(percent){
 }
 function checklistMeter(row){
   const checks=row.checklist||[];
-  if(!checks.length)return '<small class="no-checks">Alt iş eklenmemiş</small>';
+  if(!checks.length)return "";
   const done=checks.filter(x=>x.done).length,pct=Math.round(100*done/checks.length);
+  if(!done)return "";
   return '<div class="check-meter"><span>'+svg("work",14)+done+'/'+checks.length+' alt iş</span><b>%'+pct+'</b>'+progressSteps(pct)+'</div>';
 }
 function boardTask(row,grid=false){
