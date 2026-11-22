@@ -5899,7 +5899,7 @@ const ago=iso=>{const m=Math.max(1,Math.round((Date.now()-new Date(iso))/6e4));r
 const hm=min=>{min=Math.round(min);return (min>=60?Math.floor(min/60)+" sa ":"")+(min%60?min%60+" dk":min>=60?"":"0 dk");};
 
 /* ═════════ Tanımlar ═════════ */
-const STATUSES=[{id:"todo",name:"Yapılacak",color:"#64748B",wip:0},{id:"plan",name:"Planlandı",color:"#0EA5E9",wip:0},{id:"doing",name:"İşlemde",color:"#4F46E5",wip:8},{id:"review",name:"İncelemede",color:"#7C3AED",wip:5},{id:"hold",name:"Beklemede",color:"#D97706",wip:0},{id:"done",name:"Tamamlandı",color:"#12936A",wip:0}];
+const STATUSES=[{id:"todo",name:"Yapılacak",color:"#94A3B8",wip:0},{id:"plan",name:"Planlandı",color:"#7C8DB5",wip:0},{id:"doing",name:"İşlemde",color:"#3D5AA3",wip:8},{id:"review",name:"İncelemede",color:"#24418C",wip:5},{id:"hold",name:"Beklemede",color:"#8A6A2E",wip:0},{id:"done",name:"Tamamlandı",color:"#1F7A55",wip:0}];
 const stOf=id=>STATUSES.find(s=>s.id===id)||STATUSES[0];
 const PRIOS=[{id:"crit",name:"Kritik",color:"#D23F4A",sla:1},{id:"high",name:"Yüksek",color:"#EA580C",sla:3},{id:"normal",name:"Normal",color:"#4F46E5",sla:7},{id:"low",name:"Düşük",color:"#94A3B8",sla:14}];
 const prOf=id=>PRIOS.find(p=>p.id===id)||PRIOS[2];
@@ -5944,7 +5944,18 @@ function seedData(){
 }
 let S;
 try{S=JSON.parse(localStorage.getItem(KEY)||"null");}catch{S=null;}
-if(!S||S.v!==1)S=seedData();
+function enrichW(t,i){
+  const at=(d,h)=>new Date(asDate(d).getTime()+h*36e5).toISOString(),m=k=>MEMBERS[(i+k)%MEMBERS.length];
+  const cm=["Müşteriyle konuştum, öncelik verelim.","Test ortamına aldım, @Elif Arslan kontrol edebilir misin?","Tasarım onaylandı, geliştirmeye başlıyorum.","Logları ekledim, hata 3. denemede oluşuyor.","Yarın sabah toplantıda konuşalım.","Kabul kriterlerini güncelledim, açıklamaya bakabilirsiniz."];
+  while(t.comments.length<3){const k=t.comments.length;t.comments.push({who:m(k+1),text:cm[(i+k+3)%cm.length],at:at(t.start,10+k*20)});}
+  const fl=[["Analiz_dokumani.pdf","240 KB"],["Ekran_tasarimi.png","880 KB"],["Test_senaryosu.xlsx","64 KB"],["Log_kaydi.txt","32 KB"],["Toplanti_notu.docx","96 KB"]];
+  while(t.files.length<3){const [n,s]=fl[(i+t.files.length)%fl.length];if(t.files.some(f=>f.name===n)){fl.push(fl.shift());continue;}t.files.push({name:n,size:s,who:m(t.files.length+2)});}
+  const tl=[["Analiz",.25],["Geliştirme",.4],["Test ve düzeltme",.2],["Dokümantasyon",.15]];
+  if(t.timeLog.length<3){const tot=Math.max(t.spent,180);t.timeLog=tl.map(([n,r],k)=>({who:k%2?m(3):t.owner,min:Math.round(tot*r/5)*5||30,date:shift(t.start,k+1),note:n}));t.spent=t.timeLog.reduce((a,x)=>a+x.min,0);if(t.est<t.spent*.8)t.est=Math.round(t.spent*1.2/60)*60;}
+  if(t.rel.length<2){const all=S.tasks.filter(x=>x.id!==t.id);[["İlgili",1],["Engelleyen",3]].forEach(([k,o])=>{const x=all[(i+o*7)%all.length];if(!t.rel.some(r=>r.id===x.id))t.rel.push({kind:k,id:x.id});});}
+  if(t.history.length<6){t.comments.forEach(c=>t.history.push({at:c.at,who:c.who,what:"Yorum yazdı"}));t.files.forEach((f,k)=>t.history.push({at:at(t.start,6+k*9),who:f.who,what:f.name+" dosyasını ekledi"}));t.subs.filter(x=>x.done).forEach((x,k)=>t.history.push({at:at(t.start,30+k*12),who:t.owner,what:"“"+x.t+"” alt işini tamamladı"}));t.history.sort((a,b)=>a.at.localeCompare(b.at));}
+}
+if(!S||S.v!==2){S=seedData();S.v=2;S.tasks.forEach(enrichW);}
 const save=msg=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch{}if(msg)showSnackbar(msg);};
 const W=id=>S.tasks.find(t=>t.id===id);
 const isOpen=t=>t.status!=="done";
@@ -6124,24 +6135,34 @@ function secDefs(){
 /* ═════════ Detay çekmecesi ═════════ */
 function drawer(id){
   const t=W(id);if(!t)return "";const p=prj(t.project),s=stOf(t.status),tab=V.dtab;
-  const tabs=[["detail","Detay"],["subs","Alt işler ("+t.subs.length+")"],["comments","Yorumlar ("+t.comments.length+")"],["files","Ekler ("+t.files.length+")"],["time","Zaman ("+hm(t.spent)+")"],["rel","İlişkili ("+t.rel.length+")"],["history","Geçmiş"]];
-  const facts=list=>'<dl class="ik2-facts">'+list.filter(([,v])=>!blank(v)).map(([k,v,f])=>'<div class="'+(f?"full":"")+'"><dt>'+esc(k)+'</dt><dd>'+v+'</dd></div>').join("")+'</dl>';
+  const tabs=[["detail","Detay","grid"],["subs","Alt işler ("+t.subs.length+")","check"],["comments","Yorumlar ("+t.comments.length+")","chat"],["files","Ekler ("+t.files.length+")","file"],["time","Zaman","clock"],["rel","İlişkili ("+t.rel.length+")","link"],["history","Geçmiş","timeline"]];
+  const sec=(title,icon,inner,sub,right)=>'<section class="m2-sec"><header><span class="m2-ti" style="--a:#3158C9">'+ic(icon,19)+'</span><div><b>'+title+'</b>'+(sub?'<small>'+sub+'</small>':"")+'</div>'+(right||"")+'</header>'+inner+'</section>';
+  const row=(icon,label,value)=>blank(value)?"":'<div class="m2-row"><span class="m2-ri">'+ic(icon,17)+'</span><div><small>'+label+'</small><b>'+value+'</b></div></div>';
+  const item=(lead,title,sub,right,cls)=>'<div class="m2-item '+(cls||"")+'">'+lead+'<div class="m2-it"><b>'+title+'</b>'+(sub?'<small>'+sub+'</small>':"")+'</div>'+(right?'<div class="m2-ir">'+right+'</div>':"")+'</div>';
+  const tile=icon=>'<span class="m2-tile" style="--a:#3158C9">'+ic(icon,17)+'</span>';
+  const stat=(icon,label,val)=>'<div class="m2-stat"><span>'+ic(icon,20)+'</span><small>'+label+'</small><b>'+val+'</b></div>';
+  const tag=x=>'<span class="m2-chip">'+x+'</span>';
+  const pct=subPct(t),idx=STATUSES.findIndex(x=>x.id===t.status);
   let body;
   switch(tab){
-    case "subs":body='<div class="ik2-card"><h3>Alt işler · %'+subPct(t)+'</h3><div class="w2-prog" style="margin-bottom:10px"><i style="width:'+subPct(t)+'%"></i></div>'+t.subs.map((x,i)=>'<label class="w2-sub '+(x.done?"done":"")+'"><input type="checkbox" class="w2-check" data-wsub="'+i+'" '+(x.done?"checked":"")+'><span>'+esc(x.t)+'</span></label>').join("")+'<form class="w2-addrow" data-wform="sub"><input name="t" placeholder="Yeni alt iş ekle" required><button class="ik2-btn">'+ic("plus",14)+'Ekle</button></form></div>';break;
-    case "comments":body='<form class="ik2-card" data-wform="comment"><textarea name="text" required style="width:100%;min-height:70px;border:1px solid #D9DEE8;border-radius:10px;padding:9px 11px;font:inherit;font-size:13.5px" placeholder="Yorum yaz… @ ile kişi etiketle"></textarea><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">'+["Tamamlandı, kontrol edebilirsiniz.","Bilgi bekleniyor.","Yarın ilgileneceğim."].map(q=>'<button type="button" class="ik2-btn sm" style="background:#EEF0FF;color:#4F46E5;border-color:#EEF0FF" data-w="qc" data-v="'+esc(q)+'">'+esc(q)+'</button>').join("")+'<span class="ik2-spacer"></span><button class="ik2-btn">'+ic("arrow",14)+'Gönder</button></div></form>'+
-      '<div class="ik2-card">'+(t.comments.length?t.comments.slice().reverse().map(c=>'<div class="w2-comment">'+av(c.who,"sm")+'<div><header><b>'+esc(c.who)+'</b><small style="color:#6B7489">'+ago(c.at)+'</small></header><p>'+esc(c.text).replace(/@([A-ZÇĞİÖŞÜ][a-zçğıöşü]+ [A-ZÇĞİÖŞÜ][a-zçğıöşü]+)/g,'<mark>@$1</mark>')+'</p></div></div>').join(""):'<p class="ik2-empty">Henüz yorum yok</p>')+'</div>';break;
-    case "files":body='<div class="ik2-card">'+(t.files.length?'<div class="ik2-rows">'+t.files.map(f=>'<div class="ik2-row">'+ic("file",18)+'<div class="ik2-who"><div><b>'+esc(f.name)+'</b><small>'+esc(f.size+" · "+f.who)+'</small></div></div></div>').join("")+'</div>':'<p class="ik2-empty">Ek yok</p>')+'<label class="ik2-btn" style="margin-top:10px">'+ic("upload",14)+'Dosya ekle<input type="file" data-wfile hidden multiple></label></div>';break;
-    case "time":body='<div class="ik2-preview" style="margin-bottom:12px"><div><small>Tahmini</small><b>'+hm(t.est)+'</b></div><div><small>Harcanan</small><b>'+hm(t.spent)+'</b></div><div><small>Kalan</small><b>'+hm(Math.max(0,t.est-t.spent))+'</b></div><div><small>Durum</small><b>%'+Math.round(t.spent/Math.max(1,t.est)*100)+'</b></div></div><div class="ik2-card"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><h3 style="margin:0">Zaman kayıtları</h3><span class="ik2-spacer"></span><button class="w2-timer '+(S.timer?.id===t.id?"run":"")+'" data-w="timer" data-v="'+t.id+'">'+ic("clock",12)+(S.timer?.id===t.id?"Süre ölçeri durdur":"Süre ölçeri başlat")+'</button></div><div class="ik2-rows">'+(t.timeLog.map(l=>'<div class="ik2-row">'+av(l.who,"sm")+'<span>'+esc(l.note)+'</span><div class="end"><b>'+hm(l.min)+'</b><small style="color:#6B7489">'+dlong(l.date)+'</small></div></div>').join("")||'<p class="ik2-empty">Kayıt yok</p>')+'</div><form class="w2-addrow" data-wform="time"><input name="min" type="number" min="5" step="5" placeholder="Dakika" required style="max-width:110px"><input name="note" placeholder="Ne yapıldı?"><button class="ik2-btn">Ekle</button></form></div>';break;
-    case "rel":body='<div class="ik2-card">'+(t.rel.length?t.rel.map(r=>{const o=W(r.id);return o?'<div class="w2-rel">'+chip(r.kind,r.kind==="Engelleyen"?"#D23F4A":"#4F46E5")+'<button class="ik2-link" data-w="open" data-v="'+o.id+'">'+esc(o.code+" "+o.title)+'</button><div class="end" style="margin-left:auto">'+chip(stOf(o.status).name,stOf(o.status).color)+'</div></div>':"";}).join(""):'<p class="ik2-empty">İlişkili iş yok</p>')+'<form class="w2-addrow" data-wform="rel"><select name="kind" style="height:38px;border:1px solid #D9DEE8;border-radius:10px;padding:0 8px"><option>İlgili</option><option>Engelleyen</option><option>Engellenen</option><option>Kopyası</option></select><select name="id" style="flex:1;height:38px;border:1px solid #D9DEE8;border-radius:10px;padding:0 8px">'+S.tasks.filter(x=>x.id!==t.id).map(x=>'<option value="'+x.id+'">'+esc(x.code+" "+x.title)+'</option>').join("")+'</select><button class="ik2-btn">Bağla</button></form></div>';break;
-    case "history":body='<div class="ik2-card"><div class="ik2-vsteps">'+t.history.slice().reverse().map(h=>'<div class="ik2-vstep done"><span>'+ic("clock",12)+'</span><div><b>'+esc(h.what)+'</b><small>'+esc(h.who)+' · '+ago(h.at)+'</small></div></div>').join("")+'</div></div>';break;
-    default:body='<div class="ik2-card"><h3>Durum</h3><div class="w2-status-steps">'+STATUSES.map(x=>'<button data-w="setstatus" data-v="'+x.id+'" class="'+(t.status===x.id?"on":"")+'" style="--t:'+x.color+'">'+x.name+'</button>').join("")+'</div></div>'+
-      '<div class="ik2-card"><h3>Açıklama</h3><p style="margin:0;font-size:13.5px;line-height:1.6;color:#2B3550">'+esc(t.desc)+'</p></div>'+
-      '<div class="ik2-card"><h3>İş bilgileri</h3>'+facts([["Proje",chip(p.name,p.color)],["İş türü",esc(tyOf(t.type).name)],["Öncelik",prFlag(t)],["Sorumlu",'<span class="ik2-who">'+av(t.owner,"sm")+esc(t.owner)+'</span>'],["İşi açan",esc(t.opener)],["Takip edenler",esc(t.watchers.join(", "))],["Başlangıç",dlong(t.start)],["Teslim",dueChip(t)+" "+dlong(t.due)],["Bitiş",t.done?dlong(t.done):""],["Müşteri",esc(t.customer)],["Kaynak",esc(t.source)],["SLA hedefi",prOf(t.prio).sla+" iş günü"],["Etiketler",labelsHtml(t),true]])+'</div>';
+    case "subs":body=sec("Alt işler","check",'<div class="m2-progress"><div><i style="width:'+pct+'%"></i></div><b>%'+pct+'</b></div><div class="m2-crit">'+t.subs.map((x,i)=>'<label class="'+(x.done?"ok":"")+'"><input type="checkbox" class="w2-check" data-wsub="'+i+'" '+(x.done?"checked":"")+'><span>'+esc(x.t)+'</span></label>').join("")+'</div><form class="m2-add" data-wform="sub"><input name="t" placeholder="Yeni alt iş ekle" required><button class="ik2-btn">'+ic("plus",14)+'Ekle</button></form>',t.subs.filter(x=>x.done).length+" / "+t.subs.length+" tamamlandı");break;
+    case "comments":body='<form class="m2-sec m2-pad o2-noteform" data-wform="comment"><textarea name="text" required rows="3" placeholder="Yorum yaz… @ ile kişi etiketle"></textarea><div style="justify-content:space-between;gap:6px;flex-wrap:wrap"><span class="m2-chips">'+["Tamamlandı, kontrol edebilirsiniz.","Bilgi bekleniyor.","Yarın ilgileneceğim."].map(q=>'<button type="button" class="ik2-btn sm" data-w="qc" data-v="'+esc(q)+'">'+esc(q)+'</button>').join("")+'</span><button class="ik2-btn primary">'+ic("arrow",14)+'Gönder</button></div></form>'+
+      sec("Yorumlar","chat",t.comments.length?t.comments.slice().reverse().map(c=>item(av(c.who),esc(c.who),esc(c.text).replace(/@([A-ZÇĞİÖŞÜ][a-zçğıöşü]+ [A-ZÇĞİÖŞÜ][a-zçğıöşü]+)/g,'<mark>@$1</mark>'),'<small>'+ago(c.at)+'</small>')).join(""):'<p class="ik2-empty">Henüz yorum yok</p>',t.comments.length+" yorum");break;
+    case "files":body='<label class="o2-drop"><input type="file" data-wfile hidden multiple><span class="m2-ti" style="--a:#3158C9">'+ic("upload",20)+'</span><div><b>Dosyaları buraya bırakın veya seçin</b><small>PDF, Word, Excel, görsel</small></div><span class="ik2-btn">Dosya seç</span></label>'+
+      sec("Ekler","file",t.files.length?t.files.map(f=>item(tile(/\.(png|jpe?g)$/i.test(f.name)?"image":"file"),esc(f.name),esc(f.size+" · "+f.who),'<button class="ik2-btn sm" title="İndir">'+ic("download",13)+'</button>')).join(""):'<p class="ik2-empty">Ek yok</p>',t.files.length+" dosya");break;
+    case "time":body='<div class="m2-stats">'+stat("clock","Tahmini",hm(t.est))+stat("check","Harcanan",hm(t.spent))+stat("calendar","Kalan",hm(Math.max(0,t.est-t.spent)))+stat("chart","Kullanım","%"+Math.round(t.spent/Math.max(1,t.est)*100))+'</div>'+
+      sec("Zaman kayıtları","clock",(t.timeLog.map(l=>item(av(l.who),esc(l.note),esc(l.who)+" · "+dlong(l.date),'<b>'+hm(l.min)+'</b>')).join("")||'<p class="ik2-empty">Kayıt yok</p>')+'<form class="m2-add" data-wform="time"><input name="min" type="number" min="5" step="5" placeholder="Dakika" required style="max-width:110px"><input name="note" placeholder="Ne yapıldı?"><button class="ik2-btn">Ekle</button></form>',t.timeLog.length+" kayıt",'<button class="ik2-btn sm '+(S.timer?.id===t.id?"primary":"")+'" data-w="timer" data-v="'+t.id+'">'+ic("clock",13)+(S.timer?.id===t.id?"Durdur":"Süre ölçer")+'</button>');break;
+    case "rel":body=sec("İlişkili işler","link",(t.rel.map(r=>{const o=W(r.id);return o?item(tile(r.kind==="Engelleyen"?"alert":"link"),'<button class="ik2-link" data-w="open" data-v="'+o.id+'">'+esc(o.code+" "+o.title)+'</button>',esc(r.kind),tag(esc(stOf(o.status).name))):"";}).join("")||'<p class="ik2-empty">İlişkili iş yok</p>')+'<form class="m2-add" data-wform="rel"><select name="kind"><option>İlgili</option><option>Engelleyen</option><option>Engellenen</option><option>Kopyası</option></select><select name="id" style="flex:1">'+S.tasks.filter(x=>x.id!==t.id).map(x=>'<option value="'+x.id+'">'+esc(x.code+" "+x.title)+'</option>').join("")+'</select><button class="ik2-btn">Bağla</button></form>',t.rel.length+" bağlantı");break;
+    case "history":body=sec("İş geçmişi","timeline",'<div class="m2-tl">'+t.history.slice().reverse().map(h=>'<div><i></i><b>'+esc(h.what)+'</b><small>'+esc(h.who)+' · '+ago(h.at)+'</small></div>').join("")+'</div>',t.history.length+" kayıt");break;
+    default:body='<div class="o2-stage">'+STATUSES.map((x,i)=>'<button data-w="setstatus" data-v="'+x.id+'" style="--c:'+x.color+'" class="'+(i<idx&&x.id!=="hold"?"past":i===idx?"now":"")+'">'+x.name+'</button>').join("")+'</div>'+
+      '<div class="m2-stats">'+stat("calendar","Teslim",dlong(t.due))+stat("check","Alt işler","%"+pct)+stat("clock","Harcanan",hm(t.spent))+stat("flag","Öncelik",esc(prOf(t.prio).name))+'</div>'+
+      '<div class="m2-sec m2-owner">'+av(t.owner)+'<div><small>SORUMLU</small><b>'+esc(t.owner)+'</b></div><div class="m2-next"><small>Açan: '+esc(t.opener)+'</small></div></div>'+
+      sec("Açıklama","note",'<p class="m2-desc">'+esc(t.desc)+'</p>')+
+      sec("İş bilgileri","layers",row("projects","Proje",esc(p.name))+row("tag","İş türü",esc(tyOf(t.type).name))+row("calendar","Başlangıç",dlong(t.start))+row("flag","Teslim",dlong(t.due)+" "+dueChip(t))+row("check","Bitiş",t.done?dlong(t.done):"")+row("building","Müşteri",esc(t.customer))+row("external","Kaynak",esc(t.source))+row("shield","SLA hedefi",prOf(t.prio).sla+" iş günü")+row("people","Takip edenler",esc(t.watchers.join(", ")))+row("tag","Etiketler",t.labels.length?'<span class="m2-chips">'+t.labels.map(l=>tag(esc(l))).join("")+'</span>':""));
   }
-  return '<div class="ik2-shade" data-w="close"></div><aside class="ik2-drawer" role="dialog" aria-modal="true" aria-label="'+esc(t.title)+'">'+
-    '<div class="ik2-hero"><span class="ik2-av lg" style="background:'+s.color+'">'+ic(tyOf(t.type).icon,26)+'</span><div style="min-width:0"><p style="margin:0 0 3px">'+esc(t.code)+' · '+esc(p.name)+'</p><h2>'+esc(t.title)+'</h2><div class="chips" style="margin-top:8px">'+chip(s.name,s.color)+prFlag(t)+dueChip(t)+'</div></div><button class="ik2-x" data-w="close" aria-label="Kapat">'+ic("close",18)+'</button></div>'+
-    '<nav class="ik2-tabs">'+tabs.map(([k,l])=>'<button data-w="dtab" data-v="'+k+'" class="'+(tab===k?"on":"")+'">'+l+'</button>').join("")+'</nav>'+
+  return '<div class="ik2-shade" data-w="close"></div><aside class="ik2-drawer m2" style="width:min(940px,100%)" role="dialog" aria-modal="true" aria-label="'+esc(t.title)+'">'+
+    '<div class="ik2-hero"><span class="ik2-av lg" style="border-radius:16px;background:#1D3A8A">'+ic(tyOf(t.type).icon,26)+'</span><div style="min-width:0"><p style="margin:0 0 3px">'+esc(t.code)+' · '+esc(p.name)+'</p><h2>'+esc(t.title)+'</h2><div class="chips" style="margin-top:8px">'+chip(s.name,"#24418C")+chip(prOf(t.prio).name,"#475569")+dueChip(t)+'</div></div><button class="ik2-x" data-w="close" aria-label="Kapat">'+ic("close",18)+'</button></div>'+
+    '<nav class="ik2-tabs">'+tabs.map(([k,l,i])=>'<button data-w="dtab" data-v="'+k+'" class="'+(tab===k?"on":"")+'">'+ic(i,15)+l+'</button>').join("")+'</nav>'+
     '<div class="ik2-dbody">'+body+'</div><footer class="ik2-dfoot"><small>Oluşturuldu '+ago(t.created)+' · '+esc(t.opener)+'</small><button class="ik2-btn bad" data-w="delete" data-v="'+t.id+'">'+ic("close",14)+'Sil</button><button class="ik2-btn" data-w="edit" data-v="'+t.id+'">'+ic("edit",14)+'Düzenle</button>'+(isOpen(t)?'<button class="ik2-btn ok" data-w="complete" data-v="'+t.id+'">'+ic("check",14)+'Tamamla</button>':"")+'</footer></aside>';
 }
 
@@ -7546,6 +7567,67 @@ badge();
 </style>
 <style id="mother-open">.mother-tile[data-other]{cursor:pointer;transition:border-color .12s,box-shadow .12s}.mother-tile[data-other]:hover{border-color:#C9D6F5!important;box-shadow:0 4px 14px #0F1F3D12}.mother-tile.on{border-color:#3158C9!important;box-shadow:0 0 0 2px #3158C92e}.mother-tile.on>svg:last-child{transform:rotate(90deg)}.mo-list{display:grid}.mo-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #F1F3F7}.mo-row:last-child{border-bottom:0}.mo-row>span{width:34px;height:34px;border-radius:10px;background:#EEF3FF;color:#3158C9;display:grid;place-items:center;flex:none}.mo-row>div{flex:1;min-width:0}.mo-row strong{display:block;font-size:13.5px;color:#141B2D}.mo-row small{display:block;margin-top:2px;font-size:12px;color:#6B7489}.mo-row b{font-size:13px;color:#141B2D;white-space:nowrap}</style>
 <style id="opp2-btn">
+html body #is2-layer mark{background:#EEF3FF;color:#1D3A8A;font-weight:600;padding:0 3px;border-radius:4px}
+html body .is2 .progress-steps b{background:#3158C9!important}
+html body .is2 .urgent-flag{background:#F1F4F9!important;color:#475569!important}
+html body .is2 .lane .lane-step{background:#fff!important;color:#475569!important;border-color:#CBD5E1!important}
+html body :is(.is2,#is2-layer) .w2-flag{--t:#475569!important}
+html body .ik2-drawer.m2 .ik2-tabs{display:flex!important;gap:4px!important;margin:12px 18px 0!important;padding:4px!important;background:#EDF0F5!important;border:0!important;border-radius:14px!important;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap!important}
+html body .ik2-drawer.m2 .ik2-tabs::-webkit-scrollbar{display:none}
+html body .ik2-drawer.m2 .ik2-tabs button{flex:1 0 auto;display:inline-flex!important;align-items:center;justify-content:center;gap:7px;height:36px!important;padding:0 14px!important;margin:0!important;border:0!important;border-radius:10px!important;background:transparent!important;color:#475569!important;font-size:13px!important;font-weight:600!important;white-space:nowrap;box-shadow:none!important}
+html body .ik2-drawer.m2 .ik2-tabs button::after{display:none!important}
+html body .ik2-drawer.m2 .ik2-tabs button svg{color:#64748B}
+html body .ik2-drawer.m2 .ik2-tabs button:hover{color:#0F172A!important}
+html body .ik2-drawer.m2 .ik2-tabs button.on{background:#fff!important;color:#0F172A!important;box-shadow:0 1px 3px #0F172A1f!important}
+html body .ik2-drawer.m2 .ik2-tabs button.on svg{color:#3158C9}
+html body :is(.op2,.is2) .ik2-nav{display:flex!important;gap:4px!important;padding:4px!important;background:#EDF0F5!important;border:0!important;border-radius:14px!important;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap!important;width:max-content;max-width:100%}
+html body :is(.op2,.is2) .ik2-nav::-webkit-scrollbar{display:none}
+html body :is(.op2,.is2) .ik2-nav a{display:inline-flex!important;align-items:center;gap:7px;height:36px!important;padding:0 14px!important;margin:0!important;border:0!important;border-radius:10px!important;background:transparent!important;color:#475569!important;font-size:13px!important;font-weight:600!important;white-space:nowrap;box-shadow:none!important;text-decoration:none}
+html body :is(.op2,.is2) .ik2-nav a::after{display:none!important}
+html body :is(.op2,.is2) .ik2-nav a svg{color:#64748B}
+html body :is(.op2,.is2) .ik2-nav a.on{background:#fff!important;color:#0F172A!important;box-shadow:0 1px 3px #0F172A1f!important}
+html body :is(.op2,.is2) .ik2-nav a.on svg{color:#3158C9}
+html body :is(.op2,.is2) .ik2-nav a em{background:#DCE3EE!important;color:#334155!important}
+html body :is(.op2,.is2) .ik2-nav a.on em{background:#3158C9!important;color:#fff!important}
+.m2-progress{display:flex;align-items:center;gap:12px;padding:14px 18px 6px}
+.m2-progress>div{flex:1;height:8px;border-radius:4px;background:#EEF1F6;overflow:hidden}
+.m2-progress i{display:block;height:100%;background:#1D3A8A;border-radius:4px}
+.m2-progress b{font-size:13px;color:#1D3A8A}
+.m2-add{display:flex;gap:8px;padding:12px 18px 16px;border-top:1px solid #F1F3F7}
+.m2-add input,.m2-add select{height:38px;border:1px solid #E4E9F0;border-radius:10px;padding:0 12px;font:inherit;font-size:13px;background:#FBFCFE;min-width:0}
+.m2-add input:not([type=number]){flex:1}
+.m2-desc{margin:0;padding:14px 18px 16px;font-size:13.5px;line-height:1.6;color:#334155}
+html body #is2-layer .ik2-drawer.m2 .ik2-hero .ik2-chip{--t:#475569!important}
+@media (max-width:720px){html body .ik2-drawer.m2 .ik2-tabs{margin:10px 12px 0!important}.m2-add{flex-wrap:wrap}}
+html body :is(.is2,#is2-layer) .ik2-btn{height:38px!important;padding:0 16px!important;border-radius:10px!important;border:1px solid #D5DCE6!important;background:#fff!important;color:#1E293B!important;font-size:13.5px!important;font-weight:600!important;letter-spacing:-.005em;gap:7px!important;box-shadow:0 1px 2px #0F172A0d!important;transition:background .12s,border-color .12s,box-shadow .12s,transform .06s!important}
+html body :is(.is2,#is2-layer) .ik2-btn:hover{background:#F8FAFC!important;border-color:#B8C3D3!important}
+html body :is(.is2,#is2-layer) .ik2-btn:active{transform:translateY(1px)}
+html body :is(.is2,#is2-layer) .ik2-btn:focus-visible{outline:none;box-shadow:0 0 0 3px #3158C933!important}
+html body :is(.is2,#is2-layer) .ik2-btn svg{color:currentColor!important;opacity:.85}
+html body :is(.is2,#is2-layer) .ik2-btn.primary,html body :is(.is2,#is2-layer) .ik2-btn.ok{background:#1D3A8A!important;border-color:#1D3A8A!important;color:#fff!important;box-shadow:0 1px 2px #0F172A1f,inset 0 1px 0 #ffffff1f!important}
+html body :is(.is2,#is2-layer) .ik2-btn.primary:hover,html body :is(.is2,#is2-layer) .ik2-btn.ok:hover{background:#17306F!important;border-color:#17306F!important}
+html body :is(.is2,#is2-layer) .ik2-btn.bad{background:#fff!important;border-color:#D5DCE6!important;color:#B42318!important}
+html body :is(.is2,#is2-layer) .ik2-btn.bad:hover{background:#FEF3F2!important;border-color:#F4C7C3!important}
+html body :is(.is2,#is2-layer) .ik2-btn.sm{height:30px!important;padding:0 11px!important;font-size:12.5px!important;border-radius:8px!important}
+html body :is(.is2,#is2-layer) .ik2-btn.sm.ok{background:#fff!important;color:#1D3A8A!important;border-color:#C9D4EA!important}
+html body :is(.is2,#is2-layer) .ik2-btn.sm.ok:hover{background:#F5F8FF!important}
+html body :is(.is2,#is2-layer) .ik2-dfoot{gap:8px!important;background:#fff!important;border-top:1px solid #E8ECF3!important}
+.op2 .btn.primary,.op2 [data-o="new"].primary{background:#1D3A8A!important;border-color:#1D3A8A!important;border-radius:10px!important;box-shadow:0 1px 2px #0F172A1f!important}
+html body :is(#is2-layer,.is2) input[type=checkbox]{appearance:none!important;-webkit-appearance:none!important;flex:none!important;width:18px!important;height:18px!important;min-width:18px!important;min-height:18px!important;max-width:18px!important;max-height:18px!important;align-self:center!important;margin:0!important;padding:0!important;border:1.5px solid #C3CCDA!important;border-radius:5px!important;background:#fff!important;display:inline-grid!important;place-items:center!important;cursor:pointer;box-shadow:none!important;transform:none!important}
+html body :is(#is2-layer,.is2) input[type=checkbox]:checked{background:#1D3A8A!important;border-color:#1D3A8A!important}
+html body :is(#is2-layer,.is2) input[type=checkbox]:checked::after{content:"";width:4px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+html body :is(#is2-layer,.is2) input[type=checkbox]::before{display:none!important}
+html body #is2-layer .m2-chips .w2-label{display:inline-flex!important;align-items:center!important;gap:8px!important;height:34px!important;padding:0 14px!important;border-radius:10px!important;border:1px solid #D5DCE6!important;background:#fff!important;color:#1E293B!important;font-size:13px!important;font-weight:600!important}
+html body #is2-layer .m2-chips .w2-label:has(input:checked){border-color:#1D3A8A!important;background:#F3F6FD!important;color:#1D3A8A!important}
+html body #is2-layer .m2-crit label{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;padding:13px 18px!important;text-align:left!important;font-size:13.5px!important;font-weight:600!important;color:#1E293B!important}
+html body #is2-layer .m2-crit label:hover{background:#F8FAFC}
+html body #is2-layer .m2-crit input.w2-check{appearance:none!important;-webkit-appearance:none!important;flex:none!important;width:18px!important;height:18px!important;min-width:18px!important;margin:0!important;padding:0!important;border:1.5px solid #C3CCDA!important;border-radius:6px!important;background:#fff!important;display:grid!important;place-items:center!important;cursor:pointer;transition:background .12s,border-color .12s}
+html body #is2-layer .m2-crit input.w2-check:checked{background:#1D3A8A!important;border-color:#1D3A8A!important}
+html body #is2-layer .m2-crit input.w2-check:checked::after{content:"";width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+html body #is2-layer .m2-crit label span{flex:1!important;min-width:0;text-align:left!important;white-space:normal!important;word-break:normal!important}
+html body #is2-layer .m2-crit label.ok span{color:#64748B!important;text-decoration:none!important}
+html body #is2-layer .m2-crit label small{flex:none;font-size:11px!important;font-weight:700!important;color:#475569!important;background:#F1F5F9!important;padding:3px 9px!important;border-radius:999px!important}
+html body #is2-layer .o2-drop.over{border-color:#3158C9;background:#F5F8FF}
 html body :is(#op2-layer,.op2) input[type=checkbox]{appearance:none!important;-webkit-appearance:none!important;flex:none!important;width:18px!important;height:18px!important;min-width:18px!important;min-height:18px!important;max-width:18px!important;max-height:18px!important;align-self:center!important;margin:0!important;padding:0!important;border:1.5px solid #C3CCDA!important;border-radius:5px!important;background:#fff!important;display:inline-grid!important;place-items:center!important;cursor:pointer;box-shadow:none!important;transform:none!important}
 html body :is(#op2-layer,.op2) input[type=checkbox]:checked{background:#1D3A8A!important;border-color:#1D3A8A!important}
 html body :is(#op2-layer,.op2) input[type=checkbox]:checked::after{content:"";width:4px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
@@ -7575,5 +7657,6 @@ html body :is(.op2,#op2-layer) .ik2-btn.sm.ok:hover{background:#F5F8FF!important
 html body :is(.op2,#op2-layer) .ik2-dfoot{gap:8px!important;background:#fff!important;border-top:1px solid #E8ECF3!important}
 .op2 .btn.primary,.op2 [data-o="new"].primary{background:#1D3A8A!important;border-color:#1D3A8A!important;border-radius:10px!important;box-shadow:0 1px 2px #0F172A1f!important}
 </style>
+<script id="is2-drop">document.addEventListener("dragover",e=>{const z=e.target.closest?.("#is2-layer .o2-drop");if(z){e.preventDefault();z.classList.add("over");}});document.addEventListener("dragleave",e=>{e.target.closest?.("#is2-layer .o2-drop")?.classList.remove("over");});document.addEventListener("drop",e=>{const z=e.target.closest?.("#is2-layer .o2-drop");if(!z)return;e.preventDefault();const i=z.querySelector("[data-wfile]");if(i&&e.dataTransfer.files.length){i.files=e.dataTransfer.files;i.dispatchEvent(new Event("change",{bubbles:true}));}});</script>
 </body>
 </html>
