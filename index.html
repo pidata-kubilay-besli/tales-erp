@@ -8403,25 +8403,29 @@ save();
 
 <style id="nf-wrap">html body .nf-pop,html body .nf-list{overflow-x:hidden!important}html body .nf-card{min-width:0!important;overflow:hidden}html body .nf-card b,html body .nf-card p{white-space:normal!important;overflow:hidden!important;text-overflow:ellipsis;display:-webkit-box!important;-webkit-box-orient:vertical;-webkit-line-clamp:2;word-break:break-word;overflow-wrap:anywhere}html body .nf-row{grid-template-columns:36px 16px minmax(0,1fr)!important}</style>
 <style id="mob-form">
-html body .c2-form{background:#F4F6FA!important}
-html body .c2-form .c2-fs{background:none!important;border:0!important;padding:0!important;margin:0 0 6px!important;display:flex;flex-direction:column}
-html body .c2-form .c2-fs h3{margin:12px 0 12px 8px!important;font-size:12px!important;font-weight:800!important;letter-spacing:.08em!important;color:#94A3B8!important}
-html body .c2-form .c2-f{display:flex!important;align-items:center;gap:14px;padding:13px 0 13px 16px!important;background:#fff;border-bottom:0!important;box-shadow:0 1.5px 0 #F4F6FA}
-html body .c2-form .c2-fs>.c2-f:nth-child(2){border-radius:16px 16px 0 0}
-html body .c2-form .c2-fs>.c2-f:last-child{border-radius:0 0 16px 16px;box-shadow:none}
-html body .c2-form .c2-fs>.c2-f:nth-child(2):last-child{border-radius:16px}
-html body .c2-form .c2-f .fi{padding:4px;color:#3158C9;display:grid;place-items:center;flex:none}
-html body .c2-form .c2-f .fb{flex:1;min-width:0}
-html body .c2-form .c2-f small{margin:0 0 3px!important;text-transform:none!important;letter-spacing:0!important;font-size:12.5px!important;font-weight:500!important;color:#8A93A6!important}
-html body .c2-form .c2-f input,html body .c2-form .c2-f select,html body .c2-form .c2-f textarea{font-size:15.5px!important;font-weight:600!important;color:#0F172A!important;padding:0!important;-webkit-appearance:none;appearance:none;cursor:pointer}
-html body .c2-form .c2-f textarea{cursor:text;font-weight:500!important}
-html body .c2-form .c2-f input::placeholder,html body .c2-form .c2-f textarea::placeholder{color:#CBD2DC;font-weight:500}
-html body .c2-form .c2-f .fc{width:48px;color:#CBD2DC;flex:none}
-html body .c2-form .c2-ffoot{padding:10px 24px 14px!important;border-top:1px solid #F4F6FA!important}
-html body .c2-form .c2-ffoot .ik2-btn:not(.primary){display:none!important}
-html body .c2-form .c2-ffoot .ik2-btn.primary{height:52px!important;border-radius:20px!important;background:#3158C9!important;border-color:#3158C9!important;text-transform:uppercase;letter-spacing:.06em;font-size:14px!important}
+html body #c2-layer .c2-shade[data-c2="fclose"],html body #c2-layer .c2-shade[data-cy="fclose"]{z-index:4}
+html body #c2-layer .c2-form{left:50%!important;right:auto!important;top:50%!important;bottom:auto!important;transform:translate(-50%,-50%);width:min(900px,calc(100% - 32px))!important;height:min(780px,calc(100% - 40px));border-radius:20px;border:1px solid #E9EDF3;background:#F6F7FB!important;box-shadow:0 30px 80px #0F172A40!important;overflow:hidden;z-index:5!important}
+html body #c2-layer .c2-form .c2-bar{padding:16px 18px!important;background:#fff}
+html body #c2-layer .c2-form .c2-bar h2{font-size:18px!important;font-weight:800!important}
+html body #c2-layer .c2-form .c2-bar h2::before{content:"";display:inline-block;width:0}
+html body #c2-layer .c2-form .c2-body{background:#F4F6FA;padding:20px 18px!important}
+html body #c2-layer .c2-form .c2-fs{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px!important;background:none!important;border:0!important;padding:0!important;margin:0 0 18px!important}
+html body #c2-layer .c2-form .c2-fs h3{grid-column:1/-1;margin:0 0 4px!important;font-size:13.5px!important;font-weight:800!important;letter-spacing:.06em!important;color:#14243C!important;text-transform:uppercase}
+html body #c2-layer .c2-form .c2-f{display:grid!important;grid-template-columns:30px minmax(0,1fr) 22px;align-items:center;gap:0 10px!important;padding:10px 14px!important;background:#fff!important;border:1px solid #E4E9F0!important;border-radius:12px!important;box-shadow:none!important;min-height:59px;box-sizing:border-box}
+html body #c2-layer .c2-form .c2-f:focus-within{border-color:#3158C9!important;box-shadow:0 0 0 3px #3158C91f!important}
+html body #c2-layer .c2-form .c2-f:has(textarea){grid-column:1/-1;align-items:start}
+html body #c2-layer .c2-form .c2-f .fi{width:30px;height:30px;padding:0!important;border-radius:9px;background:#EEF3FF;color:#3158C9;display:grid;place-items:center}
+html body #c2-layer .c2-form .c2-f .fi svg{width:17px;height:17px}
+html body #c2-layer .c2-form .c2-f small{margin:0 0 2px!important;font-size:11px!important;font-weight:700!important;color:#64748B!important;text-transform:none!important;letter-spacing:0!important}
+html body #c2-layer .c2-form .c2-f input,html body #c2-layer .c2-form .c2-f select,html body #c2-layer .c2-form .c2-f textarea{font-size:13.5px!important;font-weight:700!important;color:#0F1B2E!important;padding:0!important;height:auto;min-height:22px;-webkit-appearance:none;appearance:none;background:none!important}
+html body #c2-layer .c2-form .c2-f textarea{font-weight:500!important;min-height:60px}
+html body #c2-layer .c2-form .c2-f .fc{width:22px!important;height:22px;color:#B8C2D1}
+html body #c2-layer .c2-form .c2-ffoot{display:flex!important;justify-content:space-between;padding:11px 16px!important;background:#fff!important;border-top:1px solid #E9EDF3!important}
+html body #c2-layer .c2-form .c2-ffoot .ik2-btn{flex:none!important;height:40px!important;border-radius:10px!important;font-size:13.5px!important;text-transform:none!important;letter-spacing:0!important;padding:0 18px!important}
+html body #c2-layer .c2-form .c2-ffoot .ik2-btn:not(.primary){display:inline-flex!important;background:none!important;border-color:transparent!important;color:#3158C9!important}
+html body #c2-layer .c2-form .c2-ffoot .ik2-btn.primary{background:#4361EE!important;border-color:#4361EE!important;min-width:120px}
 html body .c2-drawer .c2-fab{position:absolute!important;right:24px!important;bottom:24px!important;float:none!important;margin:0!important;z-index:1!important}
-html body .c2-form{z-index:5!important;width:min(860px,100%)!important}
+@media (max-width:720px){html body #c2-layer .c2-form{width:100%!important;height:100%!important;border-radius:0}html body #c2-layer .c2-form .c2-fs{grid-template-columns:1fr}}
 </style>
 </body>
 </html>
