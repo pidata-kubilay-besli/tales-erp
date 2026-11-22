@@ -7455,7 +7455,7 @@ function panel(){
   return '<div class="nf-top"><div><h2>Bildirimler</h2><small>'+(u?u+" okunmamış bildirim":"Hepsini okudun")+'</small></div>'+(u?'<button class="nf-allread" data-nf="allread">Tümünü okundu say</button>':"")+'<button class="nf-x" data-nf="close" aria-label="Kapat">✕</button></div>'+
     '<div class="nf-toggle"><div class="nf-toggle-in"><button class="'+(N.tab==="unread"?"on":"")+'" data-nf="tab" data-v="unread">Okunmamış<em>'+u+'</em></button><button class="'+(N.tab==="read"?"on":"")+'" data-nf="tab" data-v="read">Okunmuş<em>'+r+'</em></button></div></div>'+
     '<div class="nf-list">'+(html||'<div class="nf-empty"><b style="color:#14243C">'+(N.tab==="unread"?"Okunmamış bildirim yok":"Okunmuş bildirim yok")+'</b>'+(N.tab==="unread"?"Tüm bildirimleri okudun.":"")+'</div>')+'</div>'+
-    (list.length&&N.sel.size?'<div class="nf-bar"><span>'+N.sel.size+' seçildi</span><button data-nf="all">'+(allSel?"Seçimi kaldır":"Tümünü seç")+'</button><button data-nf="bread" '+(N.tab==="unread"?"":"disabled")+'>Okundu yap</button><button class="red" data-nf="bdel">Sil</button></div>':"");
+    (list.length?'<div class="nf-bar2"><div><button data-nf="all" class="'+(allSel?"on":"")+'">'+(allSel?'<svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="3" width="18" height="18" rx="4" fill="currentColor"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>':'<svg viewBox="0 0 24 24" width="22" height="22"><rect x="4" y="4" width="16" height="16" rx="3.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>')+'<span>Tümünü seç</span></button><i></i><button '+(N.sel.size?'data-nf="bread"':'data-nfwarn="1"')+'><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 9l9 6 9-6"/></svg><span>Okundu</span></button><i></i><button class="red" '+(N.sel.size?'data-nf="bdel"':'data-nfwarn="1"')+'><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg><span>Sil</span></button></div></div>':"");
 }
 function el(){let p=document.getElementById("nf-pop");if(!p){p=document.createElement("div");p.id="nf-pop";p.className="nf-pop";p.setAttribute("role","dialog");p.setAttribute("aria-label","Bildirimler");document.body.appendChild(p);}return p;}
 function bell(){return [...document.querySelectorAll(".top-bell")].find(a=>/Bildirim/.test(a.getAttribute("title")||""));}
@@ -7934,6 +7934,19 @@ if(typeof render==="function"&&location.hash.includes("view=insights"))render();
 .c2-ft small{display:block;font-size:11px;color:#94A3B8}.c2-ft strong{display:block;font-size:13.5px;color:#334155}
 .c2-empty{padding:40px 10px;text-align:center;color:#94A3B8;font-size:13.5px}
 @media (max-width:720px){.c2-head h1{font-size:22px}.c2-fab{right:16px;bottom:16px}.c2-stats{gap:8px}.c2-pcard b{font-size:19px}}
+.c2-toggle.wrap{overflow-x:auto;scrollbar-width:none}.c2-toggle.wrap button{flex:1 0 auto;padding:0 12px;white-space:nowrap}
+.c2-form{position:absolute;right:0;top:0;bottom:0;width:min(560px,100%);background:#F3F5F9;display:flex;flex-direction:column;box-shadow:-20px 0 50px #0F172A30;z-index:2;animation:c2in .18s ease-out}
+.c2-fs{background:#fff;border:1px solid #E8ECF3;border-radius:19px;padding:6px 16px 14px;margin:0 0 12px}
+.c2-fs h3{margin:10px 0 6px;font-size:13px;font-weight:800;color:#475569;text-transform:uppercase;letter-spacing:.05em}
+.c2-f{display:block;padding:10px 0;border-bottom:1px solid #F1F3F7}.c2-f:last-child{border-bottom:0}
+.c2-f small{display:block;font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.c2-f input,.c2-f select,.c2-f textarea{width:100%;box-sizing:border-box;border:0;outline:0;background:none;font:inherit;font-size:14.5px;font-weight:600;color:#0F172A;padding:2px 0}
+.c2-f textarea{resize:vertical;font-weight:500}
+.c2-ffoot{display:flex;gap:8px;padding:12px 16px;background:#fff;border-top:1px solid #E8ECF3}.c2-ffoot .ik2-btn{flex:1;justify-content:center}
+.c2-cform{display:grid;gap:8px;margin-top:6px}.c2-cform textarea{min-height:70px;border:1px solid #E4E9F1;border-radius:12px;padding:10px 12px;font:inherit;font-size:13.5px;background:#fff}
+.c2-cform .ik2-btn{justify-self:end}
+.c2-body .c2-fab{position:sticky;float:right;bottom:8px;right:0;margin-top:-56px;z-index:1}
+button.c2-rc{cursor:pointer}
 </style>
 <script id="crm2-script">
 (()=>{
@@ -7962,7 +7975,63 @@ function seed(){
 }
 let S;try{S=JSON.parse(localStorage.getItem(KEY)||"null");}catch{S=null;}if(!S||S.v!==1)S=seed();
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch{}};
-const V={sec:"customers",mine:false,q:"",stats:false,open:null,tab:"detail",other:""};
+const PSTATE=[["Planlandı","#3158C9"],["Gerçekleşti","#1B9C6B"],["Ertelendi","#D97706"],["İptal","#D23F4A"]];
+function extra(){
+  if(S.plans&&S.projects&&S.segments)return;
+  S.plans=Array.from({length:14},(_,k)=>{const c=S.customers[(k*3)%S.customers.length],d=shift(T,[-6,-3,-1,0,0,1,2,3,5,7,9,12,-9,-12][k]);return {id:"P"+k,cust:c.id,date:d,time:String(9+k%8).padStart(2,"0")+":"+["00","30"][k%2],type:["Ziyaret","Online görüşme","Toplantı","Telefon görüşmesi"][k%4],title:["Yıllık değerlendirme","Yeni modül sunumu","Teknik keşif","Sözleşme yenileme","Eğitim planlama"][k%5],who:team[k%team.length],state:d<T?PSTATE[(k%3)===0?2:1][0]:PSTATE[0][0],note:"Gündem: mevcut kullanım, ihtiyaçlar ve sonraki adımlar."};});
+  S.projects=Array.from({length:8},(_,k)=>{const c=S.customers[(k*2)%S.customers.length];return {id:"B"+k,code:"PRJ-"+String(501+k),name:["Merkez ofis yenileme","Fabrika genişletme","Lojistik deposu","Şube açılışı","Ar-Ge binası","Showroom","Sosyal tesis","Veri merkezi"][k],cust:c.id,city:c.city,locus:["A Blok","B Blok · 2. kat","Depo 3","Zemin kat","Kampüs","Cadde mağaza","Ek bina","Sunucu odası"][k],stage:["Keşif","Teklif","Sözleşme","Uygulama","Teslim"][k%5],start:shift(T,-90+k*11),end:shift(T,60+k*20),owner:team[k%team.length],area:(800+k*350)+" m²",budget:(1.2+k*0.65).toFixed(2).replace(".",",")+" Mn ₺",
+    comments:[{who:team[(k+1)%team.length],text:"Saha ölçüleri alındı, çizimler güncellendi.",date:shift(T,-5)},{who:team[(k+2)%team.length],text:"Müşteri malzeme onayını iletti.",date:shift(T,-2)}],
+    files:[{name:"Vaziyet_plani.pdf",size:"1,4 MB"},{name:"Kesif_raporu.docx",size:"220 KB"},{name:"Saha_foto_"+(k+1)+".jpg",size:"860 KB"}],
+    contracts:S.contracts.slice(k%5,k%5+2),history:["Proje oluşturuldu","Keşif tamamlandı","Teklif gönderildi","Aşama güncellendi"].map((w,j)=>({what:w,who:team[(k+j)%team.length],date:shift(T,-80+j*15)})).reverse()};});
+  S.segments=[["Kurumsal","Yıllık cirosu 100 Mn ₺ üstü firmalar"],["KOBİ","Küçük ve orta ölçekli işletmeler"],["Kamu","Belediye ve kamu kurumları"],["Bayi","Çözüm ortakları ve bayiler"],["Segmentsiz","Henüz sınıflandırılmamış"]].map(([n,d])=>({name:n,desc:d,count:S.customers.filter(c=>(c.seg||"Segmentsiz")===n).length}));
+  save();
+}
+const P=id=>S.projects.find(p=>p.id===id);
+function chipC(t,col){return '<span class="c2-lv" style="--c:'+col+'">'+esc(t)+'</span>';}
+function secPlan(){
+  const up=V.planTab!=="past",L=S.plans.filter(p=>up?p.date>=T:p.date<T).sort((a,b)=>(up?1:-1)*(a.date+a.time).localeCompare(b.date+b.time));
+  const days=[...new Set(L.map(x=>x.date))];
+  return '<div class="c2-toggle">'+[["up","Planlanan","calendar"],["past","Geçmiş","clock"]].map(([k,l,i])=>'<button class="'+((k==="past")===!up?"on":"")+'" data-c2="ptab" data-v="'+k+'">'+ic(i,17)+l+'</button>').join("")+'</div>'+
+    (days.map(d=>{const g=L.filter(x=>x.date===d);return '<div class="c2-day">'+(d===T?"Bugün":dt(d))+'</div>'+g.map((x,k)=>{const c=C(x.cust),st=PSTATE.find(s=>s[0]===x.state);return '<div class="c2-tl'+(k===0?" first":"")+(k===g.length-1?" last":"")+'"><time>'+x.time+'</time><span class="dot" style="border-color:'+st[1]+'"></span><button class="c2-mc" data-c2="open" data-v="'+c.id+'"><div><span class="m">'+ic("calendar",14)+esc(x.type)+'<span style="margin-left:auto">'+chipC(x.state,st[1])+'</span></span><b>'+esc(x.title)+'</b><span class="p">'+ic("building",14)+esc(c.name)+'</span><span class="p">'+ic("user",14)+esc(x.who)+'</span></div>'+ic("right",22)+'</button></div>';}).join("");}).join("")||'<p class="c2-empty">Kayıt yok</p>')+
+    '<button class="c2-fab" data-c2="form" data-v="plan" title="Plan ekle">'+ic("plus",24)+'</button>';
+}
+function secProjects(){return S.projects.map(p=>'<button class="c2-rc" data-c2="proj" data-v="'+p.id+'"><span class="o">'+esc(p.code)+'</span><div class="h"><div><b>'+esc(p.name)+'</b><span class="c2-ln"><i>'+ic("building",13)+'</i>'+esc(C(p.cust).name)+'</span><span class="c2-ln"><i>'+ic("flag",13)+'</i>Aşama: '+esc(p.stage)+'</span></div>'+ic("right",22)+'</div><div class="c2-ft"><div><span>'+ic("calendar",15)+'</span><div><small>Başlangıç</small><strong>'+dt(p.start)+'</strong></div></div><i></i><div><span>'+ic("check",15)+'</span><div><small>Bitiş</small><strong>'+dt(p.end)+'</strong></div></div></div></button>').join("");}
+function secSegments(){return S.segments.map(s=>'<button class="c2-rc" data-c2="segpick" data-v="'+esc(s.name)+'"><div class="h"><div><b>'+esc(s.name)+'</b><span class="c2-ln"><i>'+ic("note",13)+'</i>'+esc(s.desc)+'</span><span class="c2-ln"><i>'+ic("people",13)+'</i>'+s.count+' müşteri</span></div>'+ic("right",22)+'</div></button>').join("");}
+function projDrawer(){
+  const p=P(V.proj);if(!p)return "";const c=C(p.cust),t=V.ptab2||"detail";
+  const tabs=[["detail","Detay","grid",0],["comment","Yorum","chat",p.comments.length],["files","Ekler","image",p.files.length],["other","Diğer","layers",0]];
+  const row=(l,v)=>'<div class="c2-row"><div><small>'+l+'</small><b>'+v+'</b></div></div>';
+  let body;
+  if(t==="comment")body=p.comments.map(x=>rcard("",esc(x.who),[["chat",esc(x.text)],["calendar",dt(x.date)]])).join("")+'<form class="c2-cform" data-c2form="pcomment"><textarea name="t" required placeholder="Yorum yaz…"></textarea><button class="ik2-btn primary">Gönder</button></form>';
+  else if(t==="files")body=p.files.map(f=>rcard("",esc(f.name),[["file",esc(f.size)]])).join("");
+  else if(t==="other"){const back='<button class="c2-back" data-c2="pother" data-v="">'+ic("left",16)+'Diğer</button>';
+    if(V.pother==="contract")body=back+p.contracts.map(k=>rcard(esc(k.no),esc(k.name),[],["Başlangıç",dt(k.start),"Bitiş",dt(k.end)])).join("");
+    else if(V.pother==="history")body=back+p.history.map(h=>rcard("",esc(h.what),[["user",esc(h.who)],["calendar",dt(h.date)]])).join("");
+    else body='<div class="c2-tiles"><button class="c2-tile" style="--t:#3B5BDB" data-c2="pother" data-v="contract"><span>'+ic("file",24)+'</span><b>Sözleşme<em>'+p.contracts.length+'</em></b></button><button class="c2-tile" style="--t:#1B9C6B" data-c2="pother" data-v="history"><span>'+ic("clock",24)+'</span><b>Geçmiş</b></button></div>';}
+  else body='<div class="c2-hero"><div><span class="t">'+ic("building",20)+'</span><span><b>'+esc(p.name)+'</b><small>'+esc(p.code)+'</small></span><span class="chip">'+esc(p.stage)+'</span></div><footer>'+ic("user",17)+'Sorumlu: '+esc(p.owner)+'</footer></div>'+
+    '<section class="c2-sec"><header><span style="--a:#3158C9">'+ic("layers",19)+'</span><div><b>Proje bilgileri</b><small>Müşteri, mahal ve tarihler</small></div></header>'+row("Müşteri",esc(c.name))+row("Şehir",esc(p.city))+row("Mahal",esc(p.locus))+row("Alan",esc(p.area))+row("Bütçe",esc(p.budget))+row("Başlangıç",dt(p.start))+row("Bitiş",dt(p.end))+'</section>';
+  return '<div class="c2-shade" data-c2="pclose"></div><aside class="c2-drawer" role="dialog" aria-modal="true"><div class="c2-bar"><h2>'+esc(p.name)+'</h2><button class="c2-x" data-c2="pclose">'+ic("close",18)+'</button></div><div class="c2-body">'+body+'</div><nav class="c2-tabs">'+tabs.map(([k,l,i,n])=>'<button class="'+(t===k?"on":"")+'" data-c2="ptab2" data-v="'+k+'">'+ic(i,21)+l+(n?'<em>'+n+'</em>':"")+'</button>').join("")+'</nav></aside>';
+}
+function formLayer(){
+  const kind=V.form,c=V.open?C(V.open):null,ttl={meet:"Görüşme kaydı",conf:"Toplantı kaydı",visit:"Ziyaret kaydı",plan:"Görüşme planı"}[kind];
+  const sel=(n,l,opts,v)=>'<label class="c2-f"><small>'+l+'</small><select name="'+n+'">'+opts.map(o=>'<option'+(o===v?" selected":"")+'>'+esc(o)+'</option>').join("")+'</select></label>';
+  const inp=(n,l,t,v,ph)=>'<label class="c2-f"><small>'+l+'</small><input name="'+n+'" type="'+(t||"text")+'" value="'+esc(v||"")+'" placeholder="'+esc(ph||"")+'"'+(n==="title"?" required":"")+'></label>';
+  return '<div class="c2-shade" data-c2="fclose"></div><form class="c2-form" data-c2form="'+kind+'"><div class="c2-bar"><h2>'+ttl+'</h2><button type="button" class="c2-x" data-c2="fclose">'+ic("close",18)+'</button></div><div class="c2-body">'+
+    '<section class="c2-fs"><h3>Görüşme bilgileri</h3>'+sel("cust","Cari",S.customers.map(x=>x.name),c?.name)+sel("type","Tür",kind==="visit"?["Ziyaret"]:kind==="conf"?TTYPES:MTYPES)+inp("title","Konu","text","","Örn. Yıllık bakım sözleşmesi")+sel("reason","Sebep",["Satış","Destek","Tahsilat","Bilgilendirme","Şikayet"])+sel("person","Kişi",PEOPLE)+sel("process","Süreç",["Satış öncesi","Teklif","Sözleşme","Satış sonrası"])+sel("project","Proje",["—"].concat(S.projects.map(p=>p.name)))+'</section>'+
+    '<section class="c2-fs"><h3>Tarih ve sonuç</h3>'+inp("date","Başlangıç tarihi","date",T)+inp("time","Saat","time","10:00")+(kind==="plan"?"":sel("level","Seviye",LEVELS.map(l=>l[0]))+sel("result","Sonuç",["Olumlu sonuçlandı","Takip edilecek","Teklif istendi","Olumsuz"])+inp("next","Sonraki görüşme","date",shift(T,14)))+'</section>'+
+    '<section class="c2-fs"><h3>Açıklama</h3><label class="c2-f"><small>Açıklama</small><textarea name="note" rows="3" placeholder="Görüşme notları"></textarea></label><label class="c2-f"><small>Konum</small><input name="place" value="'+esc(c?c.city+" · Merkez ofis":"")+'"></label></section>'+
+    '</div><footer class="c2-ffoot"><button type="button" class="ik2-btn" data-c2="fclose">Vazgeç</button><button class="ik2-btn primary">'+ic("check",15)+'Kaydet</button></footer></form>';
+}
+document.addEventListener("submit",ev=>{const f=ev.target;const k=f.dataset?.c2form;if(!k)return;ev.preventDefault();const v=Object.fromEntries(new FormData(f));
+  if(k==="pcomment"){P(V.proj).comments.push({who:ME,text:v.t,date:T});}
+  else{const c=S.customers.find(x=>x.name===v.cust);const rec={id:"n"+Date.now(),date:v.date,time:v.time,type:v.type,title:v.title,person:v.person,who:ME,level:v.level||"Nötr",place:v.place||c.city};
+    if(k==="plan")S.plans.push({id:"P"+Date.now(),cust:c.id,date:v.date,time:v.time,type:v.type,title:v.title,who:ME,state:"Planlandı",note:v.note});
+    else{(k==="meet"?c.meet:k==="conf"?c.conf:c.visit).push(rec);c.stats[k==="meet"?"meet":k==="conf"?"conf":"visit"]++;c.history.unshift({what:({meet:"Görüşme",conf:"Toplantı",visit:"Ziyaret"})[k]+" eklendi: "+v.title,who:ME,date:T});}
+    V.form=null;showSnackbar("Kayıt eklendi.");}
+  save();refresh();});
+
+extra();
+const V={form:null,proj:null,ptab2:"detail",pother:"",planTab:"up",sec:"customers",mine:false,q:"",stats:false,open:null,tab:"detail",other:""};
 const C=id=>S.customers.find(c=>c.id===id);
 const dt=d=>dateText(d);
 const letter=n=>{let c=String(n||"").trim();if(c.includes("-"))c=c.split("-").pop().trim();return c&&!/^[0-9]/.test(c)?c[0].toLocaleUpperCase("tr"):"";};
@@ -7974,9 +8043,10 @@ function stats(list){const n=list.length,nw=list.filter((c,i)=>i%5===0).length,a
   return '<div class="c2-stats">'+p(n,"TOPLAM","grid","#6366F1","#4338CA")+p(nw,"YENİ","chart","#10B981","#059669")+p("%"+act,"AKTİF","flag","#F59E0B","#D97706")+'</div>';}
 function rcard(o,t,lines,foot){return '<div class="c2-rc">'+(o?'<span class="o">'+o+'</span>':"")+'<div class="h"><div><b>'+t+'</b>'+lines.map(([i,x])=>'<span class="c2-ln"><i>'+ic(i,13)+'</i>'+x+'</span>').join("")+'</div>'+ic("right",22)+'</div>'+(foot?'<div class="c2-ft"><div><span>'+ic("calendar",15)+'</span><div><small>'+foot[0]+'</small><strong>'+foot[1]+'</strong></div></div><i></i><div><span>'+ic("check",15)+'</span><div><small>'+foot[2]+'</small><strong>'+foot[3]+'</strong></div></div></div>':"")+'</div>';}
 function page(){
-  const tabs='<div class="c2-toggle">'+[["customers","Müşteriler","people"],["contracts","Sözleşmeler","file"]].map(([k,l,i])=>'<button class="'+(V.sec===k?"on":"")+'" data-c2="sec" data-v="'+k+'">'+ic(i,17)+l+'</button>').join("")+'</div>';
+  const tabs='<div class="c2-toggle wrap">'+[["customers","Müşteriler","people"],["plan","Görüşme planı","calendar"],["projects","Projeler","building"],["segments","Segmentler","tag"],["contracts","Sözleşmeler","file"]].map(([k,l,i])=>'<button class="'+(V.sec===k?"on":"")+'" data-c2="sec" data-v="'+k+'">'+ic(i,17)+l+'</button>').join("")+'</div>';
+  const TT={plan:"Görüşme planı",projects:"Projeler",segments:"Segmentler"};if(TT[V.sec])return '<div class="c2"><div class="c2-head"><h1>'+TT[V.sec]+'</h1></div>'+tabs+'<div class="c2-list">'+(V.sec==="plan"?secPlan():V.sec==="projects"?secProjects():secSegments())+'</div></div>';
   if(V.sec==="contracts")return '<div class="c2"><div class="c2-head"><h1>Sözleşmeler</h1></div>'+tabs+'<div class="c2-list">'+S.contracts.map(k=>rcard(esc(k.no),esc(k.name),[],["Başlangıç",dt(k.start),"Bitiş",dt(k.end)])).join("")+'</div></div>';
-  const q=V.q.toLocaleLowerCase("tr"),list=S.customers.filter(c=>(!V.mine||c.mine)&&(!q||(c.name+" "+c.code+" "+c.sor).toLocaleLowerCase("tr").includes(q)));
+  const q=V.q.toLocaleLowerCase("tr"),list=S.customers.filter(c=>(!V.mine||c.mine)&&(!q||(c.name+" "+c.code+" "+c.sor+" "+c.seg).toLocaleLowerCase("tr").includes(q)));
   return '<div class="c2"><div class="c2-head"><h1>Müşteri Kayıtları</h1><button class="c2-ibtn" data-c2="stats" title="Müşteri özeti">'+ic("chart",19)+'</button></div>'+tabs+
     (V.stats?stats(list):"")+
     '<div class="c2-toggle">'+[[false,"Tüm Müşteriler","people"],[true,"Müşterilerim","user"]].map(([m,l,i])=>'<button class="'+(V.mine===m?"on":"")+'" data-c2="mine" data-v="'+(m?1:"")+'">'+ic(i,17)+l+'</button>').join("")+'</div>'+
@@ -8009,19 +8079,20 @@ function other(c){
 function drawer(){
   const c=C(V.open);if(!c)return "";
   const tabs=[["detail","Detay","grid",0],["conf","Görüşme","chat",c.meet.length],["meet","Toplantı","people",c.conf.length],["visit","Ziyaret","pin",c.visit.length],["other","Diğer","layers",0]];
-  const body=V.tab==="conf"?timeline(c.meet,"phone"):V.tab==="meet"?timeline(c.conf,"people"):V.tab==="visit"?timeline(c.visit,"pin"):V.tab==="other"?other(c):detail(c);
+  const fab=["conf","meet","visit"].includes(V.tab)?'<button class="c2-fab" data-c2="form" data-v="'+({conf:"meet",meet:"conf",visit:"visit"})[V.tab]+'" title="Kayıt ekle">'+ic("plus",24)+'</button>':"";
+  const body=(V.tab==="conf"?timeline(c.meet,"phone"):V.tab==="meet"?timeline(c.conf,"people"):V.tab==="visit"?timeline(c.visit,"pin"):V.tab==="other"?other(c):detail(c))+fab;
   return '<div class="c2-shade" data-c2="close"></div><aside class="c2-drawer" role="dialog" aria-modal="true" aria-label="'+esc(c.name)+'"><div class="c2-bar"><h2>'+(V.tab==="other"?esc(c.code):esc(c.name))+'</h2><button class="c2-x" data-c2="close" aria-label="Kapat">'+ic("close",18)+'</button></div><div class="c2-body">'+body+'</div>'+
     '<nav class="c2-tabs">'+tabs.map(([k,l,i,n])=>'<button class="'+(V.tab===k?"on":"")+'" data-c2="tab" data-v="'+k+'">'+ic(i,21)+l+(n?'<em>'+n+'</em>':"")+'</button>').join("")+'</nav></aside>';
 }
 function layer(){let l=document.getElementById("c2-layer");if(!l){l=document.createElement("div");l.id="c2-layer";document.body.appendChild(l);}return l;}
-function paint(){const l=layer();if(V.open){l.className="open";l.innerHTML=drawer();}else{l.className="";l.innerHTML="";}}
+function paint(){const l=layer();const h=(V.proj?projDrawer():V.open?drawer():"")+(V.form?formLayer():"");if(h){l.className="open";l.innerHTML=h;}else{l.className="";l.innerHTML="";}}
 function refresh(){if(route!=="crm2")return;const y=window.scrollY,f=document.activeElement?.id==="c2-q",pos=f?document.activeElement.selectionStart:0;screen.innerHTML=page();window.scrollTo(0,y);if(f){const i=document.getElementById("c2-q");i.focus();i.setSelectionRange(pos,pos);}paint();}
 document.addEventListener("click",ev=>{const el=ev.target.closest("[data-c2]");if(!el)return;const a=el.dataset.c2,v=el.dataset.v||"";
-  if(a==="sec"){V.sec=v;}else if(a==="mine"){V.mine=!!v;}else if(a==="stats"){V.stats=!V.stats;}else if(a==="open"){V.open=v;V.tab="detail";V.other="";}else if(a==="close"){V.open=null;}else if(a==="tab"){V.tab=v;V.other="";}else if(a==="other"){V.other=v;}
+  if(a==="sec"){V.sec=v;}else if(a==="mine"){V.mine=!!v;}else if(a==="stats"){V.stats=!V.stats;}else if(a==="open"){V.open=v;V.tab="detail";V.other="";}else if(a==="close"){V.open=null;}else if(a==="tab"){V.tab=v;V.other="";}else if(a==="other"){V.other=v;}else if(a==="form"){V.form=v;}else if(a==="fclose"){V.form=null;}else if(a==="proj"){V.proj=v;V.ptab2="detail";V.pother="";}else if(a==="pclose"){V.proj=null;}else if(a==="ptab2"){V.ptab2=v;V.pother="";}else if(a==="pother"){V.pother=v;}else if(a==="ptab"){V.planTab=v;}else if(a==="segpick"){V.sec="customers";V.q=v==="Segmentsiz"?"":v;}
   else if(a==="filter"){V.mine=!V.mine;showSnackbar(V.mine?"Müşterilerim gösteriliyor":"Tüm müşteriler gösteriliyor");}else if(a==="map"){showSnackbar("Yol tarifi haritada açılıyor");return;}else return;
   ev.preventDefault();refresh();});
 document.addEventListener("input",ev=>{if(ev.target.id==="c2-q"){V.q=ev.target.value;refresh();}});
-document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&V.open){V.open=null;paint();}});
+document.addEventListener("keydown",ev=>{if(ev.key==="Escape"){if(V.form)V.form=null;else if(V.proj)V.proj=null;else V.open=null;paint();}});
 routes.add("crm2");routeNames.crm2="CRM";
 const tic=groups.find(g=>g[0]==="Ticari Operasyon");if(tic&&!tic[1].some(x=>x[0]==="crm2")){const i=tic[1].findIndex(x=>x[0]==="crm");tic[1].splice(i<0?0:i+1,0,["crm2","CRM (mobil)","crm"]);}
 const _render=render;
@@ -8065,5 +8136,20 @@ fillAllAccounts();
 })();
 if(location.hash.startsWith("#accounts"))render();
 </script>
+<style id="nf-bar2">
+.nf-bar2{display:flex;justify-content:center;padding:6px 12px 12px;background:transparent}
+.nf-bar2>div{display:flex;align-items:center;padding:4px 8px;background:#fff;border:1px solid #E4E9F1;border-radius:40px;box-shadow:0 10px 28px #0F1F3D24}
+.nf-bar2 button{min-width:72px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;border:0;border-radius:24px;background:none;font:inherit;font-size:11.5px;font-weight:700;color:#334155;cursor:pointer}
+.nf-bar2 button:hover{background:#F5F7FA}
+.nf-bar2 button.on{color:#3158C9}
+.nf-bar2 button.red{color:#D23F4A}
+.nf-bar2 i{width:1px;height:22px;background:#E3E8F0}
+</style>
+<script id="nf-bar2-js">document.addEventListener("click",e=>{if(e.target.closest?.("[data-nfwarn]")){e.preventDefault();showSnackbar("Lütfen bildirim seçin.");}});</script>
+<style id="task-status-plain">
+html body #screen[data-module="tasks"] tbody td:nth-child(2) .pill{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;height:auto!important;color:#334155!important;font-size:13px!important;font-weight:600!important;gap:7px!important}
+html body #screen[data-module="tasks"] tbody td:nth-child(2) .pill i{width:7px!important;height:7px!important;border-radius:50%!important;background:#94A3B8!important}
+</style>
+<style id="c2-btn">html body #c2-layer .ik2-btn{height:42px!important;border-radius:12px!important;border:1px solid #D5DCE6!important;background:#fff!important;color:#1E293B!important;font-weight:700!important;box-shadow:none!important;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:0 16px;font:inherit;cursor:pointer}html body #c2-layer .ik2-btn.primary{background:#1D3A8A!important;border-color:#1D3A8A!important;color:#fff!important}</style>
 </body>
 </html>
