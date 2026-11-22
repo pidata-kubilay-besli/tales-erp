@@ -8563,5 +8563,38 @@ document.addEventListener("dragleave",ev=>{const z=ev.target.closest?.(".ek-drop
 document.addEventListener("drop",ev=>{const z=ev.target.closest?.(".ek-drop");if(z){ev.preventDefault();z.classList.remove("over");take(ev.dataTransfer.files);}});})();
 </script>
 <style id="mp-scroll">html body .mp-body{overflow-y:auto!important;min-height:0!important}html body .mp-body>*{flex:none!important}</style>
+<style id="row-btns">
+html body .rb3{display:inline-flex;align-items:center;gap:4px;margin-left:auto}
+html body .rb3 .rb{width:32px;height:32px;border-radius:9px;border:1px solid #E4E9F0;background:#fff;color:#475569;display:grid;place-items:center;cursor:pointer;transition:background .12s,color .12s,border-color .12s}
+html body .rb3 .rb:hover{background:#EEF3FF;color:#3158C9;border-color:#C9D6F5}
+html body .rb3 .rb.del:hover{background:#FEF2F2;color:#D23F4A;border-color:#F6CACA}
+html body #screen td.row-actions{white-space:nowrap;text-align:right}
+html body #screen td.row-actions>.btn{display:none!important}
+html body .queue-row .rb3{margin:0 0 0 auto}html body .queue-row:has(.rb3)>svg:last-child{display:none}
+html body .rb-menu{position:fixed;z-index:120;min-width:200px;padding:6px;background:#fff;border:1px solid #E3E8F0;border-radius:12px;box-shadow:0 14px 34px #0F1F3D29;animation:rbIn .12s ease-out}
+@keyframes rbIn{from{opacity:0;transform:translateY(-4px)}}
+html body .rb-menu button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border:0;border-radius:8px;background:none;font:inherit;font-size:13.5px;font-weight:600;color:#1E293B;text-align:left;cursor:pointer}
+html body .rb-menu button svg{color:#64748B}
+html body .rb-menu button:hover{background:#F3F6FB}html body .rb-menu button:hover svg{color:#3158C9}
+html body .rb-menu hr{border:0;border-top:1px solid #EEF1F6;margin:4px 2px}
+</style>
+<script id="row-btns-js">
+(()=>{const ic=(n)=>svg(n,16);
+const make=(mod,id)=>'<span class="rb3"><span class="rb" role="button" tabindex="0" title="Görüntüle" data-rb="open" data-v="'+mod+'|'+id+'">'+ic("external")+'</span><span class="rb" role="button" tabindex="0" title="Düzenle" data-rb="edit" data-v="'+mod+'|'+id+'">'+ic("edit")+'</span><span class="rb" role="button" tabindex="0" title="Diğer işlemler" data-rb="more" data-v="'+mod+'|'+id+'"><svg viewBox="0 0 24 24" width="16" height="16"><circle cx="5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="19" cy="12" r="1.8" fill="currentColor"/></svg></span></span>';
+function decorate(){if(!["projects","workflows"].includes(route))return;
+  document.querySelectorAll('#screen td.row-actions').forEach(td=>{if(td.querySelector(".rb3"))return;const b=td.querySelector('[data-action="edit"]');if(!b)return;const [m,id]=b.dataset.value.split("|");td.insertAdjacentHTML("beforeend",make(m,id));});
+  document.querySelectorAll('#screen .queue-row').forEach(r=>{if(r.querySelector(".rb3"))return;const v=r.dataset.value||"";if(!v.includes("|"))return;const [m,id]=v.split("|");const last=r.lastElementChild;last&&last.insertAdjacentHTML("beforebegin",make(m,id));});}
+const _r=render;render=function(){const out=_r.apply(this,arguments);try{decorate();}catch(e){}return out;};
+new MutationObserver(()=>{try{decorate();}catch(e){}}).observe(document.getElementById("screen"),{childList:true,subtree:true});
+let menu=null;const closeMenu=()=>{menu?.remove();menu=null;};
+const openMenu=(el)=>{closeMenu();const v=el.dataset.v,isW=v.startsWith("workflows");const items=[["comments","Yorumlar","chat"],["files","Ekler","image"],[isW?"work":"activities",isW?"İş listesi":"Aktiviteler","list"],["other","Diğer","layers"]];
+  menu=document.createElement("div");menu.className="rb-menu";menu.innerHTML=items.map(([k,l,i])=>'<button data-rbm="'+k+'" data-v="'+v+'">'+svg(i,16)+l+'</button>').join("")+'<hr><button data-rbm="copy" data-v="'+v+'">'+svg("file",16)+'Kodu kopyala</button>';
+  document.body.appendChild(menu);const r=el.getBoundingClientRect();menu.style.top=Math.min(innerHeight-menu.offsetHeight-8,r.bottom+6)+"px";menu.style.left=Math.max(8,r.right-menu.offsetWidth)+"px";};
+const go=(el)=>{const a=el.dataset.rb,v=el.dataset.v;if(a==="more"){menu&&menu.dataset.for===v?closeMenu():(openMenu(el),menu.dataset.for=v);return;}if(a==="edit"){const t=document.createElement("button");t.dataset.action="edit";t.dataset.value=v;t.hidden=true;document.body.appendChild(t);t.click();t.remove();return;}
+  recordTab=a==="comments"?"comments":"info";const t=document.createElement("button");t.dataset.action="open";t.dataset.value=v;t.hidden=true;document.body.appendChild(t);t.click();t.remove();if(a==="comments"){recordTab="comments";render();}};
+document.addEventListener("click",ev=>{const m=ev.target.closest("[data-rbm]");if(m){ev.preventDefault();ev.stopPropagation();const k=m.dataset.rbm,v=m.dataset.v;closeMenu();if(k==="copy"){const r=rowOf(...v.split("|"));navigator.clipboard?.writeText(r?.code||"");showSnackbar("Kod kopyalandı: "+(r?.code||""));return;}const t=document.createElement("button");t.dataset.action="open";t.dataset.value=v;t.hidden=true;document.body.appendChild(t);t.click();t.remove();recordTab=k;render();return;}if(menu&&!ev.target.closest(".rb-menu,[data-rb=more]"))closeMenu();const el=ev.target.closest("[data-rb]");if(!el)return;ev.preventDefault();ev.stopPropagation();go(el);},true);
+window.addEventListener("scroll",closeMenu,true);document.addEventListener("keydown",ev=>{if(ev.key==="Escape")closeMenu();const el=ev.target.closest?.("[data-rb]");if(el&&(ev.key==="Enter"||ev.key===" ")){ev.preventDefault();ev.stopPropagation();go(el);}},true);
+decorate();})();
+</script>
 </body>
 </html>
