@@ -7862,7 +7862,7 @@ if(typeof render==="function"&&location.hash.includes("view=insights"))render();
 /* detay penceresi */
 #c2-layer{display:none}#c2-layer.open{display:block;position:fixed;inset:0;z-index:80}
 .c2-shade{position:absolute;inset:0;background:#0F172A55}
-.c2-drawer{position:absolute;right:0;top:0;bottom:0;width:min(720px,100%);background:#F4F6FA;display:flex;flex-direction:column;box-shadow:-20px 0 50px #0F172A30;animation:c2in .18s ease-out}
+.c2-drawer{position:absolute;right:0;top:0;bottom:0;width:min(860px,100%);background:#F4F6FA;display:flex;flex-direction:column;box-shadow:-20px 0 50px #0F172A30;animation:c2in .18s ease-out}
 @keyframes c2in{from{transform:translateX(30px);opacity:.6}}
 .c2-bar{display:flex;align-items:center;gap:10px;padding:14px 16px;background:#fff;border-bottom:1px solid #E8ECF3}
 .c2-bar h2{flex:1;margin:0;font-size:17px;font-weight:700;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -8208,6 +8208,28 @@ html body #screen[data-module="tasks"] tbody td:nth-child(2) .pill i{width:7px!i
 .cy-prod h4{margin:0 0 12px;font-size:15px;color:#0F172A}
 .cy-prod .k{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .cy-prod .k div{background:#F6F8FB;border-radius:12px;padding:10px}.cy-prod .k small{display:block;font-size:11px;color:#94A3B8}.cy-prod .k b{display:block;margin-top:3px;font-size:14px;color:#0F172A}
+.cy-hcs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 12px}
+.cy-hc{position:relative;height:96px;border-radius:16px;overflow:hidden;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff}
+.cy-hc i{position:absolute;right:-12px;top:-12px;width:82px;height:82px;border-radius:50%;background:#ffffff1a;display:grid;place-items:center;color:#ffffff45}
+.cy-hc small{font-size:11px;font-weight:700;letter-spacing:.8px;opacity:.75;position:relative}
+.cy-hc b{margin-top:5px;font-size:17px;font-weight:800;position:relative;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cy-pgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+.cy-pc{background:#fff;border:1px solid #EEF1F6;border-radius:18px;box-shadow:0 3px 10px #0000000a;overflow:hidden}
+.cy-pb{padding:18px 18px 16px}
+.cy-pb .t{display:flex;align-items:flex-start;gap:10px}.cy-pb .t b{flex:1;min-width:0;font-size:16px;font-weight:700;color:#0F172A;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cy-pf{padding:5px 10px;border-radius:12px;border:.8px solid #6366F1;background:#E0E7FF;color:#3730A3;font-size:12px;font-weight:700}
+.cy-pf.hi{border-color:#22C55E;background:#DCFCE7;color:#166534}.cy-pf.neg{border-color:#EF4444;background:#FEE2E2;color:#B91C1C}
+.cy-pb .ty{display:block;margin-top:5px;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#94A3B8}
+.cy-pm{display:flex;align-items:center;margin-top:16px}
+.cy-pm>div{display:flex;align-items:center;gap:10px;min-width:0}.cy-pm>i{width:1px;height:40px;background:#E5E7EB;margin:0 16px;flex:none}
+.cy-pm small{display:block;font-size:12px;color:#94A3B8;font-weight:500}.cy-pm b{display:block;margin-top:2px;font-size:14px;font-weight:700;color:#0F172A;white-space:nowrap}
+.cy-pm b.lg{font-size:16px}.cy-pm em{font-style:normal;font-size:12px;font-weight:500;color:#94A3B8}
+.cy-fin{display:flex;align-items:center;gap:10px;width:100%;padding:13px 18px;border:0;border-top:.8px solid #E5E7EB;background:#fff;font:inherit;font-size:14px;font-weight:600;color:#0F172A;cursor:pointer;text-align:left}
+.cy-fin>svg:first-child{color:#2F80ED}.cy-fin span{flex:1}.cy-fin>svg:last-child{color:#66BB6A;transition:transform .2s}
+.cy-fp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 16px 16px;padding:16px 14px;background:#F8FAFC;border:.8px solid #E5E7EB;border-radius:14px}
+.cy-fp small{display:block;margin-top:6px;font-size:11.5px;color:#94A3B8}.cy-fp b{display:block;margin-top:2px;font-size:13.5px;color:#0F172A}
+@media (max-width:820px){.cy-pgrid{grid-template-columns:1fr}}
+@media (max-width:520px){.cy-hcs{gap:8px}.cy-hc b{font-size:14px}.cy-hc{padding:12px}}
 .cy-kpi{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .cy-kpi>section{background:#fff;border:1px solid #E8ECF3;border-radius:18px;padding:18px;--vz-surface:#fff}
 .cy-kpi h3{margin:0 0 12px;font-size:15px;color:#0F172A}
@@ -8275,7 +8297,17 @@ function oppDrawer(){
   const tabs=[["detail","Detay","grid",0],["prod","Ürünler","box",o.lines.length],["act","Aktiviteler","calendar",o.acts.meet.length+o.acts.task.length+o.acts.call.length],["comment","Yorum","chat",o.comments.length],["files","Ekler","image",o.files.length],["other","Diğer","layers",0]];
   const row=(icn,l,v)=>'<div class="m2-row"><span class="m2-ri">'+ic(icn,17)+'</span><div><small>'+l+'</small><b>'+v+'</b></div></div>';
   let body;
-  if(V.tab==="prod")body=o.lines.map(l=>{const pr=PROD[l.p],tot=l.qty*pr[1],mar=Math.round((pr[1]-pr[2])/pr[1]*100);return '<div class="cy-prod"><h4>'+esc(pr[0])+'</h4><div class="k"><div><small>Miktar</small><b>'+l.qty+'</b></div><div><small>Birim fiyat</small><b>'+money(pr[1])+'</b></div><div><small>Birim maliyet</small><b>'+money(pr[2])+'</b></div><div><small>Toplam satış</small><b>'+money(tot)+'</b></div></div><div class="cy-ir" style="margin-top:10px"><i>'+ic("chart",12)+'</i>Kâr marjı %'+mar+'</div></div>';}).join("");
+  if(V.tab==="prod"){const PT=["Lisans","Lisans","Lisans","Hizmet","Destek","Donanım"],q=(V.pq||"").toLocaleLowerCase("tr");
+    const rows=o.lines.map(l=>{const pr=PROD[l.p],sale=l.qty*pr[1],cost=l.qty*pr[2];return {l,pr,sale,cost,profit:sale-cost,pct:(sale-cost)/sale*100,type:PT[l.p]};});
+    const tS=rows.reduce((n,r)=>n+r.sale,0),tP=rows.reduce((n,r)=>n+r.profit,0);
+    const hc=(lbl,val,icn,a,b)=>'<div class="cy-hc" style="background:linear-gradient(135deg,'+a+','+b+');box-shadow:0 8px 20px '+b+'2e"><i>'+ic(icn,34)+'</i><small>'+lbl+'</small><b>'+val+'</b></div>';
+    body='<div class="cy-hcs">'+hc("ÜRÜN",rows.length+" adet","box","#5671D0","#4460BA")+hc("SATIŞ",money(tS),"money","#ECAA2C","#D18F12")+(tP<0?hc("NET KÂR",money(tP),"chart","#EF5350","#D63E3B"):hc("NET KÂR",money(tP),"chart","#39A83F","#278E2D"))+'</div>'+
+      '<label class="c2-search">'+ic("search",17)+'<input id="cy-pq" value="'+esc(V.pq||"")+'" placeholder="Ürün ara"></label><div class="cy-pgrid">'+
+      rows.filter(r=>!q||r.pr[0].toLocaleLowerCase("tr").includes(q)).map((r,k)=>{const hi=r.pct>=30,neg=r.pct<0,open=V.pfin===k;
+        return '<div class="cy-pc"><div class="cy-pb"><div class="t"><b>'+esc(r.pr[0])+'</b><span class="cy-pf '+(neg?"neg":hi?"hi":"")+'">%'+r.pct.toFixed(1).replace(".",",")+'</span></div><small class="ty">'+esc(r.type.toLocaleUpperCase("tr"))+'</small>'+
+          '<div class="cy-pm"><div><span style="color:#8E24AA">'+ic("box",24)+'</span><div><small>Miktar</small><b>'+r.l.qty+' adet</b></div></div><i></i><div><span style="color:#43A047">'+ic("chart",24)+'</span><div><small>Toplam satış</small><b class="lg">'+money(r.sale)+' <em>TRY</em></b></div></div></div></div>'+
+          '<button class="cy-fin" data-cy="pfin" data-v="'+k+'">'+ic("chart",20)+'<span>Finansal detaylar</span><svg viewBox="0 0 24 24" width="20" height="20" style="transform:rotate('+(open?180:0)+'deg)"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>'+
+          (open?'<div class="cy-fp"><div><span style="color:#2F80ED">'+ic("tag",18)+'</span><small>Birim fiyat</small><b>'+money(r.pr[1])+'</b></div><div><span style="color:#3B5BDB">'+ic("file",18)+'</span><small>Birim maliyet</small><b>'+money(r.pr[2])+'</b></div><div><span style="color:'+(neg?"#D23F4A":"#1B9C6B")+'">'+ic("chart",18)+'</span><small>Kâr</small><b>'+money(r.profit)+'</b></div></div>':"")+'</div>';}).join("")+'</div>';}
   else if(V.tab==="act"){const m=SECS.find(x=>x[0]===V.actTab);body='<div class="c2-toggle">'+SECS.map(x=>'<button class="'+(V.actTab===x[0]?"on":"")+'" data-cy="acttab" data-v="'+x[0]+'">'+ic(x[3],16)+x[1]+'</button>').join("")+'</div>'+(o.acts[V.actTab].map(x=>item(x,m)).join("")||'<p class="c2-empty">Kayıt yok</p>');}
   else if(V.tab==="comment")body=o.comments.map(c=>'<div class="c2-rc"><div class="h"><div><b>'+esc(c.who)+'</b><span class="c2-ln"><i>'+ic("chat",13)+'</i>'+esc(c.text)+'</span><span class="c2-ln"><i>'+ic("calendar",13)+'</i>'+dt(c.date)+'</span></div></div></div>').join("")+'<form class="c2-cform" data-cyform="comment"><textarea name="t" required placeholder="Yorum yaz…"></textarea><button class="ik2-btn primary">Gönder</button></form>';
   else if(V.tab==="files")body=o.files.map(f=>'<div class="c2-rc"><div class="h"><div><b>'+esc(f.name)+'</b><span class="c2-ln"><i>'+ic("file",13)+'</i>'+esc(f.size)+'</span></div>'+ic("download",20)+'</div></div>').join("");
@@ -8307,9 +8339,9 @@ function paint(){const l=layer();const h=(V.open?oppDrawer():V.cust?custDrawer()
 function refresh(){if(route!=="crmy")return;const y=window.scrollY,f=document.activeElement?.id==="cy-q",pos=f?document.activeElement.selectionStart:0;screen.innerHTML=page();window.scrollTo(0,y);if(f){const i=document.getElementById("cy-q");i.focus();i.setSelectionRange(pos,pos);}paint();const s=document.querySelector(".cy-day.on");if(s&&!V._scrolled){s.scrollIntoView({inline:"center",block:"nearest"});V._scrolled=1;}}
 document.addEventListener("click",ev=>{const el=ev.target.closest("[data-cy]");if(!el)return;const a=el.dataset.cy,v=el.dataset.v||"";
   if(a==="sec"){V.sec=v;V.q="";V._scrolled=0;}else if(a==="date")V.date=v;else if(a==="opp"){V.cust=null;V.open=v;V.tab="detail";V.other="";}else if(a==="cust")V.cust=v;else if(a==="person")V.person=v;
-  else if(a==="close"){V.open=V.cust=V.person=null;}else if(a==="tab"){V.tab=v;V.other="";}else if(a==="acttab")V.actTab=v;else if(a==="other")V.other=v;else if(a==="form")V.form=v;else if(a==="fclose")V.form=null;
+  else if(a==="close"){V.open=V.cust=V.person=null;}else if(a==="tab"){V.tab=v;V.other="";}else if(a==="acttab")V.actTab=v;else if(a==="pfin")V.pfin=V.pfin===+v?null:+v;else if(a==="other")V.other=v;else if(a==="form")V.form=v;else if(a==="fclose")V.form=null;
   else if(a==="ev"){showSnackbar("Kayıt detayı açılıyor");return;}else return;ev.preventDefault();refresh();});
-document.addEventListener("input",ev=>{if(ev.target.id==="cy-q"){V.q=ev.target.value;refresh();}});
+document.addEventListener("input",ev=>{if(ev.target.id==="cy-q"){V.q=ev.target.value;refresh();}if(ev.target.id==="cy-pq"){V.pq=ev.target.value;paint();const i=document.getElementById("cy-pq");i.focus();i.setSelectionRange(i.value.length,i.value.length);}});
 document.addEventListener("submit",ev=>{const f=ev.target,k=f.dataset?.cyform;if(!k)return;ev.preventDefault();const v=Object.fromEntries(new FormData(f));
   if(k==="comment"){S.opps.find(o=>o.id===V.open).comments.push({who:ME,text:v.t,date:T});}
   else{S.events.push({id:k+Date.now(),kind:k,date:v.date,time:v.time,title:v.title,cust:v.cust,who:v.who});V.date=v.date;V.form=null;showSnackbar("Kayıt eklendi.");}
