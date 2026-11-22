@@ -5335,46 +5335,33 @@ const who=(p,sub)=>'<div class="ik2-who">'+av(p.name)+'<div><b>'+esc(p.name)+'</
 
 /* ─── Panorama ─── */
 function secHome(){
-  const act=active(),att=attendance(),inToday=att.filter(a=>["Ofiste","Geç geldi","Uzaktan","Sahada"].includes(a.state)).length;
-  const leaveToday=S.leaves.filter(l=>l.status==="Onaylandı"&&l.start<=T&&l.end>=T);
-  const pend=pendingAll(),late=att.filter(a=>a.state==="Geç geldi").length;
-  const newHires=S.people.filter(p=>p.start.slice(0,4)===T.slice(0,4)).length,leavers=S.people.filter(p=>p.status==="Pasif").length;
-  const upcoming=[];
-  for(const p of act){
-    const b=T.slice(0,4)+p.birth.slice(4);let n=dd(T,b);if(n<0)n=dd(T,(Number(T.slice(0,4))+1)+p.birth.slice(4));
-    if(n<=30)upcoming.push({n,p,kind:"Doğum günü",icon:"award",text:(yearsBetween(p.birth)+1)+". yaş"});
-    const a=T.slice(0,4)+p.start.slice(4);let m=dd(T,a);if(m<0)m=dd(T,(Number(T.slice(0,4))+1)+p.start.slice(4));
-    const yrs=yearsBetween(p.start)+(m>0?1:0);if(m<=30&&yrs>0)upcoming.push({n:m,p,kind:"İş yıldönümü",icon:"flag",text:yrs+". yıl"});
-  }
-  upcoming.sort((a,b)=>a.n-b.n);
+  const act=active(),att=attendance(),work=!(isWe(T)||isHol(T));
+  const inToday=att.filter(a=>["Ofiste","Geç geldi","Uzaktan","Sahada"].includes(a.state)).length;
+  const pend=pendingAll();
   const crit=[];
   for(const p of act){
-    if(p.probationEnd){const n=dd(T,p.probationEnd);if(n>=-5&&n<=45)crit.push({n,p,t:"Deneme süresi bitiyor",d:p.probationEnd,tone:"#7C3AED"});}
-    if(p.contractEnd){const n=dd(T,p.contractEnd);if(n<=60)crit.push({n,p,t:"Belirli süreli sözleşme bitiyor",d:p.contractEnd,tone:"#D23F4A"});}
-    for(const doc of p.docs)if(doc.exp){const n=dd(T,doc.exp);if(n<=30)crit.push({n,p,t:doc.name+(n<0?" süresi geçti":" süresi doluyor"),d:doc.exp,tone:n<0?"#D23F4A":"#C77712"});}
+    if(p.probationEnd){const n=dd(T,p.probationEnd);if(n>=-5&&n<=30)crit.push({n,p,t:"Deneme süresi bitiyor",tab:"general"});}
+    if(p.contractEnd){const n=dd(T,p.contractEnd);if(n<=45)crit.push({n,p,t:"Belirli süreli sözleşme bitiyor",tab:"career"});}
+    for(const d of p.docs)if(d.exp){const n=dd(T,d.exp);if(n<=14)crit.push({n,p,t:d.name+(n<0?" süresi geçti":" süresi doluyor"),tab:"docs"});}
   }
   crit.sort((a,b)=>a.n-b.n);
-  const byUnit=UNITS.map(u=>[u,act.filter(p=>p.unit===u[0]).length]),maxU=Math.max(...byUnit.map(x=>x[1]),1);
-  const fem=act.filter(p=>p.gender==="Kadın").length,deg=fem/act.length*360;
-  const ages=[["18–29",0,29],["30–39",30,39],["40–49",40,49],["50+",50,99]].map(([l,a,b])=>[l,act.filter(p=>{const y=yearsBetween(p.birth);return y>=a&&y<=b;}).length]);
-  const months=["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"].map((m,i)=>{const key=T.slice(0,4)+"-"+String(i+1).padStart(2,"0");return [m,S.leaves.filter(l=>l.status==="Onaylandı"&&l.start.slice(0,7)===key).reduce((n,l)=>n+Math.min(l.days,20),0)];});
-  const maxM=Math.max(...months.map(m=>m[1]),1);
-  return '<div class="ik2-kpis">'+
-    kpi("Aktif personel",act.length,newHires+" yeni giriş bu yıl","people","#4F46E5")+
-    kpi("Bugün işte",inToday+" / "+act.length,isWe(T)||isHol(T)?"Bugün çalışma günü değil":"%"+Math.round(inToday/act.length*100)+" katılım","clock","#12936A")+
-    kpi("Bugün izinli",leaveToday.length,leaveToday.length?leaveToday.map(l=>pname(l.person).split(" ")[0]).join(", "):"Kimse izinde değil","calendar","#0EA5E9")+
-    kpi("Bekleyen onay",pend.length,"İzin, mesai, avans, masraf","check","#C77712")+
-    kpi("Geç kalan",late,"Bugün tolerans sonrası","alert","#D23F4A")+
-    kpi("Personel devir hızı","%"+(leavers/(S.people.length)*100).toFixed(1),leavers+" ayrılış · yıllık","flow","#7C3AED")+'</div>'+
-  '<div class="ik2-cols">'+
-    '<section class="ik2-panel c4"><header><h2>Onay bekleyenler</h2><a href="#ik2?s=approvals">Tümü</a></header><div class="ik2-rows">'+(pend.slice(0,6).map(([k,x])=>approvalLine(k,x,true)).join("")||'<p class="ik2-empty">Bekleyen onay yok 🎉</p>')+'</div></section>'+
-    '<section class="ik2-panel c4"><header><h2>Yaklaşan kutlamalar</h2><small>30 gün</small></header><div class="ik2-rows">'+(upcoming.slice(0,7).map(u=>'<div class="ik2-row">'+who(u.p,u.kind+" · "+u.text)+'<div class="end">'+chip(u.n===0?"Bugün":u.n===1?"Yarın":u.n+" gün",u.kind==="Doğum günü"?"#DB2777":"#4F46E5")+'</div></div>').join("")||'<p class="ik2-empty">Yakın tarihte kutlama yok</p>')+'</div></section>'+
-    '<section class="ik2-panel c4"><header><h2>Kritik tarihler</h2><small>Deneme, sözleşme, belge</small></header><div class="ik2-rows">'+(crit.slice(0,7).map(c=>'<div class="ik2-row" data-ik="person" data-v="'+c.p.id+'" style="cursor:pointer">'+who(c.p,c.t)+'<div class="end">'+chip(c.n<0?Math.abs(c.n)+" gün geçti":c.n===0?"Bugün":c.n+" gün",c.tone)+'</div></div>').join("")||'<p class="ik2-empty">Yaklaşan kritik tarih yok</p>')+'</div></section>'+
-    '<section class="ik2-panel c5"><header><h2>Birimlere göre kadro</h2><small>'+act.length+' kişi</small></header><div class="ik2-bars">'+byUnit.map(([u,n])=>'<div class="ik2-bar"><span>'+esc(u[1])+'</span><div class="ik2-meter" style="--t:'+u[2]+'"><i style="width:'+(n/maxU*100)+'%"></i></div><b>'+n+'</b></div>').join("")+'</div></section>'+
-    '<section class="ik2-panel c4"><header><h2>Cinsiyet ve yaş</h2></header><div class="ik2-donutwrap"><div class="ik2-donut" style="background:conic-gradient(#DB2777 0 '+deg+'deg,#4F46E5 '+deg+'deg 360deg)"></div><div class="ik2-legend"><div><i style="background:#DB2777"></i>Kadın<b>'+fem+'</b></div><div><i style="background:#4F46E5"></i>Erkek<b>'+(act.length-fem)+'</b></div>'+ages.map(([l,n])=>'<div><i style="background:#CBD5E1"></i>'+l+' yaş<b>'+n+'</b></div>').join("")+'</div></div></section>'+
-    '<section class="ik2-panel c3" style="grid-column:span 3"><header><h2>Bugün izinde</h2></header><div class="ik2-rows">'+(leaveToday.map(l=>'<div class="ik2-row" data-ik="leave" data-v="'+l.id+'" style="cursor:pointer">'+who(P(l.person),lt(l.type).name+" · dönüş "+dshort(l.ret))+'</div>').join("")||'<p class="ik2-empty">Bugün izinli personel yok</p>')+'</div></section>'+
-    '<section class="ik2-panel c12"><header><h2>Aylık izin kullanımı</h2><small>'+T.slice(0,4)+' · onaylanan izin günleri</small></header><div class="ik2-cols-chart">'+months.map(([m,n])=>'<div><b>'+(n||"")+'</b><i style="height:'+Math.max(4,n/maxM*100)+'%"></i><small>'+m+'</small></div>').join("")+'</div></section>'+
-  '</div>';
+  const onLv=S.leaves.filter(l=>l.status==="Onaylandı"&&l.start<=T&&l.end>=T);
+  const cel=[];
+  for(const p of act){let b=T.slice(0,4)+p.birth.slice(4),n=dd(T,b);if(n<0)n=dd(T,(Number(T.slice(0,4))+1)+p.birth.slice(4));if(n<=7)cel.push({n,p,t:"Doğum günü"});let s=T.slice(0,4)+p.start.slice(4),m=dd(T,s);if(m<0)m=dd(T,(Number(T.slice(0,4))+1)+p.start.slice(4));const y=yearsBetween(p.start)+(m>0?1:0);if(m<=7&&y>0)cel.push({n:m,p,t:y+". iş yılı"});}
+  cel.sort((a,b)=>a.n-b.n);
+  const h=new Date().getHours(),hi=h<12?"Günaydın":h<18?"İyi günler":"İyi akşamlar";
+  const tag=(icon,tone)=>'<span class="dash-tag" style="--t:'+tone+'">'+ic(icon,15)+'</span>';
+  const when=n=>n<0?Math.abs(n)+" gün geçti":n===0?"Bugün":n===1?"Yarın":n+" gün kaldı";
+  const rows=pend.slice(0,6).map(([k,x])=>approvalLine(k,x,false)).join("")+
+    crit.slice(0,5).map(c=>'<div class="ik2-row">'+tag("file",c.n<0?"#D23F4A":"#C77712")+'<div class="ik2-who" style="flex:1"><div><b>'+esc(c.p.name)+' · '+esc(c.t)+'</b><small>'+when(c.n)+' · '+esc(dlong(c.n<0?shift(T,c.n):shift(T,c.n)))+'</small></div></div><div class="end"><button class="ik2-btn sm" data-ik="person" data-v="'+c.p.id+'" data-tab="'+c.tab+'">Dosyayı aç</button></div></div>').join("");
+  const team=[["Ofiste","#12936A"],["Uzaktan","#7C3AED"],["Sahada","#0D9488"],["Geç geldi","#C77712"],["Gelmedi","#D23F4A"],["İzinli","#0EA5E9"]].map(([s,t])=>[s,t,att.filter(a=>a.state===s).length]).filter(x=>x[2]);
+  const total=act.length||1;
+  return '<section class="dash-hello"><div><h2>'+hi+', Deniz</h2><p>'+(pend.length||crit.length?'Bugün <b>'+pend.length+' onay</b> ve <b>'+crit.length+' kritik tarih</b> seni bekliyor.':'Bugün senden bekleyen bir iş yok.')+'</p></div><span>'+esc(new Intl.DateTimeFormat("tr-TR",{weekday:"long",day:"numeric",month:"long"}).format(new Date()))+'</span></section>'+
+    '<div class="ik2-kpis">'+kpi("Aktif personel",act.length,S.people.filter(p=>p.status==="Deneme süresinde").length+" deneme süresinde","people","#4F46E5")+kpi("Bugün işte",work?inToday+" / "+act.length:"—",work?"%"+Math.round(inToday/total*100)+" katılım":"Çalışma günü değil","clock","#12936A")+kpi("Bekleyen onay",pend.length,"İzin, mesai, avans, zimmet","check","#C77712")+kpi("Bugün izinli",onLv.length,onLv.length?onLv.map(l=>pname(l.person).split(" ")[0]).join(", "):"Herkes görevde","calendar","#0EA5E9")+'</div>'+
+    '<div class="dash-grid"><section class="ik2-panel"><header><h2>Senin aksiyonun gerekenler</h2><small>'+(pend.length+crit.length)+' kalem · önce onaylar</small></header><div class="ik2-rows">'+(rows||'<p class="ik2-empty">Bekleyen onay veya kritik tarih yok.</p>')+'</div>'+(pend.length>6?'<a class="ik2-link" href="#ik2?s=approvals" style="display:inline-block;margin-top:10px">Tüm onaylar ('+pend.length+') →</a>':"")+'</section>'+
+    '<aside class="dash-side"><section class="ik2-panel"><header><h2>Ekip bugün</h2><a href="#ik2?s=attendance">PDKS</a></header>'+(work?'<div class="dash-bar">'+team.map(([s,t,n])=>'<i style="width:'+(n/total*100)+'%;background:'+t+'" title="'+s+' '+n+'"></i>').join("")+'</div>'+team.map(([s,t,n])=>'<div class="dash-stat" style="--t:'+t+'"><i></i>'+s+'<b>'+n+'</b></div>').join(""):'<p class="ik2-empty" style="padding:8px 0">Bugün çalışma günü değil.</p>')+
+      (onLv.length?'<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">'+onLv.map(l=>'<span title="'+esc(pname(l.person)+" · "+lt(l.type).name+" · dönüş "+dshort(l.ret))+'" data-ik="leave" data-v="'+l.id+'" style="cursor:pointer">'+av(pname(l.person),"sm")+'</span>').join("")+'</div>':"")+'</section>'+
+      '<section class="ik2-panel"><header><h2>Bu hafta kutlamalar</h2></header>'+(cel.slice(0,4).map(c=>'<div class="dash-stat" style="--t:'+(c.t==="Doğum günü"?"#DB2777":"#4F46E5")+'">'+av(c.p.name,"sm")+'<span><b style="margin:0;font-weight:650">'+esc(c.p.name)+'</b><small style="display:block;color:#9AA3B2;font-size:12px">'+esc(c.t)+'</small></span><b>'+(c.n===0?"Bugün":c.n===1?"Yarın":c.n+" gün")+'</b></div>').join("")||'<p class="ik2-empty" style="padding:8px 0">Bu hafta kutlama yok.</p>')+'</section></aside></div>';
 }
 
 /* ─── Personeller ─── */
@@ -5966,24 +5953,21 @@ function filters(withGroup){
 
 /* ─── Özet ─── */
 function secOverview(){
-  const open=S.tasks.filter(isOpen),late=S.tasks.filter(isLate),today=open.filter(t=>t.due===T);
+  const open=S.tasks.filter(isOpen),late=open.filter(isLate),today=open.filter(t=>t.due===T);
   const weekDone=S.tasks.filter(t=>t.done&&dd(t.done,T)<=7&&dd(t.done,T)>=0).length;
-  const doneT=S.tasks.filter(t=>t.done),cycle=doneT.length?(doneT.reduce((n,t)=>n+Math.max(1,dd(t.start,t.done)),0)/doneT.length).toFixed(1):"—";
-  const slaOk=doneT.filter(t=>dd(t.created.slice(0,10),t.done)<=prOf(t.prio).sla*2).length,sla=doneT.length?Math.round(slaOk/doneT.length*100):100;
-  const byStatus=STATUSES.map(s=>[s,S.tasks.filter(t=>t.status===s.id).length]);let acc=0;const tot=S.tasks.length;
-  const cone=byStatus.map(([s,n])=>{const a=acc;acc+=n/tot*360;return s.color+" "+a+"deg "+acc+"deg";}).join(",");
-  const load=MEMBERS.map(m=>[m,open.filter(t=>t.owner===m).length,open.filter(t=>t.owner===m&&isLate(t)).length]).sort((a,b)=>b[1]-a[1]),maxL=Math.max(...load.map(x=>x[1]),1);
-  const urgent=t=>["crit","high"].includes(t.prio),soon=t=>dd(T,t.due)<=3;
-  const mx=[["Hemen yap","Acil ve önemli","#D23F4A",open.filter(t=>urgent(t)&&soon(t))],["Planla","Önemli, acil değil","#4F46E5",open.filter(t=>urgent(t)&&!soon(t))],["Devret","Acil, önemli değil","#D97706",open.filter(t=>!urgent(t)&&soon(t))],["Sonraya bırak","Acil de önemli de değil","#64748B",open.filter(t=>!urgent(t)&&!soon(t))]];
-  const feed=[...S.activity.map(a=>({...a})),...S.tasks.flatMap(t=>t.history.map(h=>({...h,task:t.id})))].sort((a,b)=>b.at.localeCompare(a.at)).slice(0,9);
-  return '<div class="ik2-kpis">'+kpi("Açık iş",open.length,S.tasks.length+" işin","#4F46E5")+kpi("Bugün teslim",today.length,today.length?today.map(t=>t.code).join(", "):"Bugün teslim yok","#D97706")+kpi("Geciken",late.length,"Teslim tarihi geçmiş","#D23F4A")+kpi("Bu hafta tamamlanan",weekDone,"Son 7 gün","#12936A")+kpi("Ort. çözüm süresi",cycle+" gün","Başlangıçtan bitişe","#0EA5E9")+kpi("SLA uyumu","%"+sla,"Önceliğe göre hedef süre","#7C3AED")+'</div>'+
-  '<div class="ik2-cols">'+
-    '<section class="ik2-panel c5"><header><h2>Geciken ve bugün teslim</h2><a href="#is2?s=list">Liste</a></header><div class="ik2-rows">'+([...late,...today].slice(0,8).map(t=>'<div class="ik2-row" data-w="open" data-v="'+t.id+'" style="cursor:pointer">'+av(t.owner,"sm")+'<div class="ik2-who" style="flex:1"><div><b>'+esc(t.title)+'</b><small>'+esc(t.code+" · "+prj(t.project).name+" · "+t.owner)+'</small></div></div><div class="end">'+dueChip(t)+'</div></div>').join("")||'<p class="ik2-empty">Geciken iş yok</p>')+'</div></section>'+
-    '<section class="ik2-panel c4"><header><h2>Öncelik matrisi</h2><small>Açık işler</small></header><div class="w2-matrix">'+mx.map(([a,b,c,l])=>'<div style="--t:'+c+'"><small>'+a+'</small><b>'+l.length+'</b><span>'+b+'</span></div>').join("")+'</div></section>'+
-    '<section class="ik2-panel c3" style="grid-column:span 3"><header><h2>Durum dağılımı</h2></header><div class="ik2-donutwrap" style="flex-direction:column;align-items:stretch"><div class="ik2-donut" style="margin:0 auto;background:conic-gradient('+cone+')"></div><div class="ik2-legend">'+byStatus.map(([s,n])=>'<div><i style="background:'+s.color+'"></i>'+s.name+'<b>'+n+'</b></div>').join("")+'</div></div></section>'+
-    '<section class="ik2-panel c6"><header><h2>Kişi bazında açık iş</h2><a href="#is2?s=load">İş yükü</a></header><div class="ik2-bars">'+load.map(([m,n,l])=>'<div class="ik2-bar" style="grid-template-columns:150px 1fr 70px"><span>'+esc(m)+'</span><div class="ik2-meter" style="--t:'+(n>6?"#D23F4A":"#4F46E5")+'"><i style="width:'+(n/maxL*100)+'%"></i></div><b>'+n+(l?' <small style="color:#D23F4A">('+l+' gecikmiş)</small>':"")+'</b></div>').join("")+'</div></section>'+
-    '<section class="ik2-panel c6"><header><h2>Son hareketler</h2></header><div class="w2-feed">'+feed.map(f=>{const t=W(f.task);return '<div>'+av(f.who,"sm")+'<span><b>'+esc(f.who)+'</b> '+esc(f.what)+(t?' · <button class="ik2-link" data-w="open" data-v="'+t.id+'">'+esc(t.code)+'</button>':"")+'</span><small>'+ago(f.at)+'</small></div>';}).join("")+'</div></section>'+
-  '</div>';
+  const soonHigh=open.filter(t=>t.due>T&&dd(T,t.due)<=3&&["crit","high"].includes(t.prio));
+  const focus=[...late,...today,...soonHigh].filter((t,i,a)=>a.indexOf(t)===i);
+  const h=new Date().getHours(),hi=h<12?"Günaydın":h<18?"İyi günler":"İyi akşamlar";
+  const mine=open.filter(t=>t.owner===ME);
+  const tag=t=>'<span class="dash-tag" style="--t:'+prOf(t.prio).color+'">'+ic(tyOf(t.type).icon,15)+'</span>';
+  const rows=focus.slice(0,9).map(t=>'<div class="ik2-row" data-w="open" data-v="'+t.id+'" style="cursor:pointer">'+tag(t)+'<div class="ik2-who" style="flex:1"><div><b>'+esc(t.title)+'</b><small>'+esc(t.code+" · "+prj(t.project).name+" · "+t.owner)+'</small></div></div><div class="end">'+dueChip(t)+'<button class="ik2-btn sm ok" data-w="complete" data-v="'+t.id+'" title="Tamamlandı">'+ic("check",13)+'</button></div></div>').join("");
+  const load=MEMBERS.map(m=>[m,open.filter(t=>t.owner===m).length,open.filter(t=>t.owner===m&&isLate(t)).length]).sort((a,b)=>b[1]-a[1]).slice(0,6),maxL=Math.max(...load.map(x=>x[1]),1);
+  const byStatus=STATUSES.filter(s=>s.id!=="done").map(s=>[s,open.filter(t=>t.status===s.id).length]).filter(x=>x[1]),tot=open.length||1;
+  return '<section class="dash-hello"><div><h2>'+hi+', Deniz</h2><p>'+(late.length||today.length?'Ekipte <b>'+late.length+' geciken</b> ve bugün teslim edilecek <b>'+today.length+' iş</b> var. Sana atanan açık iş: <b>'+mine.length+'</b>.':'Geciken veya bugün teslim edilecek iş yok.')+'</p></div><span>'+esc(new Intl.DateTimeFormat("tr-TR",{weekday:"long",day:"numeric",month:"long"}).format(new Date()))+'</span></section>'+
+    '<div class="ik2-kpis">'+kpi("Açık iş",open.length,S.tasks.length+" işin","#4F46E5")+kpi("Geciken",late.length,"Teslim tarihi geçmiş","#D23F4A")+kpi("Bugün teslim",today.length,"Bugün bitmesi gereken","#D97706")+kpi("Bu hafta tamamlanan",weekDone,"Son 7 gün","#12936A")+'</div>'+
+    '<div class="dash-grid"><section class="ik2-panel"><header><h2>Odak listesi</h2><small>Gecikenler, bugünküler ve 3 gün içindeki yüksek öncelikliler</small></header><div class="ik2-rows">'+(rows||'<p class="ik2-empty">Acil iş yok.</p>')+'</div>'+(focus.length>9?'<a class="ik2-link" href="#is2?s=list" style="display:inline-block;margin-top:10px">Tümünü listede gör ('+focus.length+') →</a>':"")+'</section>'+
+    '<aside class="dash-side"><section class="ik2-panel"><header><h2>Açık işlerin durumu</h2><small>'+open.length+' iş</small></header><div class="dash-bar">'+byStatus.map(([s,n])=>'<i style="width:'+(n/tot*100)+'%;background:'+s.color+'" title="'+s.name+' '+n+'"></i>').join("")+'</div>'+byStatus.map(([s,n])=>'<div class="dash-stat" style="--t:'+s.color+'"><i></i>'+s.name+'<b>'+n+'</b></div>').join("")+'</section>'+
+    '<section class="ik2-panel"><header><h2>Ekip yükü</h2><a href="#is2?s=load">Ayrıntı</a></header>'+load.map(([m,n,l])=>'<div class="dash-stat" style="--t:'+(l?"#D23F4A":"#4F46E5")+'">'+av(m,"sm")+'<span style="flex:1;min-width:0"><b style="margin:0;font-weight:650;font-size:13px">'+esc(m)+'</b><span class="ik2-meter" style="display:block;margin-top:5px;--t:'+(n>6?"#D23F4A":"#6366F1")+'"><i style="width:'+(n/maxL*100)+'%"></i></span></span><b>'+n+(l?'<small style="color:#D23F4A;font-weight:600"> · '+l+' geç</small>':"")+'</b></div>').join("")+'</section></aside></div>';
 }
 
 /* ─── Pano ─── */
@@ -6398,24 +6382,23 @@ const stageChip=o=>chip(stg(o.stage).name,stg(o.stage).color);
 function secOverview(){
   const open=S.opps.filter(isOpenO),won=S.opps.filter(o=>o.stage==="won"),lost=S.opps.filter(o=>o.stage==="lost");
   const pipe=open.reduce((n,o)=>n+amountOf(o),0),wsum=open.reduce((n,o)=>n+weighted(o),0),wonSum=won.reduce((n,o)=>n+amountOf(o),0);
-  const rate=won.length+lost.length?Math.round(won.length/(won.length+lost.length)*100):0,avg=won.length?wonSum/won.length:0;
-  const cycle=won.length?Math.round(won.reduce((n,o)=>n+dd(o.created,o.close),0)/won.length):0;
-  const quota=REPS.reduce((n,r)=>n+r.quota,0)/4,att=Math.round(wonSum/quota*100);
-  const maxStage=Math.max(...OPEN_IDS.map(id=>S.opps.filter(o=>o.stage===id).reduce((n,o)=>n+amountOf(o),0)),1);
-  const attention=open.filter(o=>rotting(o)||o.close<T||!nextAct(o)).slice(0,7);
-  const top=open.slice().sort((a,b)=>amountOf(b)-amountOf(a)).slice(0,6);
-  const months=Array.from({length:6},(_,i)=>{const d=new Date(asDate(T));d.setDate(1);d.setMonth(d.getMonth()+i);const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");const os=open.filter(o=>o.close.slice(0,7)===k);return [new Intl.DateTimeFormat("tr-TR",{month:"short"}).format(d),os.reduce((n,o)=>n+weighted(o),0),os.reduce((n,o)=>n+amountOf(o),0)];});
-  const maxM=Math.max(...months.map(m=>m[2]),1);
-  const feed=[...S.activity,...S.opps.flatMap(o=>o.history.map(h=>({...h,opp:o.id})))].sort((a,b)=>b.at.localeCompare(a.at)).slice(0,8);
-  return '<div class="ik2-kpis">'+kpi("Açık huni",TLs(pipe),open.length+" fırsat","#4F46E5")+kpi("Ağırlıklı tahmin",TLs(wsum),"Aşama olasılığına göre","#7C3AED")+kpi("Kazanılan",TLs(wonSum),won.length+" fırsat","#12936A")+kpi("Kazanma oranı","%"+rate,lost.length+" kayıp","#D97706")+kpi("Ortalama anlaşma",TLs(avg),"Kazanılanlarda","#0EA5E9")+kpi("Satış döngüsü",cycle+" gün","Açılıştan kazanıma","#64748B")+'</div>'+
-  '<div class="ik2-cols">'+
-   '<section class="ik2-panel c7"><header><h2>Satış hunisi</h2><small>Açık fırsat tutarı · aşamaya göre</small></header><div class="o2-funnel">'+OPEN_IDS.map(id=>{const s=stg(id),os=S.opps.filter(o=>o.stage===id),sum=os.reduce((n,o)=>n+amountOf(o),0);return '<div><span>'+s.name+' <small style="color:#94A3B8">%'+s.prob+'</small></span><i style="--t:'+s.color+';width:'+Math.max(8,sum/maxStage*100)+'%">'+os.length+'</i><b>'+TLs(sum)+'</b></div>';}).join("")+'</div></section>'+
-   '<section class="ik2-panel c5"><header><h2>Çeyrek kotası</h2><small>Kazanılan / ekip kotası</small></header><div style="display:flex;align-items:center;gap:18px"><div class="ik2-donut" style="background:conic-gradient(#12936A 0 '+Math.min(100,att)*3.6+'deg,#E4E7EE 0)"></div><div><b style="font-size:30px">%'+att+'</b><p style="margin:4px 0;color:#6B7489;font-size:13px">'+TLs(wonSum)+' / '+TLs(quota)+'</p><p style="margin:0;color:#6B7489;font-size:13px">Ağırlıklı tahminle birlikte %'+Math.round((wonSum+wsum)/quota*100)+'</p></div></div></section>'+
-   '<section class="ik2-panel c6"><header><h2>Dikkat isteyen fırsatlar</h2><small>Bekleyen, tarihi geçen, planı olmayan</small></header><div class="ik2-rows">'+(attention.map(o=>'<div class="ik2-row" data-o="open" data-v="'+o.id+'" style="cursor:pointer">'+av(o.owner,"sm")+'<div class="ik2-who" style="flex:1"><div><b>'+esc(o.name)+'</b><small>'+esc(acc(o.account).name+" · "+TLs(amountOf(o)))+'</small></div></div><div class="end">'+(rotting(o)?'<span class="o2-rot">'+dd(o.lastAct,T)+' gündür temas yok</span>':o.close<T?chip("Kapanış tarihi geçti","#D23F4A"):chip("Sonraki adım yok","#D97706"))+'</div></div>').join("")||'<p class="ik2-empty">Her şey yolunda</p>')+'</div></section>'+
-   '<section class="ik2-panel c6"><header><h2>En büyük açık fırsatlar</h2></header><div class="ik2-rows">'+top.map(o=>'<div class="ik2-row" data-o="open" data-v="'+o.id+'" style="cursor:pointer"><div class="ik2-who" style="flex:1"><div><b>'+esc(o.name)+'</b><small>'+esc(acc(o.account).name)+' · kapanış '+dshort(o.close)+'</small></div></div><div class="end">'+stageChip(o)+'<b>'+TLs(amountOf(o))+'</b></div></div>').join("")+'</div></section>'+
-   '<section class="ik2-panel c7"><header><h2>Aylara göre kapanış beklentisi</h2><small>Gri: toplam · mor: ağırlıklı</small></header><div class="ik2-cols-chart" style="height:160px">'+months.map(([m,w,t])=>'<div><b>'+TLs(w)+'</b><span style="display:flex;gap:3px;align-items:flex-end;height:100%;width:100%;justify-content:center"><i style="height:'+Math.max(3,t/maxM*100)+'%;background:#CBD5E1;max-width:16px"></i><i style="height:'+Math.max(3,w/maxM*100)+'%;max-width:16px"></i></span><small>'+m+'</small></div>').join("")+'</div></section>'+
-   '<section class="ik2-panel c5"><header><h2>Son hareketler</h2></header><div class="w2-feed">'+feed.map(f=>{const o=O(f.opp);return '<div>'+av(f.who,"sm")+'<span><b>'+esc(f.who)+'</b> '+esc(f.what)+(o?' · <button class="ik2-link" data-o="open" data-v="'+o.id+'">'+esc(o.code)+'</button>':"")+'</span><small>'+ago(f.at)+'</small></div>';}).join("")+'</div></section>'+
-  '</div>';
+  const rate=won.length+lost.length?Math.round(won.length/(won.length+lost.length)*100):0;
+  const quota=REPS.reduce((n,r)=>n+r.quota,0)/4,att=Math.round(wonSum/quota*100),att2=Math.round((wonSum+wsum)/quota*100);
+  const qa=S.opps.flatMap(o=>o.quotes.filter(q=>q.status==="Onay bekliyor").map(q=>({o,q})));
+  const acts=S.opps.filter(isOpenO).flatMap(o=>o.acts.filter(a=>!a.done&&a.date<=T).map(a=>({o,a}))).sort((x,y)=>x.a.date.localeCompare(y.a.date));
+  const rot=open.filter(rotting).sort((a,b)=>amountOf(b)-amountOf(a));
+  const h=new Date().getHours(),hi=h<12?"Günaydın":h<18?"İyi günler":"İyi akşamlar";
+  const tag=(icon,tone)=>'<span class="dash-tag" style="--t:'+tone+'">'+ic(icon,15)+'</span>';
+  const rows=qa.map(({o,q})=>'<div class="ik2-row">'+tag("file","#D97706")+'<div class="ik2-who" style="flex:1"><div><b>İndirim onayı · '+esc(q.no)+' (%'+q.disc+')</b><small>'+esc(o.name+" · "+acc(o.account).name+" · "+TL(quoteTotal(q).grand))+'</small></div></div><div class="end"><button class="ik2-btn sm" data-o="open" data-v="'+o.id+'" data-tab="quotes">Aç</button><button class="ik2-btn sm ok" data-o="qapprove" data-v="'+o.id+'|'+q.id+'">'+ic("check",13)+'Onayla</button></div></div>').join("")+
+    acts.slice(0,6).map(({o,a})=>{const t=actOf(a.type),late=a.date<T;return '<div class="ik2-row">'+tag(t[2],late?"#D23F4A":t[3])+'<div class="ik2-who" style="flex:1"><div><b>'+t[1]+' · '+esc(a.note)+'</b><small>'+esc(o.name+" · "+acc(o.account).name)+' · <span style="color:'+(late?"#D23F4A":"#9AA3B2")+'">'+(late?Math.abs(dd(T,a.date))+" gün gecikti":"bugün")+'</span></small></div></div><div class="end"><button class="ik2-btn sm" data-o="open" data-v="'+o.id+'" data-tab="acts">Aç</button><button class="ik2-btn sm ok" data-o="actdone" data-v="'+o.id+'|'+a.id+'">'+ic("check",13)+'Yapıldı</button></div></div>';}).join("")+
+    rot.slice(0,4).map(o=>'<div class="ik2-row">'+tag("clock","#D23F4A")+'<div class="ik2-who" style="flex:1"><div><b>'+esc(o.name)+' · '+dd(o.lastAct,T)+' gündür temas yok</b><small>'+esc(acc(o.account).name+" · "+stg(o.stage).name+" · "+TLs(amountOf(o)))+'</small></div></div><div class="end"><button class="ik2-btn sm" data-o="open" data-v="'+o.id+'" data-tab="acts">Aktivite planla</button></div></div>').join("");
+  const n=qa.length+Math.min(6,acts.length)+Math.min(4,rot.length);
+  const stages=OPEN_IDS.map(id=>{const os=open.filter(o=>o.stage===id);return [stg(id),os.length,os.reduce((s,o)=>s+amountOf(o),0)];}),maxS=Math.max(...stages.map(x=>x[2]),1);
+  return '<section class="dash-hello"><div><h2>'+hi+', Deniz</h2><p>'+(n?'Bugün <b>'+qa.length+' indirim onayı</b>, <b>'+acts.length+' aktivite</b> ve temas bekleyen <b>'+rot.length+' fırsat</b> var.':'Bugün senden bekleyen bir iş yok.')+'</p></div><span>'+esc(new Intl.DateTimeFormat("tr-TR",{weekday:"long",day:"numeric",month:"long"}).format(new Date()))+'</span></section>'+
+    '<div class="ik2-kpis">'+kpi("Açık huni",TLs(pipe),open.length+" fırsat","#4F46E5")+kpi("Ağırlıklı tahmin",TLs(wsum),"Aşama olasılığına göre","#7C3AED")+kpi("Çeyrek kotası","%"+att,TLs(wonSum)+" / "+TLs(quota),"#12936A")+kpi("Kazanma oranı","%"+rate,won.length+" kazanıldı · "+lost.length+" kayıp","#D97706")+'</div>'+
+    '<div class="dash-grid"><section class="ik2-panel"><header><h2>Bugün ilgilenmen gerekenler</h2><small>Onaylar, aktiviteler, soğuyan fırsatlar</small></header><div class="ik2-rows">'+(rows||'<p class="ik2-empty">Bekleyen bir şey yok.</p>')+'</div></section>'+
+    '<aside class="dash-side"><section class="ik2-panel"><header><h2>Çeyrek kotası</h2><a href="#opp2?s=forecast">Tahmin</a></header><div style="display:flex;align-items:baseline;gap:8px"><b style="font-size:28px;font-weight:780">%'+att+'</b><small style="color:#6B7280">gerçekleşti</small></div><div class="dash-bar" style="position:relative"><i style="width:'+Math.min(100,att)+'%;background:#12936A"></i><i style="width:'+Math.max(0,Math.min(100,att2)-Math.min(100,att))+'%;background:#A7E3C9"></i></div><small style="color:#9AA3B2">Ağırlıklı tahminle birlikte %'+att2+'</small></section>'+
+    '<section class="ik2-panel"><header><h2>Satış hunisi</h2><a href="#opp2?s=pipeline">Panoda aç</a></header>'+stages.map(([s,c,sum])=>'<div class="dash-stat" style="--t:'+s.color+'"><i></i><span style="flex:1;min-width:0">'+s.name+'<span class="ik2-meter" style="display:block;margin-top:5px;--t:'+s.color+'"><i style="width:'+(sum/maxS*100)+'%"></i></span></span><b style="text-align:right">'+TLs(sum)+'<small style="display:block;color:#9AA3B2;font-weight:500">'+c+' fırsat</small></b></div>').join("")+'</section></aside></div>';
 }
 
 /* ─── Huni (Kanban) ─── */
@@ -6428,7 +6411,7 @@ function card(o){
 function secPipeline(){
   const list=filtered();
   return filters()+'<div class="w2-board">'+STAGES.map(s=>{const cs=list.filter(o=>o.stage===s.id).sort((a,b)=>amountOf(b)-amountOf(a)),sum=cs.reduce((n,o)=>n+amountOf(o),0);
-    return '<section class="w2-col" data-odrop="'+s.id+'"><header style="--t:'+s.color+'"><i></i><b>'+s.name+'</b><em>'+cs.length+'</em></header><div class="o2-colsum"><span>%'+s.prob+' olasılık</span><b>'+TLs(sum)+'</b></div>'+cs.map(card).join("")+(s.id==="new"?'<button class="w2-add" data-o="new">'+ic("plus",13)+' Fırsat ekle</button>':"")+'</section>';}).join("")+'</div>';
+    return '<section class="w2-col o2-lane" data-odrop="'+s.id+'"><header style="--t:'+s.color+'"><span class="o2-step">'+(STAGES.indexOf(s)+1)+'</span><b>'+s.name+'</b><em>'+cs.length+'</em></header><div class="o2-colsum"><span>%'+s.prob+' olasılık</span><b>'+TLs(sum)+'</b></div>'+cs.map(card).join("")+(s.id==="new"?'<button class="w2-add" data-o="new">'+ic("plus",13)+' Fırsat ekle</button>':"")+'</section>';}).join("")+'</div>';
 }
 
 /* ─── Liste ─── */
@@ -6779,6 +6762,34 @@ if(location.hash.startsWith("#opp2"))readRoute();else renderNav();
 .ik2 .ik2-donut{width:118px!important;height:118px!important;-webkit-mask:radial-gradient(circle,transparent 0 44px,#000 45px)!important;mask:radial-gradient(circle,transparent 0 44px,#000 45px)!important}
 .ik2 .ik2-legend{font-size:12.5px!important;color:#4B5563}
 .ik2 .w2-feed div{font-size:12.5px!important}
+
+/* Dashboard düzeni */
+.dash-hello{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:0 0 14px}
+.dash-hello h2{margin:0;font-size:20px;font-weight:750;color:#111827}
+.dash-hello p{margin:4px 0 0;color:#6B7280;font-size:14px}.dash-hello p b{color:#111827}
+.dash-hello>span{color:#9AA3B2;font-size:13px;text-transform:capitalize}
+.dash-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+.dash-side{display:grid;gap:16px}
+@media(max-width:1100px){.dash-grid{grid-template-columns:1fr}}
+.dash-stat{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #F1F2F6;font-size:13.5px;color:#374151}
+.dash-stat:first-of-type{border-top:0}
+.dash-stat>i{width:8px;height:8px;border-radius:50%;background:var(--t);flex:none}
+.dash-stat>b{margin-left:auto;color:#111827}
+.dash-tag{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--t) 12%,#fff);color:var(--t)}
+.dash-bar{display:flex;height:10px;border-radius:9px;overflow:hidden;background:#F1F2F6;margin:4px 0 12px}
+.dash-bar i{display:block;height:100%}
+.ik2 .ik2-head .ik2-sub{display:none}
+/* Satış hunisi: İş Takip kanbanı görünümü */
+.op2 .o2-lane{background:transparent!important;padding:0 2px!important;border-radius:0!important;min-height:420px}
+.op2 .o2-lane.over{background:#EEF0FF!important;border-radius:12px!important}
+.op2 .o2-lane>header{display:flex;align-items:center;gap:8px;padding:12px 2px 10px!important;border-top:2px solid var(--t);margin:0}
+.op2 .o2-lane>header b{font-size:14px;font-weight:680;color:#25394D}
+.op2 .o2-lane>header em{margin-left:auto;font-style:normal;font-size:12px;font-weight:700;color:var(--t);background:color-mix(in srgb,var(--t) 12%,#fff);border-radius:6px;padding:1px 8px}
+.o2-step{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;flex:none;border:1.5px solid var(--t);color:var(--t);background:#fff;font:700 12px/1 system-ui}
+.op2 .o2-lane .o2-colsum{padding:0 2px 10px}
+.op2 .o2-lane .w2-card{border:1px solid #DFE4EC;border-radius:12px;box-shadow:0 1px 2px #1018280a}
+.op2 .o2-lane .w2-card::before{display:none}
+.op2 .o2-lane .w2-card:hover{border-color:#BFCDE8;box-shadow:0 4px 12px #16233512}
 /* Satır içi onay/ret butonları: küçük ve sade */
 .ik2-row .end .ik2-btn.sm,.ik2-table .ik2-btn.sm{height:28px!important;padding:0 9px!important;font-size:12px!important;box-shadow:none!important}
 /* Renkli satır içi butonları (müşteri kartındaki fırsatlar vb.) sakinleştir */
