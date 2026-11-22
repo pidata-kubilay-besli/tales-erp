@@ -8647,5 +8647,13 @@ html body .cy-sh b{margin-left:2px}
 @media (max-width:720px){html body .cy-today{display:none}html body .cy-nav{width:30px;height:30px}}
 </style>
 <script id="cy-drag">(()=>{let s=null,x0=0,l0=0,moved=0;document.addEventListener("mousedown",e=>{const sl=e.target.closest?.(".cy-cal .cy-slider");if(!sl||e.button)return;s=sl;x0=e.pageX;l0=sl.scrollLeft;moved=0;sl.classList.add("drag");});document.addEventListener("mousemove",e=>{if(!s)return;const d=e.pageX-x0;if(Math.abs(d)>4)moved=1;s.scrollLeft=l0-d;});document.addEventListener("mouseup",()=>{if(s){s.classList.remove("drag");s=null;}});document.addEventListener("click",e=>{if(moved&&e.target.closest?.(".cy-cal .cy-slider")){e.preventDefault();e.stopPropagation();moved=0;}},true);})();</script>
+<style id="kv-rows">
+html body .m2-row,html body .c2-row{align-items:center!important;padding:12px 17px!important}
+html body .m2-row .m2-ri{display:none!important}
+html body .m2-row>div,html body .c2-row>div{flex:1;display:flex!important;align-items:center;justify-content:space-between;gap:16px;padding:0!important}
+html body .m2-row small,html body .c2-row small{flex:none;font-size:13px!important;font-weight:500!important;letter-spacing:0!important;text-transform:none!important;color:#64748B!important}
+html body .m2-row b,html body .c2-row b{margin:0!important;text-align:right;font-size:13.5px!important;font-weight:700!important;color:#0F172A!important;display:flex!important;justify-content:flex-end;flex-wrap:wrap;gap:6px}
+html body .m2-row:nth-child(even),html body .c2-row:nth-child(even){background:#FAFBFD}
+</style>
 </body>
 </html>
