@@ -4543,6 +4543,33 @@ function demoEvents(row,module){
     :module==="opportunities"?["Oluşturuldu","Atandı","Görüşme yapıldı","Teklif gönderildi","Güncellendi"]:["Oluşturuldu","Atandı","Başlatıldı","Yorum eklendi","Güncellendi"];
   return steps.map((verb,i)=>({module,id:row.id,name:(row.name||row.code)+" · "+team[(demoSeed(row)+i)%team.length],verb,time:at(i,i*2)})).reverse();
 }
+let otherOpen="";
+function otherDetail(module,row,key){
+  const s=demoSeed(row),who=i=>team[(s+i)%team.length],d=n=>dateText(shift(row.start||day(),n)),money=v=>typeof oppMoney==="function"?oppMoney(v):v;
+  const amt=Number(row.amount)||100000,cost=Number(row.cost)||Math.round(amt*.62);
+  const li=(icon,t,sub,right)=>'<div class="mo-row"><span>'+svg(icon,16)+'</span><div><strong>'+t+'</strong><small>'+sub+'</small></div>'+(right?'<b>'+right+'</b>':"")+'</div>';
+  const acc=rowOf("accounts",row.account),prj=rowOf("projects",row.project);
+  const M={
+    cari:["Cari bilgileri",li("crm",e(acc?.name||"—"),"Cari kodu "+e(acc?.code||"C-"+(1000+s%900)))+li("user","Yetkili kişi",who(1)+" · Satın alma")+li("phone","Telefon","0532 "+(300+s%600)+" 12 "+(10+s%80))+li("mail","E-posta","info@"+(e(acc?.name||"cari").toLocaleLowerCase("tr").replace(/[^a-z0-9]+/g,"").slice(0,14)||"cari")+".com.tr")+li("pin","Adres","Organize Sanayi Bölgesi, "+["Bursa","Ankara","İzmir","Konya"][s%4])+li("money","Açık bakiye","Vadesi gelmemiş",money(Math.round(amt*.18)))],
+    teklif:["Teklifler",[1,2,3].map(v=>li("file","TKF-26-"+(200+s%90+v)+" · v"+v,d(v*6)+" · "+["Reddedildi","Revize istendi","Gönderildi"][v-1],money(Math.round(amt*(1.12-v*.04))))).join("")],
+    aktivite:["Aktiviteler",[["phone","Arama","İlk görüşme, ihtiyaçlar konuşuldu"],["people","Toplantı","Keşif toplantısı yapıldı"],["chart","Demo","Ürün demosu gösterildi"],["mail","E-posta","Teklif ve referans listesi gönderildi"],["calendar","Planlandı","Karar toplantısı"]].map(([i,t,n],k)=>li(i,t+" · "+who(k),n+" · "+d(k*4),k===4?"Planlı":"Yapıldı")).join("")],
+    karlilik:["Kârlılık",li("money","Satış tutarı","KDV hariç",money(amt))+li("box","Maliyet","Lisans, hizmet ve donanım",money(cost))+li("chart","Brüt kâr","Satış − maliyet",money(amt-cost))+li("tag","Kâr marjı","Brüt kâr / satış","%"+Math.round((amt-cost)/amt*100))],
+    proje:["Proje",li("projects",e(prj?.name||"—"),"Bağlı proje")+li("user","Proje yöneticisi",who(2))+li("calendar","Başlangıç",d(0))],
+    sozlesme:["Sözleşme",li("file",e(row.contract||"SÖZ-26-"+(300+s%90)),"İmzalandı · "+d(-10))+li("calendar","Bitiş",d(355))+li("shield","Teminat","Yok")],
+    odeme:["Ödeme planı",[0,1,2].map(k=>li("money",(k+1)+". taksit",d(k*30),money(Math.round(amt/3)))).join("")],
+    hareket:["Giriş / çıkış",[0,1,2,3].map(k=>li("truck",["Depo girişi","Transfer","Zimmet çıkışı","İade"][k],d(-k*7)+" · "+who(k),String(1+k))).join("")],
+    zimmet:["Zimmet",li("user",who(3),"Teslim tarihi "+d(-20))+li("file","Zimmet formu","İmzalı")],
+    garanti:["Garanti",li("shield","Garanti bitişi",d(400))+li("work","Son servis",d(-45)+" · bakım")],
+    konum:["Konum",li("pin",e(row.warehouse||"Merkez depo"),"Raf A-"+(s%20+1))],
+    altis:["Alt işler",(row.checklist||[]).map(c=>li("check",e(c.text||c.name||"Alt iş"),c.done?"Tamamlandı":"Bekliyor")).join("")||li("check","Alt iş yok","Detay sekmesinden ekleyebilirsin")],
+    servis:["Servis durumu",li("flow",e(row.status||"—"),"Son güncelleme "+d(0))+li("user","Teknisyen",who(2))],
+    stok:["Kullanılan malzemeler",[0,1,2].map(k=>li("box",["Kablo seti","Bağlantı modülü","Etiket rulosu"][k],"STK-"+(100+k+s%50),(k+1)+" adet")).join("")],
+    form:["Servis formu",li("edit","Müşteri imzası",(s%2?"Alındı":"Bekliyor"))+li("file","Form no","SRV-"+(500+s%400))]
+  };
+  const x=M[key];if(!x)return "";
+  return '<section class="editor-card mo-panel"><h3>'+x[0]+'</h3><div class="mo-list">'+x[1]+'</div></section>';
+}
+document.addEventListener("click",ev=>{const t=ev.target.closest("[data-other]");if(!t)return;otherOpen=otherOpen===t.dataset.other?"":t.dataset.other;render();});
 function taskRecord(row,events,isInline,stepAction,module="tasks"){
   if(!row.comments)row.comments=demoComments(row,module);
   if(!events.length)events=demoEvents(row,module);
@@ -4560,17 +4587,17 @@ function taskRecord(row,events,isInline,stepAction,module="tasks"){
   }else if(recordTab==="history"){
     body=tabSearch(historyTimeline(events),"İşlem ara","Henüz işlem kaydedilmedi.");
   }else if(recordTab==="other"){
-    const tile=(icon,title,sub,tone)=>'<div class="mother-tile" style="--tone:'+tone+'"><span>'+svg(icon,19)+'</span><div><strong>'+title+'</strong><small>'+sub+'</small></div>'+svg("right",15)+'</div>';
+    const K={Cari:"cari",Teklifler:"teklif",Aktiviteler:"aktivite","Kârlılık":"karlilik",Proje:"proje","Sözleşme":"sozlesme","Ödeme planı":"odeme","Giriş / çıkış":"hareket",Zimmet:"zimmet",Garanti:"garanti",Konum:"konum","Alt işler":"altis","Servis durumu":"servis",Stok:"stok","Servis formu":"form"};const tile=(icon,title,sub,tone)=>'<div class="mother-tile'+(otherOpen===K[title]?" on":"")+'" role="button" tabindex="0" data-other="'+K[title]+'" style="--tone:'+tone+'"><span>'+svg(icon,19)+'</span><div><strong>'+title+'</strong><small>'+sub+'</small></div>'+svg("right",15)+'</div>';
     if(module==="finance"){const acc=rowOf("accounts",row.account),prj=rowOf("projects",row.project);
-      body='<div class="mother-grid">'+tile("crm","Cari",e(acc?.name||"—"),"#4967F2")+tile("projects","Proje",e(prj?.name||"—"),"#7C5CFC")+tile("file","Sözleşme",e(row.contract||"—"),"#D98B21")+tile("money","Ödeme planı",e(row.currency||"TL")+" · tek taksit","#1B9C6B")+'</div>'+
+      body='<div class="mother-grid">'+tile("crm","Cari",e(acc?.name||"—"),"#4967F2")+tile("projects","Proje",e(prj?.name||"—"),"#7C5CFC")+tile("file","Sözleşme",e(row.contract||"—"),"#D98B21")+tile("money","Ödeme planı",e(row.currency||"TL")+" · tek taksit","#1B9C6B")+'</div>'+otherDetail(module,row,otherOpen)+
         '<section class="editor-card"><h3>İlişkili kayıtlar</h3>'+linkedList(links)+'</section>';
     }else if(module==="inventory"){
-      body='<div class="mother-grid">'+tile("truck","Giriş / çıkış","Son 30 gün hareketleri","#4967F2")+tile("user","Zimmet","Kullanıcı ve teslim bilgisi","#7C5CFC")+tile("shield","Garanti","Servis ve garanti kayıtları","#1B9C6B")+tile("pin","Konum",e(row.warehouse||"—"),"#D98B21")+'</div>'+
+      body='<div class="mother-grid">'+tile("truck","Giriş / çıkış","Son 30 gün hareketleri","#4967F2")+tile("user","Zimmet","Kullanıcı ve teslim bilgisi","#7C5CFC")+tile("shield","Garanti","Servis ve garanti kayıtları","#1B9C6B")+tile("pin","Konum",e(row.warehouse||"—"),"#D98B21")+'</div>'+otherDetail(module,row,otherOpen)+
         stkMoves(row)+'<section class="editor-card"><h3>İlişkili kayıtlar</h3>'+linkedList(links)+'</section>';
     }else if(module==="opportunities"){const acc=rowOf("accounts",row.account);
-      body='<div class="mother-grid">'+tile("crm","Cari",e(acc?.name||"—"),"#4967F2")+tile("file","Teklifler","Fırsata bağlı teklifler","#7C5CFC")+tile("calendar","Aktiviteler","Görüşme ve toplantılar","#D98B21")+tile("money","Kârlılık",e(oppMoney((Number(row.amount)||0)-(Number(row.cost)||0))),"#1B9C6B")+'</div>'+
+      body='<div class="mother-grid">'+tile("crm","Cari",e(acc?.name||"—"),"#4967F2")+tile("file","Teklifler","Fırsata bağlı teklifler","#7C5CFC")+tile("calendar","Aktiviteler","Görüşme ve toplantılar","#D98B21")+tile("money","Kârlılık",e(oppMoney((Number(row.amount)||0)-(Number(row.cost)||0))),"#1B9C6B")+'</div>'+otherDetail(module,row,otherOpen)+
         '<section class="editor-card"><h3>İlişkili kayıtlar</h3>'+linkedList(links)+'</section>';
-    }else body='<div class="mother-grid">'+tile("check","Alt işler",checks.filter(x=>x.done).length+" / "+checks.length+" tamamlandı","#1B9C6B")+tile("flow","Servis durumu",e(row.status||"—"),"#4967F2")+tile("box","Stok","Kullanılan malzemeler","#D98B21")+tile("edit","Servis formu","İmza ve form","#7C5CFC")+'</div>'+
+    }else body='<div class="mother-grid">'+tile("check","Alt işler",checks.filter(x=>x.done).length+" / "+checks.length+" tamamlandı","#1B9C6B")+tile("flow","Servis durumu",e(row.status||"—"),"#4967F2")+tile("box","Stok","Kullanılan malzemeler","#D98B21")+tile("edit","Servis formu","İmza ve form","#7C5CFC")+'</div>'+otherDetail(module,row,otherOpen)+
       taskChecklist(row)+'<section class="editor-card"><h3>İlişkili kayıtlar</h3>'+linkedList(links)+'</section>';
   }else body=(module==="finance"?finHero(row):module==="inventory"?stkHero(row):"")+(fieldGroups[module]?groupedDetails(module,row):deskDetails(module,row,events,""));
   return '<div class="record-panel desk-record task-record">'+deskHeader(module,row.name,row.code,isInline)+strip+'<div class="panel-body">'+body+'</div><footer class="panel-actions">'+processActions(module,row)+stepAction+(isLocked(module,row)?"":button("Düzenle","edit",{icon:"edit",value:module+"|"+row.id,kind:"primary"}))+'</footer></div>';
@@ -7471,5 +7498,6 @@ badge();
   .ik2 .ik2-kpis{grid-template-columns:minmax(0,1fr)!important}
 }
 </style>
+<style id="mother-open">.mother-tile[data-other]{cursor:pointer;transition:border-color .12s,box-shadow .12s}.mother-tile[data-other]:hover{border-color:#C9D6F5!important;box-shadow:0 4px 14px #0F1F3D12}.mother-tile.on{border-color:#3158C9!important;box-shadow:0 0 0 2px #3158C92e}.mother-tile.on>svg:last-child{transform:rotate(90deg)}.mo-list{display:grid}.mo-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #F1F3F7}.mo-row:last-child{border-bottom:0}.mo-row>span{width:34px;height:34px;border-radius:10px;background:#EEF3FF;color:#3158C9;display:grid;place-items:center;flex:none}.mo-row>div{flex:1;min-width:0}.mo-row strong{display:block;font-size:13.5px;color:#141B2D}.mo-row small{display:block;margin-top:2px;font-size:12px;color:#6B7489}.mo-row b{font-size:13px;color:#141B2D;white-space:nowrap}</style>
 </body>
 </html>
