@@ -8562,5 +8562,6 @@ document.addEventListener("dragover",ev=>{const z=ev.target.closest?.(".ek-drop"
 document.addEventListener("dragleave",ev=>{const z=ev.target.closest?.(".ek-drop");if(z&&!z.contains(ev.relatedTarget))z.classList.remove("over");});
 document.addEventListener("drop",ev=>{const z=ev.target.closest?.(".ek-drop");if(z){ev.preventDefault();z.classList.remove("over");take(ev.dataTransfer.files);}});})();
 </script>
+<style id="mp-scroll">html body .mp-body{overflow-y:auto!important;min-height:0!important}html body .mp-body>*{flex:none!important}</style>
 </body>
 </html>
