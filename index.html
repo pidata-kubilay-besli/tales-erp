@@ -5978,11 +5978,19 @@ function card(t){
     '<footer>'+dueChip(t)+(t.subs.length?'<span>'+ic("check",12)+t.subs.filter(s=>s.done).length+'/'+t.subs.length+'</span>':"")+(t.comments.length?'<span>'+ic("chat",12)+t.comments.length+'</span>':"")+(t.files.length?'<span>'+ic("file",12)+t.files.length+'</span>':"")+av(t.owner,"sm")+'</footer></article>';
 }
 function secBoard(){
-  const list=filtered();
-  return filters(false)+'<div class="w2-board">'+STATUSES.map(s=>{const cards=list.filter(t=>t.status===s.id).sort((a,b)=>PRIOS.findIndex(p=>p.id===a.prio)-PRIOS.findIndex(p=>p.id===b.prio)||a.due.localeCompare(b.due));const full=s.wip&&cards.length>=s.wip;
-    return '<section class="w2-col" data-drop2="'+s.id+'"><header style="--t:'+s.color+'"><i></i><b>'+s.name+'</b><em class="'+(full?"full":"")+'">'+cards.length+(s.wip?" / "+s.wip:"")+'</em></header>'+(full?'<div class="ik2-alert warn" style="margin:0 0 8px;padding:7px 9px;font-size:12px">'+ic("alert",14)+'<div>Devam eden iş sınırına ulaşıldı</div></div>':"")+cards.map(card).join("")+
-      (V.quick===s.id?'<form class="w2-quick" data-wform="quick" data-status="'+s.id+'"><input name="title" placeholder="İş başlığı yazıp Enter" required autofocus></form>':'<button class="w2-add" data-w="quick" data-v="'+s.id+'">'+ic("plus",13)+' İş ekle</button>')+'</section>';}).join("")+'</div>';
+  const list=filtered(),soft=c=>"color-mix(in srgb,"+c+" 14%,#fff)";
+  const ticket=t=>{const p=prOf(t.prio),ty=tyOf(t.type),late=isLate(t),pct=subPct(t),done=t.subs.filter(s=>s.done).length;
+    const dl=t.due===T?"Bugün":t.due===shift(T,1)?"Yarın":dshort(t.due);
+    return '<article class="work-ticket clear-ticket" draggable="true" data-drag2="'+t.id+'" data-w="open" data-v="'+t.id+'"><header><span class="task-component">'+ic(ty.icon,15)+esc(ty.name)+'</span><span class="ticket-code">'+esc(t.code)+'</span>'+(["crit","high"].includes(t.prio)&&isOpen(t)?'<span class="urgent-flag">↑ '+esc(p.name)+'</span>':"")+'</header>'+
+      '<button type="button" class="ticket-name">'+esc(t.title)+'</button><p class="ticket-scope">'+ic("projects",13)+esc(prj(t.project).name)+'</p>'+
+      (t.subs.length?'<div class="check-meter"><span>'+ic("work",14)+done+'/'+t.subs.length+' alt iş</span><b>%'+pct+'</b>'+progressSteps(pct)+'</div>':'<small class="no-checks">Alt iş eklenmemiş</small>')+
+      '<footer><span class="ticket-person">'+av(t.owner,"sm")+'<span>'+esc(t.owner)+'</span></span><time class="'+(late?"overdue":"")+'" title="'+esc(dlong(t.due))+'">'+ic("calendar",13)+esc(dl)+'</time></footer></article>';};
+  return filters(false)+'<div class="work-room" data-view="board"><div class="studio-board w2-kb" style="grid-template-columns:repeat('+STATUSES.length+',minmax(260px,1fr))">'+STATUSES.map((s,i)=>{
+    const cs=list.filter(t=>t.status===s.id).sort((a,b)=>PRIOS.findIndex(p=>p.id===a.prio)-PRIOS.findIndex(p=>p.id===b.prio)||a.due.localeCompare(b.due)),full=s.wip&&cs.length>=s.wip;
+    return '<section class="board-column lane" data-drop2="'+s.id+'" style="--lane-ink:'+s.color+';--lane-soft:'+soft(s.color)+';--lane-line:'+s.color+';--lane:'+s.color+';--wash:'+soft(s.color)+';--laneink:'+s.color+'"><header><span class="lane-step">'+(i+1)+'</span><h2>'+s.name+'</h2><span class="lane-total" style="'+(full?"background:#FDEDEE;color:#D23F4A":"")+'" title="'+(s.wip?"İş sınırı "+s.wip:"")+'">'+cs.length+(s.wip?" / "+s.wip:"")+'</span><button class="btn icon" data-w="quick" data-v="'+s.id+'" aria-label="'+s.name+' sütununa iş ekle">'+ic("plus",15)+'</button></header>'+
+      '<div class="board-stack">'+(V.quick===s.id?'<form class="w2-quick" data-wform="quick" data-status="'+s.id+'"><input name="title" placeholder="İş başlığı yazıp Enter" required autofocus></form>':"")+cs.map(ticket).join("")+(!cs.length?'<p class="vacant-lane">Bu aşamada iş yok</p>':"")+'</div></section>';}).join("")+'</div></div>';
 }
+
 
 /* ─── Liste ─── */
 function secList(){
@@ -6194,11 +6202,11 @@ document.addEventListener("submit",ev=>{
 /* Sürükle-bırak (pano) */
 let dragId=null;
 document.addEventListener("dragstart",ev=>{const c=ev.target.closest?.("[data-drag2]");if(!c)return;dragId=c.dataset.drag2;c.classList.add("dragging");ev.dataTransfer.effectAllowed="move";ev.dataTransfer.setData("text/plain",dragId);});
-document.addEventListener("dragover",ev=>{if(!dragId)return;const col=ev.target.closest?.("[data-drop2]");document.querySelectorAll(".w2-col.over").forEach(x=>x!==col&&x.classList.remove("over"));if(col){ev.preventDefault();col.classList.add("over");}});
+document.addEventListener("dragover",ev=>{if(!dragId)return;const col=ev.target.closest?.("[data-drop2]");document.querySelectorAll(".over").forEach(x=>x!==col&&x.classList.remove("over"));if(col){ev.preventDefault();col.classList.add("over");}});
 document.addEventListener("drop",ev=>{const col=ev.target.closest?.("[data-drop2]");if(!col||!dragId)return;ev.preventDefault();const t=W(dragId),s=stOf(col.dataset.drop2);
   if(s.wip&&S.tasks.filter(x=>x.status===s.id).length>=s.wip&&t.status!==s.id)showSnackbar("“"+s.name+"” sütunu sınırda ("+s.wip+"); yine de taşındı.");
   setStatus(t,s.id);save();dragId=null;refresh();});
-document.addEventListener("dragend",()=>{dragId=null;document.querySelectorAll(".w2-col.over,.w2-card.dragging").forEach(x=>x.classList.remove("over","dragging"));});
+document.addEventListener("dragend",()=>{dragId=null;document.querySelectorAll(".over,.dragging").forEach(x=>x.classList.remove("over","dragging"));});
 document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&V.layer){ev.stopPropagation();closeLayer();}if(ev.key==="Escape"&&V.quick){V.quick="";refresh();}},true);
 
 /* ═════════ Uygulamaya bağlama ═════════ */
@@ -6409,10 +6417,18 @@ function card(o){
     '<footer>'+(rotting(o)?'<span class="o2-rot">'+ic("clock",11)+dd(o.lastAct,T)+' g</span>':'<span class="w2-due '+(isOpenO(o)&&o.close<T?"late":"")+'">'+ic("calendar",11)+dshort(o.close)+'</span>')+(n?'<span title="Sonraki aktivite">'+ic(actOf(n.type)[2],12)+dshort(n.date)+'</span>':isOpenO(o)?'<span style="color:#D97706">'+ic("alert",12)+'Plan yok</span>':"")+av(o.owner,"sm")+'</footer></article>';
 }
 function secPipeline(){
-  const list=filtered();
-  return filters()+'<div class="w2-board">'+STAGES.map(s=>{const cs=list.filter(o=>o.stage===s.id).sort((a,b)=>amountOf(b)-amountOf(a)),sum=cs.reduce((n,o)=>n+amountOf(o),0);
-    return '<section class="w2-col o2-lane" data-odrop="'+s.id+'"><header style="--t:'+s.color+'"><span class="o2-step">'+(STAGES.indexOf(s)+1)+'</span><b>'+s.name+'</b><em>'+cs.length+'</em></header><div class="o2-colsum"><span>%'+s.prob+' olasılık</span><b>'+TLs(sum)+'</b></div>'+cs.map(card).join("")+(s.id==="new"?'<button class="w2-add" data-o="new">'+ic("plus",13)+' Fırsat ekle</button>':"")+'</section>';}).join("")+'</div>';
+  const list=filtered(),soft=c=>"color-mix(in srgb,"+c+" 14%,#fff)";
+  const ticket=o=>{const s=stg(o.stage),n=nextAct(o),late=isOpenO(o)&&o.close<T,crit=critDone(o,"qual"),pct=Math.round(STAGES.slice(0,5).reduce((x,st)=>x+critDone(o,st.id),0)/STAGES.slice(0,5).reduce((x,st)=>x+st.crit.length,0)*100);
+    return '<article class="work-ticket clear-ticket" draggable="true" data-odrag="'+o.id+'" data-o="open" data-v="'+o.id+'"><header><span class="task-component">'+ic("building",15)+esc(acc(o.account).name)+'</span><span class="ticket-code">'+esc(o.code)+'</span>'+(rotting(o)?'<span class="urgent-flag">'+dd(o.lastAct,T)+' gün temas yok</span>':"")+'</header>'+
+      '<button type="button" class="ticket-name">'+esc(o.name)+'</button><p class="ticket-scope" style="font-weight:750;color:#1F2937;font-size:14px">'+TL(amountOf(o))+' <small style="color:#9AA3B2;font-weight:600;font-size:11.5px">· %'+s.prob+' · '+esc(o.type)+'</small></p>'+
+      (isOpenO(o)?'<div class="check-meter"><span>'+ic("work",14)+'Süreç kriterleri</span><b>%'+pct+'</b>'+progressSteps(pct)+'</div>':'<small class="no-checks">'+(o.stage==="won"?"Sipariş "+esc(o.won?.order||""):"Neden: "+esc(o.lossReason))+'</small>')+
+      '<footer><span class="ticket-person">'+av(o.owner,"sm")+'<span>'+esc(o.owner)+'</span></span><time class="'+(late?"overdue":"")+'" title="'+(n?"Sonraki: "+esc(actOf(n.type)[1]+" "+dlong(n.date)):"Kapanış "+esc(dlong(o.close)))+'">'+ic(n?actOf(n.type)[2]:"calendar",13)+esc(n?dshort(n.date):dshort(o.close))+'</time></footer></article>';};
+  return filters()+'<div class="work-room" data-view="board"><div class="studio-board w2-kb" style="grid-template-columns:repeat('+STAGES.length+',minmax(260px,1fr))">'+STAGES.map((s,i)=>{
+    const cs=list.filter(o=>o.stage===s.id).sort((a,b)=>amountOf(b)-amountOf(a)),sum=cs.reduce((x,o)=>x+amountOf(o),0);
+    return '<section class="board-column lane" data-odrop="'+s.id+'" style="--lane-ink:'+s.color+';--lane-soft:'+soft(s.color)+';--lane-line:'+s.color+';--lane:'+s.color+';--wash:'+soft(s.color)+';--laneink:'+s.color+'"><header><span class="lane-step">'+(i+1)+'</span><h2>'+s.name+'</h2><span class="lane-total">'+cs.length+'</span>'+(s.id==="new"?'<button class="btn icon" data-o="new" aria-label="Fırsat ekle">'+ic("plus",15)+'</button>':"")+'</header>'+
+      '<div class="w2-kbsum"><span>%'+s.prob+' olasılık</span><b>'+TLs(sum)+'</b></div><div class="board-stack">'+cs.map(ticket).join("")+(!cs.length?'<p class="vacant-lane">Bu aşamada fırsat yok</p>':"")+'</div></section>';}).join("")+'</div></div>';
 }
+
 
 /* ─── Liste ─── */
 function secList(){
@@ -6673,9 +6689,9 @@ document.addEventListener("submit",ev=>{
 });
 let drag=null;
 document.addEventListener("dragstart",ev=>{const c=ev.target.closest?.("[data-odrag]");if(!c)return;drag=c.dataset.odrag;c.classList.add("dragging");ev.dataTransfer.setData("text/plain",drag);});
-document.addEventListener("dragover",ev=>{if(!drag)return;const col=ev.target.closest?.("[data-odrop]");document.querySelectorAll(".w2-col.over").forEach(x=>x!==col&&x.classList.remove("over"));if(col){ev.preventDefault();col.classList.add("over");}});
+document.addEventListener("dragover",ev=>{if(!drag)return;const col=ev.target.closest?.("[data-odrop]");document.querySelectorAll(".over").forEach(x=>x!==col&&x.classList.remove("over"));if(col){ev.preventDefault();col.classList.add("over");}});
 document.addEventListener("drop",ev=>{const col=ev.target.closest?.("[data-odrop]");if(!col||!drag)return;ev.preventDefault();const o=O(drag);drag=null;setStage(o,col.dataset.odrop);if(!V.layer)refresh();else if(V.layer.type!=="form")refresh();else{screen.innerHTML=page();}});
-document.addEventListener("dragend",()=>{drag=null;document.querySelectorAll(".w2-col.over,.w2-card.dragging").forEach(x=>x.classList.remove("over","dragging"));});
+document.addEventListener("dragend",()=>{drag=null;document.querySelectorAll(".over,.dragging").forEach(x=>x.classList.remove("over","dragging"));});
 document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&V.layer){ev.stopPropagation();const back=V.layer.back;closeLayer();if(back)openOpp(back);}},true);
 
 /* ═════════ Uygulamaya bağlama ═════════ */
@@ -6790,6 +6806,21 @@ if(location.hash.startsWith("#opp2"))readRoute();else renderNav();
 .op2 .o2-lane .w2-card{border:1px solid #DFE4EC;border-radius:12px;box-shadow:0 1px 2px #1018280a}
 .op2 .o2-lane .w2-card::before{display:none}
 .op2 .o2-lane .w2-card:hover{border-color:#BFCDE8;box-shadow:0 4px 12px #16233512}
+
+/* 2.0 panoları: orijinal İş Takip kanbanı */
+.ik2 .work-room .w2-kb{overflow-x:auto;padding-bottom:12px;align-items:start}
+.ik2 .work-room .board-column.over{background:color-mix(in srgb,var(--lane-line) 8%,transparent)!important;border-radius:12px;outline:2px dashed var(--lane-line);outline-offset:2px}
+.ik2 .work-room .work-ticket.dragging{opacity:.45}
+.ik2 .work-room .work-ticket{cursor:grab}
+.ik2 .w2-kbsum{display:flex;justify-content:space-between;font-size:12px;color:#6B7280;padding:0 2px 10px}
+.ik2 .w2-kbsum b{color:#111827}
+.ik2 .work-room .board-column>header .btn.icon{margin-left:auto}
+.ik2 .work-room .w2-quick{margin-bottom:8px}
+/* Pencere: gövde kayar, Kaydet/Vazgeç hep altta */
+.ik2-dialog>form{display:flex!important;flex-direction:column;flex:1 1 auto;min-height:0;overflow:hidden;gap:0!important}
+.ik2-dialog>form>.ik2-dbody,.ik2-dialog>.ik2-dbody{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.ik2-dialog>form>.ik2-dfoot,.ik2-dialog>.ik2-dfoot{flex:none}
+.ik2-dialog{max-height:calc(100dvh - 32px)!important}
 /* Satır içi onay/ret butonları: küçük ve sade */
 .ik2-row .end .ik2-btn.sm,.ik2-table .ik2-btn.sm{height:28px!important;padding:0 9px!important;font-size:12px!important;box-shadow:none!important}
 /* Renkli satır içi butonları (müşteri kartındaki fırsatlar vb.) sakinleştir */
