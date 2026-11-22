@@ -8427,5 +8427,98 @@ html body #c2-layer .c2-form .c2-ffoot .ik2-btn.primary{background:#4361EE!impor
 html body .c2-drawer .c2-fab{position:absolute!important;right:24px!important;bottom:24px!important;float:none!important;margin:0!important;z-index:1!important}
 @media (max-width:720px){html body #c2-layer .c2-form{width:100%!important;height:100%!important;border-radius:0}html body #c2-layer .c2-form .c2-fs{grid-template-columns:1fr}}
 </style>
+<style id="mproj-style">
+.mp-body{background:#F4F6FA!important;display:flex;flex-direction:column;gap:12px}
+.mp-hero{background:#fff;border:1px solid #E8ECF3;border-radius:19px;box-shadow:0 4px 14px #0F1F3D0b}
+.mp-hero>div{display:flex;align-items:center;gap:12px;padding:16px 16px 14px}
+.mp-hero .t{width:44px;height:44px;border-radius:14px;background:#EEF3FF;color:#3158C9;display:grid;place-items:center;font-size:20px;font-weight:800;flex:none}
+.mp-hero .tx{flex:1;min-width:0}.mp-hero b{display:block;font-size:16px;font-weight:700;color:#0F172A}.mp-hero small{display:block;margin-top:3px;font-size:12.4px;font-weight:600;color:#94A3B8}
+.mp-chip{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;color:var(--c);background:color-mix(in srgb,var(--c) 12%,#fff);white-space:nowrap}
+.mp-hero footer{display:flex;align-items:center;gap:9px;padding:12px 16px;border-top:1px solid #EEF1F6;font-size:13.3px;font-weight:700;color:#334155}
+.mp-hero footer svg{color:#7C3AED}
+.mp-stagebtn{background:#fff;border:1px solid #E8ECF3;border-radius:18px;padding:12px}
+.mp-stagebtn button{width:100%;height:48px;border:0;border-radius:14px;background:#3158C9;color:#fff;font:inherit;font-size:14.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.mp-stagebtn button:disabled{background:#CBD5E1;cursor:default}
+.mp-amt{background:#fff;border:1px solid #E8ECF3;border-radius:19px;padding:16px}
+.mp-amt header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.mp-amt header span{width:36px;height:36px;border-radius:11px;background:#E8F6EF;color:#1B9C6B;display:grid;place-items:center}
+.mp-amt header b{font-size:16px;color:#0F172A}
+.mp-amt .row{display:flex;gap:8px}
+.mp-amt .row>div{flex:1;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--c) 7%,#fff);border:1px solid color-mix(in srgb,var(--c) 16%,#fff)}
+.mp-amt small{display:block;color:var(--c);font-size:11.5px;font-weight:700}.mp-amt strong{display:block;margin-top:4px;font-size:15px;color:#0F172A}
+.mp-sec{background:#fff;border:1px solid #E8ECF3;border-radius:19px;box-shadow:0 4px 14px #0F1F3D0b;overflow:hidden}
+.mp-sec>header{display:flex;align-items:center;gap:11px;padding:15px 17px 14px;border-bottom:1px solid #EEF1F6}
+.mp-sec>header span{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:var(--a);background:color-mix(in srgb,var(--a) 9%,#fff)}
+.mp-sec>header b{display:block;font-size:14.5px;font-weight:800;color:#0F172A}.mp-sec>header small{display:block;margin-top:2px;font-size:12px;font-weight:600;color:#9AA3B2}
+.mp-dr{display:flex;align-items:center;gap:12px;padding:13px 17px;border-bottom:1px solid #F1F3F7}
+.mp-dr:last-child{border-bottom:0}
+.mp-dr>span{flex:1;font-size:13.5px;font-weight:600;color:#64748B}
+.mp-dr>b{flex:1;text-align:right;font-size:13.5px;font-weight:700;color:#0F172A;display:flex;justify-content:flex-end}
+.mp-step{display:inline-flex;align-items:center;gap:8px}
+.mp-step i{display:flex;gap:4px;width:102px}.mp-step i u{flex:1;height:5px;border-radius:30px;background:#E2E8F0;text-decoration:none}
+.mp-step em{font-style:normal;font-size:12px;font-weight:700;color:#64748B}
+.mp-cm{display:flex;gap:10px;padding:14px 16px;background:#fff;border:1px solid #E8ECF3;border-radius:16px}
+.mp-cm>div{flex:1;min-width:0}.mp-cm header{display:flex;justify-content:space-between;gap:8px}.mp-cm header b{font-size:14px;color:#0F172A}.mp-cm header small{font-size:12px;color:#94A3B8}
+.mp-cm p{margin:4px 0 0;font-size:13.5px;line-height:1.5;color:#334155}
+.mp-cbox{display:flex;gap:8px;align-items:flex-end;padding:10px;background:#fff;border:1px solid #E4E9F1;border-radius:16px}
+.mp-cbox textarea{flex:1;min-height:44px;border:0;outline:0;resize:vertical;font:inherit;font-size:14px}
+.mp-cbox button{height:40px;padding:0 16px;border:0;border-radius:12px;background:#3158C9;color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.mp-back{display:inline-flex;align-items:center;gap:6px;padding:0;border:0;background:none;font:inherit;font-size:13.5px;font-weight:700;color:#3158C9;cursor:pointer;align-self:flex-start}
+</style>
+<script id="mproj-script">
+(()=>{
+const MP={other:""};
+const ic=(n,s)=>svg(n,s);
+const STEPC=["#EF4444","#F59E0B","#EAB308","#84CC16","#22C55E"];
+function step(p){const k=Math.round(p/20);return '<span class="mp-step"><i>'+[0,1,2,3,4].map(j=>'<u style="'+(j<k?"background:"+STEPC[Math.min(4,k-1)]:"")+'"></u>').join("")+'</i><em>%'+Math.round(p)+'</em></span>';}
+function dr(l,v){return v==null||v===""||v==="—"?"":'<div class="mp-dr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function sec(t,s,icn,a,rows){return '<section class="mp-sec"><header><span style="--a:'+a+'">'+ic(icn,19)+'</span><div><b>'+t+'</b><small>'+s+'</small></div></header>'+rows+'</section>';}
+function seedOf(row){let s=0;for(const ch of String(row.id))s+=ch.charCodeAt(0);return s;}
+function demo(module,row){const s=seedOf(row),w=k=>team[(s+k)%team.length];
+  if(!row.mpComments)row.mpComments=[{author:w(1),date:shift(day(),-6),text:"Kapsam toplantısı yapıldı, gereksinimler netleşti."},{author:w(2),date:shift(day(),-3),text:"Takvim güncellendi, ilk teslim önümüzdeki hafta."},{author:w(0),date:shift(day(),-1),text:"Müşteri onayı alındı, devam ediyoruz."}];
+  if(!row.mpFiles)row.mpFiles=[{name:"Kapsam_dokumani.pdf",size:"412 KB",who:w(1),date:shift(day(),-12)},{name:"Is_plani.xlsx",size:"88 KB",who:w(2),date:shift(day(),-8)},{name:"Saha_fotografi.jpg",size:"1,2 MB",who:w(3),date:shift(day(),-4)},{name:"Toplanti_notu.docx",size:"64 KB",who:w(0),date:shift(day(),-2)}];
+  return {s,w};}
+function hrList(items){return items.map(x=>'<div class="c2-rc"'+(x.open?' data-action="open" data-value="'+x.open+'" style="cursor:pointer"':"")+'>'+(x.o?'<span class="o">'+e(x.o)+'</span>':"")+'<div class="h"><div><b>'+e(x.t)+'</b>'+(x.lines||[]).map(([i,v])=>'<span class="c2-ln"><i>'+ic(i,13)+'</i>'+e(v)+'</span>').join("")+'</div>'+(x.chip?'<span class="mp-chip" style="--c:'+x.chip[1]+'">'+e(x.chip[0])+'</span>':"")+ic("right",22)+'</div>'+(x.foot?'<div class="c2-ft"><div><span>'+ic("calendar",15)+'</span><div><small>'+x.foot[0]+'</small><strong>'+x.foot[1]+'</strong></div></div>'+(x.foot[2]?'<i></i><div><span>'+ic("check",15)+'</span><div><small>'+x.foot[2]+'</small><strong>'+x.foot[3]+'</strong></div></div>':"")+'</div>':"")+'</div>').join("");}
+window.mobileProjRecord=function(module,row,isInline){const dv=(k)=>{const v=display(module,row,k);return v&&v!=="—"&&v!=="-"?v:"";};
+  const isP=module==="projects",{s,w}=demo(module,row),tasks=db.tasks.filter(t=>t.project===row.id||(!isP&&(seedOf(t)+s)%4===0)).slice(0,6);
+  const tabs=isP?[["info","Detay"],["comments","Yorum ("+row.mpComments.length+")"],["files","Ekler ("+row.mpFiles.length+")"],["activities","Aktiviteler"],["other","Diğer"]]:[["info","Detay"],["comments","Yorum ("+row.mpComments.length+")"],["files","Ekler ("+row.mpFiles.length+")"],["work","İş listesi ("+tasks.length+")"],["other","Diğer"]];
+  if(!tabs.some(t=>t[0]===recordTab))recordTab="info";
+  const opts=fieldOf(module,"status")?.options||[],cur=row.status||opts[0]||"—",idx=Math.max(0,opts.indexOf(cur)),pct=isP?(typeof completion==="function"?completion(row.id):40):Math.round((idx+1)/Math.max(1,opts.length)*100);
+  const stc=["#64748B","#3158C9","#7C3AED","#D97706","#1B9C6B"][idx%5];
+  const cari=dv("account")||["Kuzey Teknoloji A.Ş.","Mavi Endüstri","Eksen Lojistik","Pera Yazılım"][s%4];
+  const start=row.start||shift(day(),-40),end=row.end||shift(day(),50);
+  const owner=dv("owner")||row.owner||w(0);
+  let body;
+  if(recordTab==="comments")body=row.mpComments.slice().reverse().map(c=>'<div class="mp-cm">'+avatar(c.author)+'<div><header><b>'+e(c.author)+'</b><small>'+e(dateText(c.date))+'</small></header><p>'+e(c.text)+'</p></div></div>').join("")+'<form class="mp-cbox" data-mpform="'+module+'|'+row.id+'"><textarea name="t" required placeholder="Yorum yaz…"></textarea><button>Gönder</button></form>';
+  else if(recordTab==="files"){window.EKR=render;window.EKADD=a=>{row.mpFiles.unshift(...a);persist&&persist(a.length+" dosya eklendi.");render();};body=mobileEkler(row.mpFiles);}
+  else if(recordTab==="work")body=hrList(tasks.map(t=>({o:t.code,t:t.name,lines:[["flag","Aşama: "+t.status]],open:"tasks|"+t.id})))||'<p class="c2-empty">Kayıt bulunamadı</p>';
+  else if(recordTab==="activities")body=hrList(["Proje başlangıç toplantısı","Saha keşfi","Malzeme teslimi","Ara değerlendirme","Müşteri sunumu"].map((n,k)=>({t:n,chip:[["Tamamlandı","#1B9C6B"],["Devam ediyor","#3158C9"],["Planlandı","#D97706"]][k%3],foot:["Tarih",dateText(shift(start,k*9))]})));
+  else if(recordTab==="other"){const back='<button class="mp-back" data-mpo="">'+ic("left",16)+'Diğer</button>';
+    const T=isP?[["work","İş listesi","work","#1B9C6B",tasks.length],["packs","Paketler","check","#2F80ED",3],["pay","Ödeme","money","#3B5BDB",4],["dist","Dağıtım","external","#8A94A6",null]]:[["act","Aktiviteler","chart","#3B5BDB",null],["hist","Geçmiş","clock","#1B9C6B",null],["dist","Dağıtım","external","#8A94A6",null],["op","Görüş / Onay","user","#2F80ED",null]];
+    const lists={work:()=>hrList(tasks.map(t=>({o:t.code,t:t.name,lines:[["flag","Aşama: "+t.status]],open:"tasks|"+t.id}))),packs:()=>hrList(["Altyapı paketi","Yazılım paketi","Eğitim paketi"].map((n,k)=>({o:"PKT-"+(101+k),t:n,lines:[["flag","İlerleme: %"+[80,45,10][k]]]}))),
+      pay:()=>hrList([1,2,3,4].map(k=>({t:k+". hakediş",lines:[["money",new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY",maximumFractionDigits:0}).format(120000+k*35000)]],chip:k<3?["Ödendi","#1B9C6B"]:["Bekliyor","#D97706"],foot:["Vade",dateText(shift(start,k*30))]}))),
+      dist:()=>hrList([0,1,2].map(k=>({t:w(k+1),lines:[["mail",["Bilgi","Onay","Bilgi"][k]]]}))),act:()=>hrList(["Süreç başlatıldı","Belge yüklendi","Aşama değişti","Onaya gönderildi"].map((n,k)=>({t:n,lines:[["user",w(k)]],foot:["Tarih",dateText(shift(start,k*6))]}))),
+      hist:()=>historyTimeline(typeof demoEvents==="function"?demoEvents(row,module):[]),op:()=>hrList([{t:w(2),lines:[["chat","Uygun, devam edilebilir."]],chip:["Onaylandı","#1B9C6B"]},{t:w(3),lines:[["chat","Bütçe kontrolü bekleniyor."]],chip:["Bekliyor","#D97706"]}])};
+    body=MP.other&&lists[MP.other]?back+lists[MP.other]():'<div class="c2-tiles">'+T.map(([k,l,i,c,n])=>'<button class="c2-tile" style="--t:'+c+'" data-mpo="'+k+'"><span>'+ic(i,24)+'</span><b>'+l+(n!=null?'<em>'+n+'</em>':"")+'</b></button>').join("")+'</div>';}
+  else{
+    const hero='<div class="mp-hero"><div><span class="t">'+e((row.name||"?")[0])+'</span><div class="tx"><b>'+e(row.name||row.code)+'</b><small>'+e(row.code)+' · '+e(cari)+'</small></div><span class="mp-chip" style="--c:'+stc+'">'+e(cur)+'</span></div><footer>'+ic("calendar",17)+e(dateText(start))+' – '+e(dateText(end))+'</footer></div>';
+    const next=opts[idx+1];
+    body=hero+(isP?'<div class="mp-amt"><header><span>'+ic("money",19)+'</span><b>Finans bilgileri</b></header><div class="row">'+[["Bütçe","#3158C9",420000+s*1000],["Harcanan","#EA8A2B",180000+s*500],["Kalan","#1B9C6B",240000+s*500]].map(([l,c,v])=>'<div style="--c:'+c+'"><small>'+l+'</small><strong>'+new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY",maximumFractionDigits:0}).format(v)+'</strong></div>').join("")+'</div></div>'
+      :'<div class="mp-stagebtn"><button data-action="advance" data-value="'+e(next||"")+'" '+(next?"":"disabled")+'>'+ic("arrow",20)+'Aşama değiştir</button></div>')+
+      (isP?sec("Genel bilgiler","Tür, ilerleme, birim ve sorumlu","work","#3158C9",dr("Tür",e(dv("type")||"Uygulama projesi"))+dr("İlerleme",step(pct))+dr("Birim",e(dv("unit")||"Proje Yönetimi"))+dr("Sorumlu",e(owner)))+
+            sec("Finans bilgileri","Süreç ve sözleşme","money","#1B9C6B",dr("Süreç",e(["Satış süreci","Kurulum süreci","Bakım süreci"][s%3]))+dr("Sözleşme türü",e(["Anahtar teslim","Birim fiyat","Götürü bedel"][s%3])))
+          :sec("Genel bilgiler","İlerleme ve tür","flow","#3158C9",dr("İlerleme",step(pct))+dr("Tür",e(dv("type")||["Satın alma","Onay","İK"][s%3])))+
+            sec("Detay bilgileri","Birim, sorumlu, dönem ve bütçe","note","#7C3AED",dr("Birim",e(dv("unit")||"Operasyon"))+dr("Sorumlu",e(owner))+dr("Dönem","2026 / Q"+(1+s%4))+dr("Bütçe",new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY",maximumFractionDigits:0}).format(85000+s*700))));
+  }
+  return '<div class="record-panel desk-record task-record">'+deskHeader(module,row.name||row.code,row.code,isInline)+tabStrip(tabs,isInline,"Kayıt bölümleri")+'<div class="panel-body mp-body">'+body+'</div><footer class="panel-actions">'+(isLocked(module,row)?"":button("Düzenle","edit",{icon:"edit",value:module+"|"+row.id,kind:"primary"}))+'</footer></div>';
+};
+const _rp=recordPopup;
+recordPopup=function(context=popup,isInline=false){if(context&&["projects","workflows"].includes(context.module)){const row=rowOf(context.module,context.id);if(row)return mobileProjRecord(context.module,row,isInline);}return _rp.apply(this,arguments);};
+document.addEventListener("click",ev=>{const o=ev.target.closest("[data-mpo]");if(o){ev.preventDefault();MP.other=o.dataset.mpo;render();return;}const t=ev.target.closest('[data-action="tab"],[data-action="inline-tab"],[data-action="open"]');if(t)MP.other="";},true);
+document.addEventListener("submit",ev=>{const f=ev.target;if(!f.dataset?.mpform)return;ev.preventDefault();const [m,id]=f.dataset.mpform.split("|"),r=rowOf(m,id),t=new FormData(f).get("t").trim();if(!r||!t)return;r.mpComments.push({author:team[0],date:day(),text:t});render();persist&&persist("Yorum eklendi.");});
+})();
+</script>
+
+<style id="list-gaps">html body .c2-list{gap:16px!important}html body .c2-rc,html body .cy-opp,html body .cy-item,html body .cy-person,html body .hr-card,html body .mt-rec{margin-bottom:16px!important}html body .me-row+.me-row::before{height:1.5px!important;background:#E3E8EF!important;left:16px!important}html body .mp-dr,html body .m2-row,html body .m2-item,html body .c2-row{border-bottom:1.5px solid #E9EDF3!important}html body .mp-dr:last-child,html body .m2-row:last-child,html body .m2-item:last-child,html body .c2-row:last-child{border-bottom:0!important}html body .c2-tl .c2-mc{margin-bottom:14px!important}html body .mp-body{gap:16px!important}</style>
 </body>
 </html>
