@@ -4553,6 +4553,9 @@ function otherDetail(module,row,key){
     cari:["Cari bilgileri",li("crm",e(acc?.name||"—"),"Cari kodu "+e(acc?.code||"C-"+(1000+s%900)))+li("user","Yetkili kişi",who(1)+" · Satın alma")+li("phone","Telefon","0532 "+(300+s%600)+" 12 "+(10+s%80))+li("mail","E-posta","info@"+(e(acc?.name||"cari").toLocaleLowerCase("tr").replace(/[^a-z0-9]+/g,"").slice(0,14)||"cari")+".com.tr")+li("pin","Adres","Organize Sanayi Bölgesi, "+["Bursa","Ankara","İzmir","Konya"][s%4])+li("money","Açık bakiye","Vadesi gelmemiş",money(Math.round(amt*.18)))],
     teklif:["Teklifler",[1,2,3].map(v=>li("file","TKF-26-"+(200+s%90+v)+" · v"+v,d(v*6)+" · "+["Reddedildi","Revize istendi","Gönderildi"][v-1],money(Math.round(amt*(1.12-v*.04))))).join("")],
     aktivite:["Aktiviteler",[["phone","Arama","İlk görüşme, ihtiyaçlar konuşuldu"],["people","Toplantı","Keşif toplantısı yapıldı"],["chart","Demo","Ürün demosu gösterildi"],["mail","E-posta","Teklif ve referans listesi gönderildi"],["calendar","Planlandı","Karar toplantısı"]].map(([i,t,n],k)=>li(i,t+" · "+who(k),n+" · "+d(k*4),k===4?"Planlı":"Yapıldı")).join("")],
+    gecmis:["Geçmiş",["Oluşturuldu","Atandı","Görüşme yapıldı","Teklif gönderildi","Güncellendi"].map((v,k)=>li("clock",v,who(k)+" · "+d(k*3))).reverse().join("")],
+    dagitim:["Dağıtım listesi",[0,1,2].map(k=>li("user",who(k+1),["Bilgi","Onay","Bilgi"][k]+" · "+d(k))).join("")],
+    gorus:["Görüş / Onay",[0,1].map(k=>li("user",who(k+2),["Görüş: Fiyat uygun, devam edilebilir.","Onay bekleniyor"][k]+" · "+d(k*2))).join("")],
     karlilik:["Kârlılık",li("money","Satış tutarı","KDV hariç",money(amt))+li("box","Maliyet","Lisans, hizmet ve donanım",money(cost))+li("chart","Brüt kâr","Satış − maliyet",money(amt-cost))+li("tag","Kâr marjı","Brüt kâr / satış","%"+Math.round((amt-cost)/amt*100))],
     proje:["Proje",li("projects",e(prj?.name||"—"),"Bağlı proje")+li("user","Proje yöneticisi",who(2))+li("calendar","Başlangıç",d(0))],
     sozlesme:["Sözleşme",li("file",e(row.contract||"SÖZ-26-"+(300+s%90)),"İmzalandı · "+d(-10))+li("calendar","Bitiş",d(355))+li("shield","Teminat","Yok")],
@@ -4587,7 +4590,7 @@ function taskRecord(row,events,isInline,stepAction,module="tasks"){
   }else if(recordTab==="history"){
     body=tabSearch(historyTimeline(events),"İşlem ara","Henüz işlem kaydedilmedi.");
   }else if(recordTab==="other"){
-    const K={Cari:"cari",Teklifler:"teklif",Aktiviteler:"aktivite","Kârlılık":"karlilik",Proje:"proje","Sözleşme":"sozlesme","Ödeme planı":"odeme","Giriş / çıkış":"hareket",Zimmet:"zimmet",Garanti:"garanti",Konum:"konum","Alt işler":"altis","Servis durumu":"servis",Stok:"stok","Servis formu":"form"};const tile=(icon,title,sub,tone)=>'<div class="mother-tile'+(otherOpen===K[title]?" on":"")+'" role="button" tabindex="0" data-other="'+K[title]+'" style="--tone:'+tone+'"><span>'+svg(icon,19)+'</span><div><strong>'+title+'</strong><small>'+sub+'</small></div>'+svg("right",15)+'</div>';
+    const K={"Geçmiş":"gecmis","Dağıtım":"dagitim","Görüş / Onay":"gorus",Cari:"cari",Teklifler:"teklif",Aktiviteler:"aktivite","Kârlılık":"karlilik",Proje:"proje","Sözleşme":"sozlesme","Ödeme planı":"odeme","Giriş / çıkış":"hareket",Zimmet:"zimmet",Garanti:"garanti",Konum:"konum","Alt işler":"altis","Servis durumu":"servis",Stok:"stok","Servis formu":"form"};const tile=(icon,title,sub,tone)=>'<div class="mother-tile'+(otherOpen===K[title]?" on":"")+'" role="button" tabindex="0" data-other="'+K[title]+'" style="--tone:'+tone+'"><span>'+svg(icon,19)+'</span><div><strong>'+title+'</strong><small>'+sub+'</small></div>'+svg("right",15)+'</div>';
     if(module==="finance"){const acc=rowOf("accounts",row.account),prj=rowOf("projects",row.project);
       body='<div class="mother-grid">'+tile("crm","Cari",e(acc?.name||"—"),"#4967F2")+tile("projects","Proje",e(prj?.name||"—"),"#7C5CFC")+tile("file","Sözleşme",e(row.contract||"—"),"#D98B21")+tile("money","Ödeme planı",e(row.currency||"TL")+" · tek taksit","#1B9C6B")+'</div>'+otherDetail(module,row,otherOpen)+
         '<section class="editor-card"><h3>İlişkili kayıtlar</h3>'+linkedList(links)+'</section>';
@@ -4595,7 +4598,7 @@ function taskRecord(row,events,isInline,stepAction,module="tasks"){
       body='<div class="mother-grid">'+tile("truck","Giriş / çıkış","Son 30 gün hareketleri","#4967F2")+tile("user","Zimmet","Kullanıcı ve teslim bilgisi","#7C5CFC")+tile("shield","Garanti","Servis ve garanti kayıtları","#1B9C6B")+tile("pin","Konum",e(row.warehouse||"—"),"#D98B21")+'</div>'+otherDetail(module,row,otherOpen)+
         stkMoves(row)+'<section class="editor-card"><h3>İlişkili kayıtlar</h3>'+linkedList(links)+'</section>';
     }else if(module==="opportunities"){const acc=rowOf("accounts",row.account);
-      body='<div class="mother-grid">'+tile("crm","Cari",e(acc?.name||"—"),"#4967F2")+tile("file","Teklifler","Fırsata bağlı teklifler","#7C5CFC")+tile("calendar","Aktiviteler","Görüşme ve toplantılar","#D98B21")+tile("money","Kârlılık",e(oppMoney((Number(row.amount)||0)-(Number(row.cost)||0))),"#1B9C6B")+'</div>'+otherDetail(module,row,otherOpen)+
+      body='<div class="mother-grid">'+tile("clock","Geçmiş","","#1B9C6B")+tile("external","Dağıtım","","#8A94A6")+tile("user","Görüş / Onay","","#3B5BDB")+tile("crm","Cari",e(acc?.name||"—"),"#4967F2")+tile("file","Teklifler","Fırsata bağlı teklifler","#7C5CFC")+tile("calendar","Aktiviteler","Görüşme ve toplantılar","#D98B21")+tile("money","Kârlılık",e(oppMoney((Number(row.amount)||0)-(Number(row.cost)||0))),"#1B9C6B")+'</div>'+otherDetail(module,row,otherOpen)+
         '<section class="editor-card"><h3>İlişkili kayıtlar</h3>'+linkedList(links)+'</section>';
     }else body='<div class="mother-grid">'+tile("check","Alt işler",checks.filter(x=>x.done).length+" / "+checks.length+" tamamlandı","#1B9C6B")+tile("flow","Servis durumu",e(row.status||"—"),"#4967F2")+tile("box","Stok","Kullanılan malzemeler","#D98B21")+tile("edit","Servis formu","İmza ve form","#7C5CFC")+'</div>'+otherDetail(module,row,otherOpen)+
       taskChecklist(row)+'<section class="editor-card"><h3>İlişkili kayıtlar</h3>'+linkedList(links)+'</section>';
@@ -7677,6 +7680,24 @@ html body .mt-tile .l{display:flex;align-items:center;justify-content:center;gap
 html body .mt-tile .l b{flex:none!important;font-size:13.5px!important;font-weight:600!important;color:#334155!important;line-height:1.25}
 html body .mt-tile .l .c{min-width:0!important;height:auto!important;padding:1px 6px!important;border-radius:10px!important;background:#E8F5EF!important;color:#1B9C6B!important;font-size:12px!important;font-weight:700!important;display:inline-block!important}
 html body .mt-tile>svg{display:none!important}
+</style>
+<style id="mother-m">
+html body .mother-grid{display:flex!important;flex-wrap:wrap;justify-content:center;gap:16px!important}
+html body .mother-tile{width:120px!important;height:132px!important;flex:none;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:10px!important;padding:8px 6px!important;border:0!important;border-radius:18px!important;background:#fff!important;box-shadow:0 4px 14px #0F172A0f!important;text-align:center!important}
+html body .mother-tile>span{width:48px!important;height:48px!important;border-radius:50%!important;background:var(--tone)!important;color:#fff!important;display:grid!important;place-items:center!important;opacity:.95}
+html body .mother-tile>span svg{width:24px;height:24px}
+html body .mother-tile>div strong{font-size:13.5px!important;font-weight:600!important;color:#334155!important}
+html body .mother-tile>div small,html body .mother-tile>svg{display:none!important}
+html body .mother-tile.on{box-shadow:0 0 0 2px #3158C9,0 4px 14px #0F172A0f!important}
+html body .mo-panel{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+html body .mo-panel h3{margin:4px 0 10px!important;font-size:15px}
+html body .mo-list{display:grid;gap:10px}
+html body .mo-row{padding:12px 16px!important;border:.8px solid #E4E9F1!important;border-radius:19px!important;background:#fff!important;box-shadow:0 4px 14px #0F1F3D0b;gap:10px!important}
+html body .mo-row>span{width:24px!important;height:24px!important;box-sizing:border-box;border-radius:50%!important;background:#F8FAFD!important;border:1.2px solid #3158C9;color:#3158C9!important}
+html body .mo-row>span svg{width:13px;height:13px}
+html body .mo-row strong{font-size:15px!important;font-weight:700!important;color:#141B2D!important}
+html body .mo-row small{font-size:13px!important;color:#334155!important;margin-top:4px!important}
+html body .mo-row b{font-size:14px!important;color:#141B2D!important}
 </style>
 </body>
 </html>
