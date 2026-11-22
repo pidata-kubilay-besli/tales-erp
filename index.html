@@ -8318,7 +8318,7 @@ function secCal(){
 function oppCard(o){const s=stg(o.stage),pct=o.prob;
   return '<button class="cy-opp" data-cy="opp" data-v="'+o.id+'"><div class="top"><span class="code">'+esc(o.code)+'</span><span class="cy-badge" style="--c:'+s[1]+'">'+esc(s[0])+'</span></div><div class="mid"><div><b>'+esc(o.name)+'</b><span class="cy-ir"><i>'+ic("building",12)+'</i>'+esc(o.cust)+'</span><span class="cy-ir"><i>'+ic("target",12)+'</i>'+esc(o.type)+'</span></div>'+ic("right",25)+'</div>'+
     '<div class="cy-foot"><div><span>'+ic("user",16)+'</span><div><small>Sorumlu</small><strong>'+esc(o.owner)+'</strong></div></div><i></i><div><span>'+ic("calendar",16)+'</span><div><small>Kapanış tarihi</small><strong>'+dt(o.close)+'</strong></div></div></div>'+
-    (pct?'<div class="cy-prog"><div>'+[1,2,3,4,5].map(k=>'<i class="'+(k*20<=pct?"on":"")+'"></i>').join("")+'</div><small>%'+pct+'</small></div>':"")+'</button>';}
+    (pct?'<div class="cy-prog" style="--pc:'+(pct>=70?"#22C55E":pct>=40?"#F59E0B":"#EF4444")+'"><div>'+[1,2,3,4,5].map(k=>'<i class="'+(k*20<=pct+10?"on":"")+'"></i>').join("")+'</div><small>%'+pct+'</small></div>':"")+'</button>';}
 function search(){return '<label class="c2-search">'+ic("search",17)+'<input id="cy-q" value="'+esc(V.q)+'" placeholder="Ara"></label>';}
 const hit=s=>!V.q||s.toLocaleLowerCase("tr").includes(V.q.toLocaleLowerCase("tr"));
 function secOpps(){return search()+'<div class="cy-l">'+S.opps.filter(o=>hit(o.name+o.cust+o.code)).map(oppCard).join("")+'</div>';}
@@ -8616,5 +8616,6 @@ html body .cy-lay button{width:34px;height:30px;border:0;border-radius:8px;backg
 html body .cy-lay button.on{background:#fff;color:#3158C9;box-shadow:0 1px 3px #0F172A1f}
 @media (max-width:820px){html body .cy-grid .cy-l{grid-template-columns:1fr}html body .cy-lay{display:none}}
 </style>
+<style id="cy-prog-c">html body .cy-prog>div i.on{background:var(--pc)!important}html body .cy-prog small{color:var(--pc)!important;font-weight:800}</style>
 </body>
 </html>
