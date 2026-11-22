@@ -5144,6 +5144,18 @@ if(location.hash.startsWith("#opportunities")||location.hash.startsWith("#financ
 .ik2-btn.primary{background:#312E81;border-color:#312E81;box-shadow:none}.ik2-btn.primary:hover{background:#262361}
 .ik2-btn .ik2-count{background:#fff;color:#D23F4A}
 .ik2-btn .ik2-av{box-shadow:0 0 0 1.5px #fff}
+/* Sekmeler: kaydırmasız, karo düzeni */
+.ik2-nav{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:0;background:none;border:0;overflow:visible}
+.ik2-nav a{position:relative;display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:#2B3550;font-size:13px;white-space:normal;line-height:1.2}
+.ik2-nav a svg{flex:none;width:18px;height:18px;padding:6px;box-sizing:content-box;border-radius:9px;background:#F1F2F8;color:#4F46E5}
+.ik2-nav a:hover{border-color:#C9CFE8;background:#fff;box-shadow:0 3px 10px #141B2D0f}
+.ik2-nav a.on{background:#312E81;border-color:#312E81;color:#fff;box-shadow:0 6px 16px #312E8133}
+.ik2-nav a.on svg{background:#ffffff1f;color:#fff}
+.ik2-nav a em{position:absolute;top:-7px;right:-6px;background:#D23F4A;color:#fff;border:2px solid #F6F7FB}
+.ik2-nav a.on em{background:#D23F4A;color:#fff}
+.ik2-tabs{flex-wrap:wrap;overflow:visible;padding:8px 16px;gap:6px}
+.ik2-tabs button{height:32px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#4A5470}
+.ik2-tabs button.on{background:#312E81;border-color:#312E81;color:#fff}
 @media(max-width:720px){.ik2{padding:14px 10px 40px}.ik2-fields,.ik2-facts{grid-template-columns:minmax(0,1fr)}.ik2-stats,.ik2-preview{grid-template-columns:1fr 1fr}.ik2-bar{grid-template-columns:100px 1fr 36px}}
 </style>
 <script>
@@ -5157,6 +5169,7 @@ const dshort=v=>v?new Intl.DateTimeFormat("tr-TR",{day:"numeric",month:"short"})
 const dlong=v=>v?dateText(v):"—";
 const dd=(a,b)=>Math.round((asDate(b)-asDate(a))/864e5);
 const yearsBetween=(a,b=T)=>{const x=asDate(a),y=asDate(b);let n=y.getFullYear()-x.getFullYear();if(y.getMonth()<x.getMonth()||y.getMonth()===x.getMonth()&&y.getDate()<x.getDate())n--;return n;};
+const blank=v=>{const s=String(v??"").replace(/<[^>]*>/g,"").trim();return !s||s==="—"||s==="-"||/^— ·/.test(s);};
 const chip=(t,tone)=>'<span class="ik2-chip" style="--t:'+tone+'"><i></i>'+esc(t)+'</span>';
 const av=(name,cls="")=>'<span class="ik2-av '+cls+'" style="background:'+personTone(name)+'">'+esc(initials(name))+'</span>';
 const STATUS_TONE={"Onay bekliyor":"#C77712","Onaylandı":"#12936A","Reddedildi":"#D23F4A","İptal":"#64748B","Taslak":"#64748B","Ödendi":"#12936A","Aktif":"#12936A","İzinde":"#0EA5E9","Pasif":"#64748B","Deneme süresinde":"#7C3AED"};
@@ -5218,7 +5231,8 @@ function seedData(){
       blood:["A Rh+","0 Rh+","B Rh+","AB Rh+","A Rh-","0 Rh-"][i%6],marital:i%3?"Evli":"Bekâr",children:i%3?(i%4):0,disability:i===9?"%40 (görme)":"Yok",
       military:FEM.has(fn)?"—":(i%4===1?"Tecilli":"Yapıldı"),license:["B","B","Yok","B, C","B","Yok"][i%6],
       emergency:{name:["Ayten","Hasan","Gül","Mehmet","Sevgi","Ali"][i%6]+" "+LN[i],rel:["Anne","Baba","Eş","Kardeş","Eş","Anne"][i%6],phone:"05"+(40+i%7)+" 555 "+String(20+i).padStart(2,"0")+" "+String(60+i).padStart(2,"0")},
-      edu:[{school:sch[0],dept:sch[1],degree:sch[2],year:String(startYear-2-(i%3))}],langs:[{name:lang[0],level:lang[1]}],certs:i%2?["İSG Temel Eğitimi"]:["İSG Temel Eğitimi","Etkili İletişim"],
+      tc:String(1+i%9)+"*******"+String(10+i*3).slice(-2)+String(i%10),birthPlace:CITY[(i+2)%6],nationality:"T.C.",homePhone:"0312 4"+(10+i)+" "+String(20+i*2).padStart(2,"0")+" "+String(30+i).padStart(2,"0"),personalEmail:fn.toLocaleLowerCase("tr").replace(/[çğıöşü]/g,c=>({ç:"c",ğ:"g",ı:"i",ö:"o",ş:"s",ü:"u"})[c])+(1980+i)+"@example.com",
+      edu:[{school:sch[0],dept:sch[1],degree:sch[2],year:String(startYear-2-(i%3))},{school:CITY[i%6]+" "+["Fen","Anadolu","Kolej"][i%3]+" Lisesi",dept:["Sayısal","Eşit ağırlık","Sözel"][i%3],degree:"Lise",year:String(startYear-6-(i%3))}],langs:[{name:lang[0],level:lang[1]}].concat(i%2?[{name:"Almanca",level:"A2"}]:[]),certs:i%2?["İSG Temel Eğitimi"]:["İSG Temel Eğitimi","Etkili İletişim"],
       bank:"Örnek Bankası · TR** **** **** **** **"+String(10+i).padStart(2,"0"),salaryBand:["B4","B3","B2","B1"][Math.min(rank,3)],sgk:"SGK-"+(48200+i*13),
       carry:(i*3)%9,usedBase:(i*5)%9,
       score:{award:20+((i*13)%55),penalty:(i*7)%18},
@@ -5259,11 +5273,11 @@ function seedData(){
   const trainings=[["İş Sağlığı ve Güvenliği (yıllık)",true,D(20),"Zorunlu",16],["Bilgi Güvenliği Farkındalığı",true,D(35),"Zorunlu",8],["KVKK Temel Eğitimi",true,D(-10),"Zorunlu",4],["Etkili Geri Bildirim",false,D(48),"Gelişim",6],["İleri Excel ile Raporlama",false,D(15),"Gelişim",12],["Müşteri Deneyimi Yönetimi",false,D(70),"Gelişim",8]].map(([name,req,due,kind,hours],i)=>({id:"T"+(i+1),name,req,due,kind,hours,people:people.filter((_,k)=>req||k%(i+2)===0).map((p,k)=>({id:p.id,done:(k+i)%3!==0}))}));
   const goals=[["Müşteri memnuniyeti puanını 4,5'e çıkar","SAT",72],["Ay sonu kapanışını 3 iş gününe indir","FIN",85],["Mobil uygulama sürümünü yayınla","BT",64],["Depo sayım farkını %0,5 altına düşür","OPR",48],["İşe alım süresini 30 güne indir","IK",57],["Enerji tüketimini %10 azalt","IDR",33]];
   const scores=[[3,"Ödül","Müşteri teşekkür mektubu",15],[7,"Ödül","Proje zamanında teslim",20],[11,"Ceza","Geç kalma (3. kez)",-5],[2,"Ödül","Yılın ekip arkadaşı adaylığı",25],[15,"Ödül","Maliyet tasarrufu önerisi",15],[20,"Ceza","Zimmet tutanağı gecikmesi",-3],[5,"Ödül","Mentorluk",10]].map(([pi,kind,reason,pts],i)=>({id:"S"+i,person:people[pi].id,kind,reason,pts,date:D(-(i*6)-2),by:"Deniz Kaya"}));
-  return {v:1,people,leaves,overtime,expenses,candidates,positions,trainings,goals,scores,log:[]};
+  return {v:2,people,leaves,overtime,expenses,candidates,positions,trainings,goals,scores,log:[]};
 }
 let S;
 try{S=JSON.parse(localStorage.getItem(KEY)||"null");}catch{S=null;}
-if(!S||S.v!==1)S=seedData();
+if(!S||S.v!==2)S=seedData();
 const save=msg=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch{}if(msg)showSnackbar(msg);};
 const P=id=>S.people.find(p=>p.id===id);
 const pname=id=>P(id)?.name||"—";
@@ -5535,10 +5549,10 @@ function personDrawer(id,tab){
   const myL=S.leaves.filter(l=>l.person===id).sort((a,c)=>c.start.localeCompare(a.start));
   const score=p.score.award-p.score.penalty+S.scores.filter(s=>s.person===id).reduce((n,s)=>n+s.pts,0);
   const tabs=[["general","Genel"],["personal","Özlük & iletişim"],["edu","Eğitim & dil"],["career","Kariyer"],["leave","İzinler"],["pdks","PDKS"],["assets","Zimmet"],["perf","Performans"],["docs","Belgeler"],["pay","Bordro & banka"]];
-  const facts=list=>'<dl class="ik2-facts">'+list.map(([k,v,full])=>'<div class="'+(full?"full":"")+'"><dt>'+esc(k)+'</dt><dd>'+(v===undefined||v===""?"—":v)+'</dd></div>').join("")+'</dl>';
+  const facts=list=>'<dl class="ik2-facts">'+list.filter(([,v])=>!blank(v)).map(([k,v,full])=>'<div class="'+(full?"full":"")+'"><dt>'+esc(k)+'</dt><dd>'+(v===undefined||v===""?"—":v)+'</dd></div>').join("")+'</dl>';
   let body;
   switch(tab){
-    case "personal":body='<div class="ik2-card"><h3>Kimlik ve özlük</h3>'+facts([["Ad",esc(p.first)],["Soyad",esc(p.last)],["Doğum tarihi",dlong(p.birth)+" ("+yearsBetween(p.birth)+" yaş)"],["Cinsiyet",esc(p.gender)],["Medeni durum",esc(p.marital)],["Çocuk sayısı",p.children],["Kan grubu",esc(p.blood)],["Engellilik",esc(p.disability)],["Askerlik",esc(p.military)],["Ehliyet",esc(p.license)]])+'</div><div class="ik2-card"><h3>İletişim</h3>'+facts([["GSM",esc(p.gsm)],["Dahili",esc(p.ext)],["İş e-postası",esc(p.email)],["Şehir",esc(p.city)],["Adres",esc(p.address),true]])+'</div><div class="ik2-card"><h3>Acil durumda ulaşılacak kişi</h3>'+facts([["Ad soyad",esc(p.emergency.name)],["Yakınlık",esc(p.emergency.rel)],["Telefon",esc(p.emergency.phone)]])+'</div>';break;
+    case "personal":body='<div class="ik2-card"><h3>Kimlik ve özlük</h3>'+facts([["Ad",esc(p.first)],["Soyad",esc(p.last)],["T.C. kimlik no",esc(p.tc)],["Uyruk",esc(p.nationality)],["Doğum yeri",esc(p.birthPlace)],["Doğum tarihi",dlong(p.birth)+" ("+yearsBetween(p.birth)+" yaş)"],["Cinsiyet",esc(p.gender)],["Medeni durum",esc(p.marital)],["Çocuk sayısı",p.children],["Kan grubu",esc(p.blood)],["Engellilik",esc(p.disability)],["Askerlik",esc(p.military)],["Ehliyet",esc(p.license)]])+'</div><div class="ik2-card"><h3>İletişim</h3>'+facts([["GSM",esc(p.gsm)],["Dahili",esc(p.ext)],["Ev telefonu",esc(p.homePhone)],["İş e-postası",esc(p.email)],["Kişisel e-posta",esc(p.personalEmail)],["Şehir",esc(p.city)],["Adres",esc(p.address),true]])+'</div><div class="ik2-card"><h3>Acil durumda ulaşılacak kişi</h3>'+facts([["Ad soyad",esc(p.emergency.name)],["Yakınlık",esc(p.emergency.rel)],["Telefon",esc(p.emergency.phone)]])+'</div>';break;
     case "edu":body='<div class="ik2-card"><h3>Eğitim</h3>'+p.edu.map(x=>facts([["Okul",esc(x.school)],["Bölüm",esc(x.dept)],["Derece",esc(x.degree)],["Mezuniyet",esc(x.year)]])).join("")+'</div><div class="ik2-card"><h3>Yabancı dil</h3><div class="ik2-rows">'+p.langs.map(l=>'<div class="ik2-row"><b>'+esc(l.name)+'</b><div class="end">'+chip(l.level,"#4F46E5")+'</div></div>').join("")+'</div></div><div class="ik2-card"><h3>Sertifikalar</h3><div class="ik2-rows">'+p.certs.map(c=>'<div class="ik2-row">'+ic("award",16)+'<b>'+esc(c)+'</b></div>').join("")+'</div></div>';break;
     case "career":body='<div class="ik2-card"><h3>Görev ve kadro</h3>'+facts([["Birim",esc(u[1])],["Unvan",esc(p.title)],["Yönetici",esc(mgr?.name||"Genel Müdür")],["Sözleşme",esc(p.contract)+(p.contractEnd?" · bitiş "+dlong(p.contractEnd):"")],["Çalışma modeli",esc(p.model)],["Vardiya",esc((SHIFTS.find(s=>s.id===p.shift)||{}).name||"")]])+'</div><div class="ik2-card"><h3>Kariyer geçmişi</h3><div class="ik2-vsteps">'+p.career.slice().reverse().map(c=>'<div class="ik2-vstep done"><span>'+ic("flag",13)+'</span><div><b>'+esc(c.type)+'</b><small>'+dlong(c.date)+' · '+esc(c.detail)+'</small></div></div>').join("")+'</div></div>';break;
     case "leave":body='<div class="ik2-preview" style="margin-bottom:12px">'+[["Hak edilen",b.earned],["Devreden",b.carry],["Kullanılan",b.used],["Kalan",b.left]].map(([k,v])=>'<div><small>'+k+'</small><b>'+v+' gün</b></div>').join("")+'</div><div class="ik2-card"><h3>İzin talepleri</h3>'+(myL.length?'<div class="ik2-rows">'+myL.map(l=>'<div class="ik2-row" data-ik="leave" data-v="'+l.id+'" style="cursor:pointer">'+chip(lt(l.type).name,lt(l.type).color)+'<span>'+dshort(l.start)+' – '+dshort(l.end)+' · <b>'+l.days+' gün</b></span><div class="end">'+st(l.status)+'</div></div>').join("")+'</div>':'<p class="ik2-empty">İzin kaydı yok</p>')+'</div>';break;
@@ -5564,7 +5578,7 @@ function leaveDrawer(id){
   const icon={done:ic("check",14),now:ic("clock",14),no:ic("close",14),wait:"",skip:"–"};
   return '<div class="ik2-shade" data-ik="close"></div><aside class="ik2-drawer" role="dialog" aria-modal="true">'+
     '<div class="ik2-hero"><span class="ik2-av lg" style="background:'+t.color+'">'+ic("calendar",26)+'</span><div><h2>'+esc(t.name)+'</h2><p>'+esc(l.code)+' · '+esc(p.name)+' · talep '+ago(l.created)+'</p><div class="chips">'+st(l.status)+chip(l.days+" iş günü","#4F46E5")+(t.paid?chip("Ücretli","#12936A"):chip("Ücretsiz","#64748B"))+'</div></div><button class="ik2-x" data-ik="close" aria-label="Kapat">'+ic("close",18)+'</button></div>'+
-    '<div class="ik2-dbody"><div class="ik2-cols"><div class="c7"><div class="ik2-card"><h3>Talep bilgileri</h3><dl class="ik2-facts">'+[["Personel",who(p)],["Görev",esc(p.title)],["Başlangıç",dlong(l.start)],["Bitiş",dlong(l.end)],["İşe dönüş",dlong(l.ret)],["Süre",l.days+" iş günü"+(l.half?" (yarım gün dahil)":"")],["Yerine bakacak",esc(pname(l.substitute))],["İzinde ulaşım",esc(l.phone)],["Geçireceği yer",esc(l.place)]].concat(l.degree?[["Yakınlık derecesi",esc(l.degree)]]:[]).concat([["Açıklama",esc(l.note),true]]).map(([k,v,f])=>'<div class="'+(f?"full":"")+'"><dt>'+k+'</dt><dd>'+v+'</dd></div>').join("")+'</dl></div>'+
+    '<div class="ik2-dbody"><div class="ik2-cols"><div class="c7"><div class="ik2-card"><h3>Talep bilgileri</h3><dl class="ik2-facts">'+[["Personel",who(p)],["Görev",esc(p.title)],["Başlangıç",dlong(l.start)],["Bitiş",dlong(l.end)],["İşe dönüş",dlong(l.ret)],["Süre",l.days+" iş günü"+(l.half?" (yarım gün dahil)":"")],["Yerine bakacak",esc(pname(l.substitute))],["İzinde ulaşım",esc(l.phone)],["Geçireceği yer",esc(l.place)]].concat(l.degree?[["Yakınlık derecesi",esc(l.degree)]]:[]).concat([["Açıklama",esc(l.note),true]]).filter(([,v])=>!blank(v)).map(([k,v,f])=>'<div class="'+(f?"full":"")+'"><dt>'+k+'</dt><dd>'+v+'</dd></div>').join("")+'</dl></div>'+
     (t.balance?'<div class="ik2-card"><h3>Yıllık izin bakiyesi</h3><div class="ik2-preview">'+[["Hak edilen",b.earned],["Kullanılan",b.used],["Planlanan",b.planned],["Kalan",b.left]].map(([k,v])=>'<div><small>'+k+'</small><b>'+v+'</b></div>').join("")+'</div></div>':"")+'</div>'+
     '<div class="c5"><div class="ik2-card"><h3>Onay süreci</h3><div class="ik2-vsteps">'+l.steps.map((s,i)=>'<div class="ik2-vstep '+s.state+'"><span>'+(icon[s.state]||i+1)+'</span><div><b>'+esc(s.name)+'</b><small>'+esc(s.who)+' · '+({done:"Onayladı",now:"Onay bekliyor",no:"Reddetti",wait:"Sırada",skip:"Atlandı"})[s.state]+(s.date?" · "+dlong(s.date):"")+'</small>'+(s.note?'<p>'+esc(s.note)+'</p>':"")+'</div></div>').join("")+'</div></div></div></div></div>'+
     '<footer class="ik2-dfoot"><small>Talep '+dlong(l.created.slice(0,10))+' tarihinde oluşturuldu</small>'+(l.status==="Onay bekliyor"?'<button class="ik2-btn bad" data-ik="reject" data-k="leave" data-v="'+l.id+'">'+ic("close",15)+'Reddet</button><button class="ik2-btn ok" data-ik="approve" data-k="leave" data-v="'+l.id+'">'+ic("check",15)+'Onayla</button>':"")+(["Onay bekliyor","Taslak"].includes(l.status)||l.status==="Onaylandı"&&l.start>T?'<button class="ik2-btn" data-ik="cancel-leave" data-v="'+l.id+'">Talebi iptal et</button>':"")+'</footer></aside>';
@@ -5742,6 +5756,477 @@ render=function(){
 };
 window.ik2Debug={state:()=>S,page:ik2Page};
 if(location.hash.startsWith("#ik2"))readRoute();else renderNav();
+})();
+</script>
+
+<style id="is2-style">
+/* ══════════════════════════════════════════════════════════════════════
+   İŞ TAKİBİ 2.0 — bağımsız modül (İK 2.0 görsel dilini paylaşır)
+   ══════════════════════════════════════════════════════════════════════ */
+.is2 .w2-board{display:grid;grid-template-columns:repeat(6,minmax(250px,1fr));gap:12px;overflow-x:auto;padding-bottom:8px;align-items:start}
+.w2-col{background:#F3F4F9;border-radius:14px;padding:10px;min-height:300px;transition:background .15s,box-shadow .15s}
+.w2-col.over{background:#E8EAFB;box-shadow:inset 0 0 0 2px #4F46E5}
+.w2-col>header{display:flex;align-items:center;gap:8px;padding:2px 4px 10px}
+.w2-col>header i{width:10px;height:10px;border-radius:3px;background:var(--t)}
+.w2-col>header b{font-size:13.5px}
+.w2-col>header em{font-style:normal;font-size:12px;color:#6B7489;margin-left:auto}
+.w2-col>header em.full{color:#D23F4A;font-weight:700}
+.w2-col .w2-add{width:100%;height:34px;margin-top:4px;border:1.5px dashed #CDD2E2;border-radius:10px;background:transparent;color:#6B7489;font-size:12.5px;font-weight:650}
+.w2-col .w2-add:hover{border-color:#4F46E5;color:#4F46E5;background:#fff}
+.w2-quick{display:grid;gap:6px;margin-top:4px}
+.w2-quick input{height:36px;border:1px solid #4F46E5!important;border-radius:10px!important;padding:0 10px;font:inherit;font-size:13px;box-shadow:0 0 0 3px #4F46E522!important}
+.w2-card{display:grid;gap:8px;padding:12px;margin-bottom:8px;background:#fff;border:1px solid #E6E9F0;border-radius:12px;cursor:grab;transition:box-shadow .15s,border-color .15s,transform .15s;position:relative}
+.w2-card:hover{border-color:#CBD0F5;box-shadow:0 6px 16px #141B2D12}
+.w2-card.dragging{opacity:.45}
+.w2-card::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--pr)}
+.w2-card .top{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#6B7489}
+.w2-card .top .code{font:600 11px/1 ui-monospace,Consolas,monospace}
+.w2-card .top .type{margin-left:auto}
+.w2-card b.title{font-size:13.5px;line-height:1.35;font-weight:650;color:#141B2D}
+.w2-labels{display:flex;gap:4px;flex-wrap:wrap}
+.w2-label{height:18px;padding:0 7px;border-radius:5px;font-size:10.5px;font-weight:700;display:inline-flex;align-items:center;background:color-mix(in srgb,var(--t) 14%,#fff);color:var(--t)}
+.w2-card footer{display:flex;align-items:center;gap:8px;font-size:11.5px;color:#6B7489}
+.w2-card footer span{display:inline-flex;align-items:center;gap:3px}
+.w2-card footer .ik2-av{margin-left:auto}
+.w2-due{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;background:#F1F2F7;font-size:11px;font-weight:650;color:#4A5470}
+.w2-due.late{background:#FDEDEE;color:#D23F4A}.w2-due.today{background:#FFF4E2;color:#B56A0B}
+.w2-prog{height:4px;border-radius:9px;background:#EEF0F5;overflow:hidden}.w2-prog i{display:block;height:100%;background:#12936A;border-radius:9px}
+.w2-flag{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;color:var(--t)}
+/* Liste */
+.w2-group-row td{background:#F7F8FC!important;font-weight:750;font-size:12.5px;color:#2B3550;padding:9px 14px!important}
+.w2-check{width:16px;height:16px;accent-color:#4F46E5}
+.w2-bulk{display:flex;align-items:center;gap:8px;padding:10px 14px;margin-bottom:10px;border-radius:12px;background:#312E81;color:#fff;font-size:13px;font-weight:650}
+.w2-bulk select{height:32px;border-radius:8px!important;border:0!important;padding:0 8px;font:inherit;font-size:12.5px}
+/* İşlerim */
+.w2-day{display:grid;gap:8px}
+.w2-task{display:flex;align-items:center;gap:12px;padding:11px 14px;background:#fff;border:1px solid #E6E9F0;border-radius:12px;cursor:pointer}
+.w2-task:hover{border-color:#CBD0F5}
+.w2-task .done{width:22px;height:22px;border-radius:50%;border:2px solid #CBD5E1;background:#fff;display:grid;place-items:center;color:#fff;flex:none}
+.w2-task .done:hover{border-color:#12936A;background:#E7F6EF;color:#12936A}
+.w2-task .meta{display:flex;gap:6px;align-items:center;margin-left:auto;flex:none}
+.w2-timer{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:999px;border:0;background:#EEF0FF;color:#4F46E5;font-size:12px;font-weight:700}
+.w2-timer.run{background:#D23F4A;color:#fff;animation:w2pulse 1.6s infinite}
+@keyframes w2pulse{50%{box-shadow:0 0 0 5px #D23F4A22}}
+/* Takvim */
+.w2-month{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:#fff;border:1px solid #E6E9F0;border-radius:14px;overflow:hidden}
+.w2-month .wd{padding:9px;font-size:11.5px;font-weight:700;color:#6B7489;background:#FAFBFD;border-bottom:1px solid #E6E9F0;text-align:center}
+.w2-month .d{min-height:112px;padding:6px;border-right:1px solid #F0F2F7;border-bottom:1px solid #F0F2F7;display:flex;flex-direction:column;gap:3px}
+.w2-month .d.out{background:#FAFBFD;color:#B0B7C6}.w2-month .d.we{background:#FBFBFD}
+.w2-month .d.today>span{background:#4F46E5;color:#fff}
+.w2-month .d>span{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700}
+.w2-ev{display:block;width:100%;text-align:left;padding:3px 6px;border-radius:6px;border:0;font-size:11.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:color-mix(in srgb,var(--t) 13%,#fff);color:color-mix(in srgb,var(--t) 80%,#000);border-left:3px solid var(--t)}
+.w2-more{font-size:11px;color:#6B7489;background:none;border:0;text-align:left;padding:0 4px}
+/* Gantt */
+.w2-gantt{background:#fff;border:1px solid #E6E9F0;border-radius:14px;overflow:auto}
+.w2-gantt table{border-collapse:separate;border-spacing:0;min-width:100%}
+.w2-gantt th,.w2-gantt td{height:38px;border-bottom:1px solid #F0F2F7;padding:0;font-size:12px}
+.w2-gantt th{position:sticky;top:0;background:#FAFBFD;font-size:11px;color:#6B7489;font-weight:700;z-index:1;text-align:center;border-right:1px solid #F0F2F7;min-width:34px}
+.w2-gantt .name{position:sticky;left:0;background:#fff;min-width:280px;max-width:280px;text-align:left;padding:0 12px;z-index:2;border-right:1px solid #E6E9F0}
+.w2-gantt th.name{background:#FAFBFD;z-index:3}
+.w2-gantt .proj td{background:#F7F8FC;font-weight:750;font-size:12.5px}
+.w2-gantt .track{position:relative;padding:0}
+.w2-gantt .bar{position:absolute;top:9px;height:20px;border-radius:7px;background:var(--t);color:#fff;font-size:11px;font-weight:700;padding:0 8px;display:flex;align-items:center;overflow:hidden;white-space:nowrap;cursor:pointer;box-shadow:0 2px 6px color-mix(in srgb,var(--t) 40%,transparent)}
+.w2-gantt .bar i{position:absolute;left:0;top:0;bottom:0;background:#ffffff38}
+.w2-gantt .bar span{position:relative}
+.w2-gantt .todayline{position:absolute;top:0;bottom:0;width:2px;background:#D23F4A;z-index:1}
+.w2-gantt .we{background:#FAFBFD}
+/* İş yükü */
+.w2-load td.cell{text-align:center;font-weight:700;font-size:12px}
+.w2-heat{display:grid;place-items:center;height:30px;margin:4px;border-radius:8px}
+/* Proje kartları */
+.w2-proj{display:grid;gap:12px;padding:16px;background:#fff;border:1px solid #E6E9F0;border-radius:14px;border-top:3px solid var(--t)}
+.w2-proj h3{margin:0;font-size:15px}
+.w2-health{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--t)}
+.w2-health i{width:8px;height:8px;border-radius:50%;background:var(--t)}
+.w2-team{display:flex}.w2-team .ik2-av{margin-right:-7px}
+/* Matris */
+.w2-matrix{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.w2-matrix div{padding:12px;border-radius:12px;background:color-mix(in srgb,var(--t) 9%,#fff);border:1px solid color-mix(in srgb,var(--t) 25%,#fff)}
+.w2-matrix small{display:block;font-size:11.5px;font-weight:700;color:var(--t)}.w2-matrix b{font-size:22px}.w2-matrix span{display:block;font-size:11.5px;color:#6B7489}
+/* Akış */
+.w2-feed{display:grid;gap:0}
+.w2-feed div{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:start;padding:9px 0;border-top:1px solid #F0F2F7;font-size:13px}
+.w2-feed div:first-child{border-top:0}
+.w2-feed small{color:#6B7489;font-size:11.5px;white-space:nowrap}
+/* Detay çekmecesi */
+.w2-status-steps{display:flex;gap:4px;flex-wrap:wrap}
+.w2-status-steps button{height:30px;padding:0 11px;border-radius:999px;border:1px solid #E6E9F0;background:#fff;font-size:12px;font-weight:650;color:#4A5470}
+.w2-status-steps button.on{background:var(--t);border-color:var(--t);color:#fff}
+.w2-sub{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #F0F2F7;font-size:13.5px}
+.w2-sub:first-child{border-top:0}
+.w2-sub.done span{text-decoration:line-through;color:#94A3B8}
+.w2-addrow{display:flex;gap:8px;margin-top:10px}
+.w2-addrow input{flex:1;height:38px;border:1px solid #D9DEE8!important;border-radius:10px!important;padding:0 11px;font:inherit;font-size:13px}
+.w2-comment{display:flex;gap:10px;padding:10px 0}
+.w2-comment>div{flex:1;background:#F7F8FB;border:1px solid #E6E9F0;border-radius:4px 14px 14px 14px;padding:9px 12px}
+.w2-comment header{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}.w2-comment header b{font-size:13px}
+.w2-comment p{margin:0;font-size:13.5px;white-space:pre-wrap}
+.w2-comment mark{background:#EEF0FF;color:#4F46E5;border-radius:4px;padding:0 3px;font-weight:650}
+.w2-rel{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #F0F2F7}
+.w2-rel:first-child{border-top:0}
+.is2 .ik2-tools select{width:auto!important;flex:0 0 auto;min-width:150px;height:40px!important;padding:0 30px 0 12px!important;border:1px solid #E6E9F0!important;border-radius:11px!important;background-color:#fff!important;color:#2B3550!important;font-size:13px!important;font-weight:600}
+.is2 .ik2-tools select:focus{border-color:#4F46E5!important;box-shadow:0 0 0 3px #4F46E522!important}
+@media(max-width:900px){.w2-matrix{grid-template-columns:1fr}}
+</style>
+<script>
+"use strict";
+(()=>{
+const KEY="tales-is2-v1",T=day(),D=n=>shift(T,n),ME="Deniz Kaya";
+const ic=(n,s=16)=>svg(n,s),esc=e;
+const dshort=v=>v?new Intl.DateTimeFormat("tr-TR",{day:"numeric",month:"short"}).format(asDate(v)):"—";
+const dlong=v=>v?dateText(v):"—";
+const dd=(a,b)=>Math.round((asDate(b)-asDate(a))/864e5);
+const isWe=d=>[0,6].includes(asDate(d).getDay());
+const chip=(t,tone)=>'<span class="ik2-chip" style="--t:'+tone+'"><i></i>'+esc(t)+'</span>';
+const av=(name,cls="")=>'<span class="ik2-av '+cls+'" style="background:'+personTone(name)+'" title="'+esc(name)+'">'+esc(initials(name))+'</span>';
+const blank=v=>{const s=String(v??"").replace(/<[^>]*>/g,"").trim();return !s||s==="—";};
+const ago=iso=>{const m=Math.max(1,Math.round((Date.now()-new Date(iso))/6e4));return m<60?m+" dk önce":m<1440?Math.round(m/60)+" saat önce":Math.round(m/1440)+" gün önce";};
+const hm=min=>{min=Math.round(min);return (min>=60?Math.floor(min/60)+" sa ":"")+(min%60?min%60+" dk":min>=60?"":"0 dk");};
+
+/* ═════════ Tanımlar ═════════ */
+const STATUSES=[{id:"todo",name:"Yapılacak",color:"#64748B",wip:0},{id:"plan",name:"Planlandı",color:"#0EA5E9",wip:0},{id:"doing",name:"İşlemde",color:"#4F46E5",wip:8},{id:"review",name:"İncelemede",color:"#7C3AED",wip:5},{id:"hold",name:"Beklemede",color:"#D97706",wip:0},{id:"done",name:"Tamamlandı",color:"#12936A",wip:0}];
+const stOf=id=>STATUSES.find(s=>s.id===id)||STATUSES[0];
+const PRIOS=[{id:"crit",name:"Kritik",color:"#D23F4A",sla:1},{id:"high",name:"Yüksek",color:"#EA580C",sla:3},{id:"normal",name:"Normal",color:"#4F46E5",sla:7},{id:"low",name:"Düşük",color:"#94A3B8",sla:14}];
+const prOf=id=>PRIOS.find(p=>p.id===id)||PRIOS[2];
+const TYPES=[{id:"task",name:"Görev",icon:"check"},{id:"bug",name:"Arıza",icon:"alert"},{id:"req",name:"Talep",icon:"note"},{id:"dev",name:"Geliştirme",icon:"settings"},{id:"support",name:"Destek",icon:"phone"},{id:"meet",name:"Toplantı",icon:"calendar"}];
+const tyOf=id=>TYPES.find(t=>t.id===id)||TYPES[0];
+const LABELS=[["Müşteri","#0EA5E9"],["Acil","#D23F4A"],["Mobil","#7C3AED"],["Web","#4F46E5"],["Saha","#0D9488"],["Rapor","#D97706"],["Altyapı","#475569"],["Eğitim","#DB2777"]];
+const lbColor=n=>(LABELS.find(l=>l[0]===n)||["","#64748B"])[1];
+const MEMBERS=["Deniz Kaya","Elif Arslan","Burak Demir","Selin Aydın","Mert Yıldız","Ece Şahin","Can Çelik","Zeynep Koç"];
+const PROJECTS=[{id:"PR1",name:"ERP Modernizasyonu",color:"#4F46E5",owner:"Deniz Kaya",start:D(-60),end:D(45),client:"İç proje"},{id:"PR2",name:"Saha Servis Mobil",color:"#7C3AED",owner:"Burak Demir",start:D(-40),end:D(30),client:"Eksen Lojistik"},{id:"PR3",name:"İK ve PDKS Dönüşümü",color:"#DB2777",owner:"Elif Arslan",start:D(-25),end:D(60),client:"İç proje"},{id:"PR4",name:"Müşteri Portalı",color:"#0EA5E9",owner:"Selin Aydın",start:D(-15),end:D(75),client:"Kuzey Teknoloji"},{id:"PR5",name:"Depo Otomasyonu",color:"#D97706",owner:"Mert Yıldız",start:D(-70),end:D(10),client:"Mavi Endüstri"}];
+const prj=id=>PROJECTS.find(p=>p.id===id)||PROJECTS[0];
+const RULES=[["İş “İncelemede”ye geçince","İşi açan kişiye bildirim gönder"],["Kritik iş 4 saat içinde başlamazsa","Birim yöneticisine e-posta at"],["Teslim tarihi geçen iş","“Acil” etiketi ekle ve sorumluya hatırlat"],["Tüm alt işler tamamlanınca","İşi “İncelemede”ye taşı"],["Müşteri kaynaklı arıza açılınca","Destek ekibine otomatik ata"],["Her pazartesi 09:00","Haftalık bakım işini oluştur (yinelenen)"]];
+const TEMPLATES=[["Yeni müşteri kurulumu",["Sözleşme kontrolü","Kullanıcı tanımları","Veri aktarımı","Eğitim","Canlıya geçiş"]],["Aylık kapanış",["Banka mutabakatı","Cari mutabakat","Amortisman","Raporlama"]],["Saha arıza müdahalesi",["Ön tespit","Parça talebi","Müdahale","Test","Servis formu imza"]]];
+
+/* ═════════ Örnek veri ═════════ */
+function seedData(){
+  const titles=[
+    ["Satış teklif onay akışını yeniden tasarla","PR1","dev",["Web"]],["Görev tanımı filtrelerine üst görev ekle","PR1","dev",["Web"]],["Kasım kapanış raporu şablonu","PR1","task",["Rapor"]],["Rol bazlı yetki matrisini çıkar","PR1","task",["Altyapı"]],["Fatura entegrasyonunda zaman aşımı hatası","PR1","bug",["Acil","Altyapı"]],["Kullanıcı kabul testleri (UAT) planı","PR1","task",[]],["Veri tabanı yedekleme senaryosu","PR1","task",["Altyapı"]],["Raporlama ekranında yavaşlık","PR1","bug",["Web"]],
+    ["Mobil servis formu imza ekranı","PR2","dev",["Mobil","Saha"]],["Çevrimdışı senkronizasyon","PR2","dev",["Mobil"]],["Konum doğrulama (sahte GPS)","PR2","dev",["Mobil","Saha"]],["Teknisyen eğitimi","PR2","meet",["Eğitim","Saha"]],["Android 15'te bildirim gelmiyor","PR2","bug",["Mobil","Acil"]],["Parça talep akışı","PR2","task",["Saha"]],["Mağaza yayın görselleri","PR2","task",["Mobil"]],
+    ["İzin formu kullanıcı testi","PR3","task",["Web"]],["PDKS cihaz entegrasyonu","PR3","dev",["Altyapı"]],["Bordro aktarım dosyası formatı","PR3","req",["Rapor"]],["Personel paneli fotoğraf yükleme","PR3","dev",["Web"]],["Yönetici onay bildirimleri","PR3","dev",["Mobil"]],["İK süreç eğitimi","PR3","meet",["Eğitim"]],
+    ["Müşteri portalı giriş ekranı","PR4","dev",["Web","Müşteri"]],["Destek talebi açma formu","PR4","dev",["Web","Müşteri"]],["Portal SSS içeriği","PR4","task",["Müşteri"]],["Kuzey Teknoloji ihtiyaç toplantısı","PR4","meet",["Müşteri"]],["Şifre sıfırlama e-postası gitmiyor","PR4","bug",["Müşteri","Acil"]],["Portal kullanım raporu","PR4","req",["Rapor","Müşteri"]],
+    ["Barkod okuyucu entegrasyonu","PR5","dev",["Saha"]],["Depo sayım farkı raporu","PR5","task",["Rapor"]],["Raf etiketleme","PR5","task",["Saha"]],["Sevkiyat ekranında hata","PR5","bug",["Acil"]],["Depo personeli eğitimi","PR5","meet",["Eğitim"]],["El terminali kurulumları","PR5","support",["Saha"]],["Mal kabul akışı onayı","PR5","req",[]],
+    ["Sunucu sertifika yenilemesi","PR1","support",["Altyapı","Acil"]],["Kullanıcı şifre politikası","PR1","req",["Altyapı"]],["Mobil uygulama sürüm notları","PR2","task",["Mobil"]],["Portal hata günlüğü incelemesi","PR4","support",["Web"]],["Yıl sonu sayım planı","PR5","task",["Rapor"]],["Haftalık bakım kontrolü","PR1","task",["Altyapı"]]
+  ];
+  const sts=["doing","todo","done","plan","doing","review","todo","hold","doing","plan","review","done","doing","todo","done","review","doing","todo","done","plan","todo","doing","todo","plan","done","doing","todo","doing","review","todo","doing","done","plan","hold","todo","plan","done","todo","review","todo"];
+  const prs=["high","normal","normal","normal","crit","normal","low","high","high","normal","normal","low","crit","normal","low","normal","high","normal","normal","normal","low","high","normal","low","normal","crit","low","normal","normal","low","high","normal","normal","normal","crit","normal","low","normal","normal","low"];
+  const comments=["Müşteriyle konuştum, öncelik verelim.","Test ortamına aldım, @Elif Arslan kontrol edebilir misin?","Tasarım onaylandı, geliştirmeye başlıyorum.","Logları ekledim, hata 3. denemede oluşuyor.","Yarın sabah toplantıda konuşalım."];
+  const tasks=titles.map(([title,project,type,labels],i)=>{
+    const status=sts[i],start=D(-14+((i*3)%16)),len=1+((i*5)%9),end=shift(start,len+(status==="done"?0:(i%3)));
+    const owner=MEMBERS[(i*3)%MEMBERS.length],opener=MEMBERS[(i+2)%MEMBERS.length];
+    const subs=Array.from({length:i%4+1},(_,k)=>({t:["Analiz","Geliştirme","Test","Dokümantasyon","Canlıya alma"][k]+" — "+title.split(" ").slice(0,2).join(" "),done:status==="done"||k<(i%3)}));
+    const est=[2,4,6,8,3,5,12,16][i%8]*60,spent=status==="done"?est*(.8+(i%5)/10):status==="todo"?0:est*((i%7)/10);
+    return {id:"W"+(100+i),code:"İŞ-"+String(1001+i),title,project,type,labels,status,prio:prs[i],owner,opener,watchers:[MEMBERS[(i+4)%8]],start,due:end,created:new Date(asDate(start).getTime()-((i%4)+1)*864e5).toISOString(),
+      done:status==="done"?shift(end,-(i%2)):"",est,spent,timeLog:spent?[{who:owner,min:Math.round(spent*.6),date:shift(start,1),note:"Geliştirme"},{who:owner,min:Math.round(spent*.4),date:shift(start,2),note:"Test ve düzeltme"}]:[],
+      desc:title+" kapsamında yapılacaklar: ihtiyaç analizi, uygulama, test ve teslim. Kabul kriteri: ilgili ekip onayı ve canlı ortamda sorunsuz çalışma.",
+      subs,comments:i%3===0?[]:comments.slice(0,(i%3)+1).map((c,k)=>({who:MEMBERS[(i+k+1)%8],text:c,at:new Date(asDate(start).getTime()+(k+1)*36e5*20).toISOString()})),
+      files:i%4===0?[]:[{name:["Analiz.pdf","Ekran_tasarimi.png","Log_kaydi.txt","Test_senaryosu.xlsx"][i%4],size:[240,880,32,64][i%4]+" KB",who:opener}],
+      rel:i%5===1?[{kind:"Engelleyen",id:"W"+(100+i-1)}]:i%7===3?[{kind:"İlgili",id:"W"+(100+i+1)}]:[],
+      customer:["","Eksen Lojistik","Kuzey Teknoloji","Mavi Endüstri"][i%4],source:["Sistem","E-posta","Telefon","Web portal"][i%4],
+      history:[{at:new Date(asDate(start).getTime()-864e5).toISOString(),who:opener,what:"İşi oluşturdu"},{at:new Date(asDate(start).getTime()).toISOString(),who:opener,what:owner+" kişisine atadı"}].concat(status!=="todo"?[{at:new Date(asDate(start).getTime()+864e5).toISOString(),who:owner,what:"Durumu “"+stOf(status).name+"” yaptı"}]:[])};
+  });
+  return {v:1,tasks,timer:null,activity:[]};
+}
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY)||"null");}catch{S=null;}
+if(!S||S.v!==1)S=seedData();
+const save=msg=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch{}if(msg)showSnackbar(msg);};
+const W=id=>S.tasks.find(t=>t.id===id);
+const isOpen=t=>t.status!=="done";
+const isLate=t=>isOpen(t)&&t.due<T;
+const logA=(t,what)=>{t.history.push({at:new Date().toISOString(),who:ME,what});S.activity.unshift({at:new Date().toISOString(),who:ME,what,task:t.id});S.activity=S.activity.slice(0,40);};
+
+/* ═════════ Görünüm durumu ═════════ */
+const SECS=[["overview","Özet","home","Ekibin iş durumu, gecikmeler, iş yükü ve son hareketler"],["board","Pano","board","Sürükle-bırak Kanban; durum sınırları ve hızlı ekleme"],["list","Liste","list","Gruplu, sıralanabilir liste; toplu işlem"],["mine","İşlerim","user","Bana atanan işler, bugün ve bu hafta; süre ölçer"],["calendar","Takvim","calendar","Teslim tarihlerine göre aylık görünüm"],["timeline","Zaman çizelgesi","timeline","Projelere göre Gantt görünümü"],["load","İş yükü","chart","Kişi bazında kapasite ve planlanan saat"],["projects","Projeler","projects","Proje ilerlemesi, sağlık durumu ve ekip"],["reports","Raporlar","chart","Tamamlanma hızı, SLA uyumu ve dağılımlar"],["defs","Tanımlar","settings","Durumlar, öncelik ve SLA, etiketler, otomasyon ve şablonlar"]];
+const V={sec:"overview",q:"",fProject:"",fOwner:"",fPrio:"",fLabel:"",group:"status",sortKey:"due",sortDir:1,sel:new Set(),month:T.slice(0,7),quick:"",layer:null,dtab:"detail",gStart:shift(T,-14)};
+function readSec(){const q=new URLSearchParams((location.hash.split("?")[1])||"");const s=q.get("s");V.sec=SECS.some(x=>x[0]===s)?s:"overview";}
+const filtered=()=>{const q=lc(V.q);return S.tasks.filter(t=>(!V.fProject||t.project===V.fProject)&&(!V.fOwner||t.owner===V.fOwner)&&(!V.fPrio||t.prio===V.fPrio)&&(!V.fLabel||t.labels.includes(V.fLabel))&&(!q||lc(t.code+" "+t.title+" "+t.owner+" "+prj(t.project).name+" "+t.labels.join(" ")).includes(q)));};
+const kpi=(label,val,sub,tone)=>'<div class="ik2-kpi" style="--t:'+tone+'"><small>'+esc(label)+'</small><b>'+val+'</b><em>'+esc(sub)+'</em></div>';
+const dueChip=t=>{if(!isOpen(t))return '<span class="w2-due">'+ic("check",11)+dshort(t.done||t.due)+'</span>';const n=dd(T,t.due);return '<span class="w2-due '+(n<0?"late":n===0?"today":"")+'">'+ic("calendar",11)+(n<0?Math.abs(n)+" gün gecikti":n===0?"Bugün":n===1?"Yarın":dshort(t.due))+'</span>';};
+const prFlag=t=>{const p=prOf(t.prio);return '<span class="w2-flag" style="--t:'+p.color+'">'+ic("flag",12)+p.name+'</span>';};
+const labelsHtml=t=>t.labels.length?'<div class="w2-labels">'+t.labels.map(l=>'<span class="w2-label" style="--t:'+lbColor(l)+'">'+esc(l)+'</span>').join("")+'</div>':"";
+const subPct=t=>t.subs.length?Math.round(t.subs.filter(s=>s.done).length/t.subs.length*100):0;
+
+function head(){
+  const sec=SECS.find(x=>x[0]===V.sec),late=S.tasks.filter(isLate).length;
+  return '<header class="ik2-head"><div><p class="ik2-eyebrow">'+ic("work",14)+' İş Takibi 2.0</p><h1>'+esc(sec[1])+'</h1><p class="ik2-sub">'+esc(sec[3])+'</p></div>'+
+    '<div class="ik2-actions">'+(S.timer?'<button class="w2-timer run" data-w="open" data-v="'+S.timer.id+'">'+ic("clock",14)+'Süre ölçülüyor · '+esc(W(S.timer.id)?.code||"")+'</button>':"")+'<button class="ik2-btn" data-w="go" data-v="list" data-late="1">'+ic("alert",16)+'Gecikenler'+(late?'<b class="ik2-count">'+late+'</b>':"")+'</button><button class="ik2-btn primary" data-w="new">'+ic("plus",16)+'Yeni iş</button></div></header>';
+}
+function nav(){
+  const badge={mine:S.tasks.filter(t=>t.owner===ME&&isOpen(t)).length,board:S.tasks.filter(t=>t.status==="doing").length};
+  return '<nav class="ik2-nav" aria-label="İş takibi bölümleri">'+SECS.map(([id,label,icon])=>'<a href="#is2?s='+id+'" class="'+(V.sec===id?"on":"")+'">'+ic(icon,16)+label+(badge[id]?'<em>'+badge[id]+'</em>':"")+'</a>').join("")+'</nav>';
+}
+function filters(withGroup){
+  const sel=(k,opts,label)=>'<select data-wf="'+k+'" class="ik2-btn" style="background:#fff;color:#2B3550;border-color:#E6E9F0"><option value="">'+label+'</option>'+opts.map(([v,l])=>'<option value="'+esc(v)+'" '+(V[k]===v?"selected":"")+'>'+esc(l)+'</option>').join("")+'</select>';
+  return '<div class="ik2-tools"><label class="ik2-search">'+ic("search",16)+'<input data-wq placeholder="Kod, başlık, kişi, proje veya etiket ara" value="'+esc(V.q)+'"></label>'+
+    sel("fProject",PROJECTS.map(p=>[p.id,p.name]),"Tüm projeler")+sel("fOwner",MEMBERS.map(m=>[m,m]),"Tüm kişiler")+sel("fPrio",PRIOS.map(p=>[p.id,p.name]),"Tüm öncelikler")+sel("fLabel",LABELS.map(l=>[l[0],l[0]]),"Tüm etiketler")+
+    (withGroup?sel("group",[["status","Duruma göre"],["project","Projeye göre"],["owner","Kişiye göre"],["prio","Önceliğe göre"]],"Gruplama").replace('<option value="">Gruplama</option>',""):"")+
+    ((V.q||V.fProject||V.fOwner||V.fPrio||V.fLabel)?'<button class="ik2-btn bad sm" data-w="clear">'+ic("close",14)+'Temizle</button>':"")+'</div>';
+}
+
+/* ─── Özet ─── */
+function secOverview(){
+  const open=S.tasks.filter(isOpen),late=S.tasks.filter(isLate),today=open.filter(t=>t.due===T);
+  const weekDone=S.tasks.filter(t=>t.done&&dd(t.done,T)<=7&&dd(t.done,T)>=0).length;
+  const doneT=S.tasks.filter(t=>t.done),cycle=doneT.length?(doneT.reduce((n,t)=>n+Math.max(1,dd(t.start,t.done)),0)/doneT.length).toFixed(1):"—";
+  const slaOk=doneT.filter(t=>dd(t.created.slice(0,10),t.done)<=prOf(t.prio).sla*2).length,sla=doneT.length?Math.round(slaOk/doneT.length*100):100;
+  const byStatus=STATUSES.map(s=>[s,S.tasks.filter(t=>t.status===s.id).length]);let acc=0;const tot=S.tasks.length;
+  const cone=byStatus.map(([s,n])=>{const a=acc;acc+=n/tot*360;return s.color+" "+a+"deg "+acc+"deg";}).join(",");
+  const load=MEMBERS.map(m=>[m,open.filter(t=>t.owner===m).length,open.filter(t=>t.owner===m&&isLate(t)).length]).sort((a,b)=>b[1]-a[1]),maxL=Math.max(...load.map(x=>x[1]),1);
+  const urgent=t=>["crit","high"].includes(t.prio),soon=t=>dd(T,t.due)<=3;
+  const mx=[["Hemen yap","Acil ve önemli","#D23F4A",open.filter(t=>urgent(t)&&soon(t))],["Planla","Önemli, acil değil","#4F46E5",open.filter(t=>urgent(t)&&!soon(t))],["Devret","Acil, önemli değil","#D97706",open.filter(t=>!urgent(t)&&soon(t))],["Sonraya bırak","Acil de önemli de değil","#64748B",open.filter(t=>!urgent(t)&&!soon(t))]];
+  const feed=[...S.activity.map(a=>({...a})),...S.tasks.flatMap(t=>t.history.map(h=>({...h,task:t.id})))].sort((a,b)=>b.at.localeCompare(a.at)).slice(0,9);
+  return '<div class="ik2-kpis">'+kpi("Açık iş",open.length,S.tasks.length+" işin","#4F46E5")+kpi("Bugün teslim",today.length,today.length?today.map(t=>t.code).join(", "):"Bugün teslim yok","#D97706")+kpi("Geciken",late.length,"Teslim tarihi geçmiş","#D23F4A")+kpi("Bu hafta tamamlanan",weekDone,"Son 7 gün","#12936A")+kpi("Ort. çözüm süresi",cycle+" gün","Başlangıçtan bitişe","#0EA5E9")+kpi("SLA uyumu","%"+sla,"Önceliğe göre hedef süre","#7C3AED")+'</div>'+
+  '<div class="ik2-cols">'+
+    '<section class="ik2-panel c5"><header><h2>Geciken ve bugün teslim</h2><a href="#is2?s=list">Liste</a></header><div class="ik2-rows">'+([...late,...today].slice(0,8).map(t=>'<div class="ik2-row" data-w="open" data-v="'+t.id+'" style="cursor:pointer">'+av(t.owner,"sm")+'<div class="ik2-who" style="flex:1"><div><b>'+esc(t.title)+'</b><small>'+esc(t.code+" · "+prj(t.project).name+" · "+t.owner)+'</small></div></div><div class="end">'+dueChip(t)+'</div></div>').join("")||'<p class="ik2-empty">Geciken iş yok</p>')+'</div></section>'+
+    '<section class="ik2-panel c4"><header><h2>Öncelik matrisi</h2><small>Açık işler</small></header><div class="w2-matrix">'+mx.map(([a,b,c,l])=>'<div style="--t:'+c+'"><small>'+a+'</small><b>'+l.length+'</b><span>'+b+'</span></div>').join("")+'</div></section>'+
+    '<section class="ik2-panel c3" style="grid-column:span 3"><header><h2>Durum dağılımı</h2></header><div class="ik2-donutwrap" style="flex-direction:column;align-items:stretch"><div class="ik2-donut" style="margin:0 auto;background:conic-gradient('+cone+')"></div><div class="ik2-legend">'+byStatus.map(([s,n])=>'<div><i style="background:'+s.color+'"></i>'+s.name+'<b>'+n+'</b></div>').join("")+'</div></div></section>'+
+    '<section class="ik2-panel c6"><header><h2>Kişi bazında açık iş</h2><a href="#is2?s=load">İş yükü</a></header><div class="ik2-bars">'+load.map(([m,n,l])=>'<div class="ik2-bar" style="grid-template-columns:150px 1fr 70px"><span>'+esc(m)+'</span><div class="ik2-meter" style="--t:'+(n>6?"#D23F4A":"#4F46E5")+'"><i style="width:'+(n/maxL*100)+'%"></i></div><b>'+n+(l?' <small style="color:#D23F4A">('+l+' gecikmiş)</small>':"")+'</b></div>').join("")+'</div></section>'+
+    '<section class="ik2-panel c6"><header><h2>Son hareketler</h2></header><div class="w2-feed">'+feed.map(f=>{const t=W(f.task);return '<div>'+av(f.who,"sm")+'<span><b>'+esc(f.who)+'</b> '+esc(f.what)+(t?' · <button class="ik2-link" data-w="open" data-v="'+t.id+'">'+esc(t.code)+'</button>':"")+'</span><small>'+ago(f.at)+'</small></div>';}).join("")+'</div></section>'+
+  '</div>';
+}
+
+/* ─── Pano ─── */
+function card(t){
+  const p=prOf(t.prio),ty=tyOf(t.type);
+  return '<article class="w2-card" draggable="true" data-drag2="'+t.id+'" data-w="open" data-v="'+t.id+'" style="--pr:'+p.color+'"><div class="top"><span class="code">'+esc(t.code)+'</span><span style="display:inline-flex;align-items:center;gap:3px">'+ic(ty.icon,12)+esc(ty.name)+'</span><span class="type" style="color:'+prj(t.project).color+'">● '+esc(prj(t.project).name.split(" ")[0])+'</span></div>'+
+    '<b class="title">'+esc(t.title)+'</b>'+labelsHtml(t)+(t.subs.length?'<div class="w2-prog"><i style="width:'+subPct(t)+'%"></i></div>':"")+
+    '<footer>'+dueChip(t)+(t.subs.length?'<span>'+ic("check",12)+t.subs.filter(s=>s.done).length+'/'+t.subs.length+'</span>':"")+(t.comments.length?'<span>'+ic("chat",12)+t.comments.length+'</span>':"")+(t.files.length?'<span>'+ic("file",12)+t.files.length+'</span>':"")+av(t.owner,"sm")+'</footer></article>';
+}
+function secBoard(){
+  const list=filtered();
+  return filters(false)+'<div class="w2-board">'+STATUSES.map(s=>{const cards=list.filter(t=>t.status===s.id).sort((a,b)=>PRIOS.findIndex(p=>p.id===a.prio)-PRIOS.findIndex(p=>p.id===b.prio)||a.due.localeCompare(b.due));const full=s.wip&&cards.length>=s.wip;
+    return '<section class="w2-col" data-drop2="'+s.id+'"><header style="--t:'+s.color+'"><i></i><b>'+s.name+'</b><em class="'+(full?"full":"")+'">'+cards.length+(s.wip?" / "+s.wip:"")+'</em></header>'+(full?'<div class="ik2-alert warn" style="margin:0 0 8px;padding:7px 9px;font-size:12px">'+ic("alert",14)+'<div>Devam eden iş sınırına ulaşıldı</div></div>':"")+cards.map(card).join("")+
+      (V.quick===s.id?'<form class="w2-quick" data-wform="quick" data-status="'+s.id+'"><input name="title" placeholder="İş başlığı yazıp Enter" required autofocus></form>':'<button class="w2-add" data-w="quick" data-v="'+s.id+'">'+ic("plus",13)+' İş ekle</button>')+'</section>';}).join("")+'</div>';
+}
+
+/* ─── Liste ─── */
+function secList(){
+  let list=filtered();if(V.lateOnly)list=list.filter(isLate);
+  const key=V.sortKey,dir=V.sortDir;
+  const val=t=>key==="prio"?PRIOS.findIndex(p=>p.id===t.prio):key==="status"?STATUSES.findIndex(s=>s.id===t.status):key==="project"?prj(t.project).name:t[key]||"";
+  list.sort((a,b)=>(val(a)>val(b)?1:val(a)<val(b)?-1:0)*dir);
+  const gname=t=>V.group==="status"?stOf(t.status).name:V.group==="project"?prj(t.project).name:V.group==="owner"?t.owner:prOf(t.prio).name;
+  const groups=[...new Set(list.map(gname))];
+  const th=(k,l)=>'<th data-w="sort" data-v="'+k+'" style="cursor:pointer">'+l+(V.sortKey===k?(V.sortDir>0?" ↑":" ↓"):"")+'</th>';
+  const bulk=V.sel.size?'<div class="w2-bulk">'+V.sel.size+' iş seçildi<span class="ik2-spacer"></span><select data-wbulk="status"><option value="">Durum değiştir…</option>'+STATUSES.map(s=>'<option value="'+s.id+'">'+s.name+'</option>').join("")+'</select><select data-wbulk="owner"><option value="">Kişiye ata…</option>'+MEMBERS.map(m=>'<option>'+esc(m)+'</option>').join("")+'</select><select data-wbulk="prio"><option value="">Öncelik…</option>'+PRIOS.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join("")+'</select><button class="ik2-btn sm" data-w="unsel">Seçimi kaldır</button></div>':"";
+  return filters(true)+(V.lateOnly?'<div class="ik2-alert bad" style="margin:0 0 12px">'+ic("alert",16)+'<div>Yalnızca gecikmiş işler gösteriliyor. <button class="ik2-link" data-w="alllist">Tümünü göster</button></div></div>':"")+bulk+
+    (list.length?'<div class="ik2-tablewrap"><table class="ik2-table"><thead><tr><th><input type="checkbox" class="w2-check" data-w="selall" '+(list.every(t=>V.sel.has(t.id))?"checked":"")+'></th>'+th("code","Kod")+th("title","İş")+th("project","Proje")+th("status","Durum")+th("prio","Öncelik")+th("owner","Sorumlu")+th("due","Teslim")+'<th>İlerleme</th><th class="num">Süre</th></tr></thead><tbody>'+
+    groups.map(g=>{const rows=list.filter(t=>gname(t)===g);return '<tr class="w2-group-row"><td colspan="10">'+esc(g)+' · '+rows.length+'</td></tr>'+rows.map(t=>'<tr data-w="open" data-v="'+t.id+'"><td><input type="checkbox" class="w2-check" data-w="sel" data-v="'+t.id+'" '+(V.sel.has(t.id)?"checked":"")+'></td><td><span class="ik2-code">'+esc(t.code)+'</span></td><td style="white-space:normal;min-width:260px"><b style="font-size:13.5px">'+esc(t.title)+'</b>'+labelsHtml(t)+'</td><td>'+chip(prj(t.project).name,prj(t.project).color)+'</td><td>'+chip(stOf(t.status).name,stOf(t.status).color)+'</td><td>'+prFlag(t)+'</td><td><div class="ik2-who">'+av(t.owner,"sm")+'<div><b style="font-size:12.5px">'+esc(t.owner)+'</b></div></div></td><td>'+dueChip(t)+'</td><td style="min-width:110px">'+(t.subs.length?'<div class="w2-prog"><i style="width:'+subPct(t)+'%"></i></div><small style="color:#6B7489">'+t.subs.filter(s=>s.done).length+'/'+t.subs.length+' alt iş</small>':'<small style="color:#94A3B8">Alt iş yok</small>')+'</td><td class="num">'+hm(t.spent)+' / '+hm(t.est)+'</td></tr>').join("");}).join("")+'</tbody></table></div>':'<div class="ik2-panel ik2-empty">Filtreye uyan iş yok.</div>');
+}
+
+/* ─── İşlerim ─── */
+function secMine(){
+  const mine=S.tasks.filter(t=>t.owner===ME&&isOpen(t)).sort((a,b)=>a.due.localeCompare(b.due));
+  const g=[["Gecikmiş",t=>t.due<T,"#D23F4A"],["Bugün",t=>t.due===T,"#D97706"],["Bu hafta",t=>t.due>T&&dd(T,t.due)<=7,"#4F46E5"],["Daha sonra",t=>dd(T,t.due)>7,"#64748B"]];
+  const doneMine=S.tasks.filter(t=>t.owner===ME&&t.done&&dd(t.done,T)<=14);
+  const spentToday=S.tasks.flatMap(t=>t.timeLog).filter(l=>l.who===ME&&l.date===T).reduce((n,l)=>n+l.min,0);
+  return '<div class="ik2-kpis">'+kpi("Açık işlerim",mine.length,"Bana atanan","#4F46E5")+kpi("Gecikmiş",mine.filter(isLate).length,"Hemen ilgilen","#D23F4A")+kpi("Bugün kaydedilen süre",hm(spentToday),"Süre ölçer ve elle giriş","#12936A")+kpi("Son 14 günde biten",doneMine.length,"Tamamladığım işler","#0EA5E9")+'</div>'+
+  '<div class="ik2-cols">'+g.map(([name,f,c])=>{const l=mine.filter(f);return '<section class="c6"><div class="ik2-panel"><header><h2 style="color:'+c+'">'+name+'</h2><small>'+l.length+' iş</small></header><div class="w2-day">'+(l.map(t=>'<div class="w2-task" data-w="open" data-v="'+t.id+'"><button class="done" data-w="complete" data-v="'+t.id+'" title="Tamamlandı olarak işaretle">'+ic("check",13)+'</button><div class="ik2-who" style="min-width:0"><div><b>'+esc(t.title)+'</b><small>'+esc(t.code+" · "+prj(t.project).name)+'</small></div></div><div class="meta">'+prFlag(t)+dueChip(t)+'<button class="w2-timer '+(S.timer?.id===t.id?"run":"")+'" data-w="timer" data-v="'+t.id+'">'+ic("clock",12)+(S.timer?.id===t.id?"Durdur":"Başlat")+'</button></div></div>').join("")||'<p class="ik2-empty">Bu grupta iş yok</p>')+'</div></div></section>';}).join("")+'</div>';
+}
+
+/* ─── Takvim ─── */
+function secCalendar(){
+  const [y,m]=V.month.split("-").map(Number),first=V.month+"-01",startD=shift(first,-((asDate(first).getDay()+6)%7));
+  const days=Array.from({length:42},(_,i)=>shift(startD,i));
+  const list=filtered();
+  const label=new Intl.DateTimeFormat("tr-TR",{month:"long",year:"numeric"}).format(asDate(first));
+  return filters(false)+'<div class="ik2-tools"><button class="ik2-btn sm" data-w="month" data-v="-1">'+ic("left",14)+'</button><b style="min-width:150px;text-align:center;text-transform:capitalize">'+esc(label)+'</b><button class="ik2-btn sm" data-w="month" data-v="1">'+ic("right",14)+'</button><button class="ik2-btn sm" data-w="month" data-v="0">Bu ay</button><span class="ik2-spacer"></span>'+STATUSES.map(s=>'<span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#6B7489"><i style="width:9px;height:9px;border-radius:3px;background:'+s.color+'"></i>'+s.name+'</span>').join("")+'</div>'+
+    '<div class="w2-month">'+["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"].map(d=>'<div class="wd">'+d+'</div>').join("")+days.map(d=>{const ts=list.filter(t=>t.due===d);return '<div class="d '+(d.slice(0,7)!==V.month?"out ":"")+(isWe(d)?"we ":"")+(d===T?"today":"")+'"><span>'+Number(d.slice(8))+'</span>'+ts.slice(0,3).map(t=>'<button class="w2-ev" style="--t:'+stOf(t.status).color+'" data-w="open" data-v="'+t.id+'" title="'+esc(t.code+" "+t.title)+'">'+esc(t.title)+'</button>').join("")+(ts.length>3?'<button class="w2-more" data-w="day" data-v="'+d+'">+'+(ts.length-3)+' iş daha</button>':"")+'</div>';}).join("")+'</div>';
+}
+
+/* ─── Zaman çizelgesi ─── */
+function secTimeline(){
+  const days=Array.from({length:42},(_,i)=>shift(V.gStart,i)),cw=34,last=days[days.length-1];
+  const list=filtered().filter(t=>t.due>=V.gStart&&t.start<=last);
+  const rows=PROJECTS.filter(p=>list.some(t=>t.project===p.id)).map(p=>{
+    const ts=list.filter(t=>t.project===p.id).sort((a,b)=>a.start.localeCompare(b.start));
+    return '<tr class="proj"><td class="name" style="background:#F7F8FC">'+chip(p.name,p.color)+'</td><td colspan="'+days.length+'"></td></tr>'+ts.map(t=>{
+      const s=Math.max(0,dd(V.gStart,t.start)),e=Math.min(days.length-1,dd(V.gStart,t.due)),pct=t.subs.length?subPct(t):t.status==="done"?100:t.status==="todo"?0:50;
+      return '<tr><td class="name"><div class="ik2-who">'+av(t.owner,"sm")+'<div><b style="font-size:12.5px">'+esc(t.title)+'</b><small>'+esc(t.code)+' · '+stOf(t.status).name+'</small></div></div></td><td class="track" colspan="'+days.length+'" style="height:38px">'+
+        (dd(V.gStart,T)>=0&&dd(V.gStart,T)<days.length?'<span class="todayline" style="left:'+(dd(V.gStart,T)*cw+cw/2)+'px"></span>':"")+
+        '<span class="bar" data-w="open" data-v="'+t.id+'" style="--t:'+(isLate(t)?"#D23F4A":p.color)+';left:'+(s*cw+2)+'px;width:'+Math.max(cw-4,(e-s+1)*cw-4)+'px"><i style="width:'+pct+'%"></i><span>'+pct+'%</span></span></td></tr>';
+    }).join("");
+  }).join("");
+  return filters(false)+'<div class="ik2-tools"><button class="ik2-btn sm" data-w="gshift" data-v="-7">'+ic("left",14)+'1 hafta</button><button class="ik2-btn sm" data-w="gshift" data-v="0">Bugün</button><button class="ik2-btn sm" data-w="gshift" data-v="7">1 hafta'+ic("right",14)+'</button><span class="ik2-spacer"></span><small style="color:#6B7489">Kırmızı çubuk gecikmiş iş · çubuk içindeki açık alan ilerleme</small></div>'+
+    '<div class="w2-gantt"><table><thead><tr><th class="name">İş</th>'+days.map(d=>'<th class="'+(isWe(d)?"we":"")+'" style="'+(d===T?"color:#D23F4A":"")+'">'+Number(d.slice(8))+'<br><small>'+new Intl.DateTimeFormat("tr-TR",{weekday:"narrow"}).format(asDate(d))+'</small></th>').join("")+'</tr></thead><tbody>'+(rows||'<tr><td class="name">Bu aralıkta iş yok</td></tr>')+'</tbody></table></div>';
+}
+
+/* ─── İş yükü ─── */
+function secLoad(){
+  const days=Array.from({length:10},(_,i)=>i).map(i=>{let d=T;let n=0;while(n<=i){d=shift(d,1);if(!isWe(d))n++;}return d;});
+  const open=S.tasks.filter(isOpen);
+  const perDay=(m,d)=>open.filter(t=>t.owner===m&&t.start<=d&&t.due>=d).reduce((n,t)=>{const span=Math.max(1,dd(t.start,t.due)+1);return n+Math.max(0,(t.est-t.spent))/60/span;},0);
+  const color=h=>h>8?"#FDEDEE":h>6?"#FFF4E2":h>0?"#E7F6EF":"#F4F5F9",tc=h=>h>8?"#D23F4A":h>6?"#B56A0B":h>0?"#12936A":"#94A3B8";
+  return '<div class="ik2-tablewrap w2-load"><table class="ik2-table"><thead><tr><th>Kişi</th><th class="num">Açık iş</th><th class="num">Kalan tahmini</th>'+days.map(d=>'<th style="text-align:center">'+new Intl.DateTimeFormat("tr-TR",{weekday:"short",day:"numeric"}).format(asDate(d))+'</th>').join("")+'</tr></thead><tbody>'+
+    MEMBERS.map(m=>{const mine=open.filter(t=>t.owner===m),rem=mine.reduce((n,t)=>n+Math.max(0,t.est-t.spent),0);return '<tr><td><div class="ik2-who">'+av(m)+'<div><b>'+esc(m)+'</b><small>Günlük kapasite 8 saat</small></div></div></td><td class="num">'+mine.length+'</td><td class="num">'+hm(rem)+'</td>'+days.map(d=>{const h=perDay(m,d);return '<td class="cell"><div class="w2-heat" style="background:'+color(h)+';color:'+tc(h)+'">'+(h?h.toFixed(1):"—")+'</div></td>';}).join("")+'</tr>';}).join("")+'</tbody></table></div>'+
+    '<div class="ik2-legendrow"><span><i style="--t:#E7F6EF"></i>Uygun (≤ 6 sa)</span><span><i style="--t:#FFF4E2"></i>Yoğun (6–8 sa)</span><span><i style="--t:#FDEDEE"></i>Aşırı yük (> 8 sa)</span><span>Kalan tahmini süre, işin başlangıç–teslim aralığına eşit dağıtılır.</span></div>';
+}
+
+/* ─── Projeler ─── */
+function secProjects(){
+  return '<div class="ik2-cards" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr))">'+PROJECTS.map(p=>{
+    const ts=S.tasks.filter(t=>t.project===p.id),done=ts.filter(t=>!isOpen(t)).length,pct=ts.length?Math.round(done/ts.length*100):0,late=ts.filter(isLate).length;
+    const timePct=Math.min(100,Math.max(0,Math.round(dd(p.start,T)/Math.max(1,dd(p.start,p.end))*100)));
+    const health=late>2||pct+20<timePct?["Risk altında","#D23F4A"]:late||pct+5<timePct?["Dikkat","#D97706"]:["Yolunda","#12936A"];
+    const team=[...new Set(ts.map(t=>t.owner))];
+    return '<article class="w2-proj" style="--t:'+p.color+'"><div style="display:flex;align-items:center;gap:8px"><h3>'+esc(p.name)+'</h3><span class="w2-health" style="margin-left:auto;--t:'+health[1]+'"><i></i>'+health[0]+'</span></div><small style="color:#6B7489">'+esc(p.client)+' · Sorumlu '+esc(p.owner)+'</small>'+
+      '<div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span>İş ilerlemesi '+done+'/'+ts.length+'</span><b>%'+pct+'</b></div><div class="ik2-meter" style="--t:'+p.color+'"><i style="width:'+pct+'%"></i></div></div>'+
+      '<div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span>Geçen süre '+dshort(p.start)+' – '+dshort(p.end)+'</span><b>%'+timePct+'</b></div><div class="ik2-meter" style="--t:#94A3B8"><i style="width:'+timePct+'%"></i></div></div>'+
+      '<div style="display:flex;align-items:center;gap:8px"><div class="w2-team">'+team.slice(0,6).map(m=>av(m,"sm")).join("")+'</div><span class="ik2-spacer"></span>'+(late?chip(late+" gecikmiş","#D23F4A"):"")+chip(ts.filter(isOpen).length+" açık","#4F46E5")+'</div>'+
+      '<div style="display:flex;gap:8px"><a class="ik2-btn sm" href="#is2?s=board" data-w="proj" data-v="'+p.id+'">'+ic("board",14)+'Panoda aç</a><a class="ik2-btn sm" href="#is2?s=timeline" data-w="proj" data-v="'+p.id+'">'+ic("timeline",14)+'Zaman çizelgesi</a></div></article>';}).join("")+'</div>';
+}
+
+/* ─── Raporlar ─── */
+function secReports(){
+  const weeks=Array.from({length:8},(_,i)=>{const end=shift(T,-(7-i)*7+7),start=shift(end,-6);return [dshort(start),S.tasks.filter(t=>t.done&&t.done>=start&&t.done<=end).length,S.tasks.filter(t=>t.created.slice(0,10)>=start&&t.created.slice(0,10)<=end).length];});
+  const maxW=Math.max(...weeks.flatMap(w=>[w[1],w[2]]),1);
+  const byType=TYPES.map(t=>[t,S.tasks.filter(x=>x.type===t.id).length]),maxT=Math.max(...byType.map(x=>x[1]),1);
+  const sla=PRIOS.map(p=>{const d=S.tasks.filter(t=>t.prio===p.id&&t.done);const ok=d.filter(t=>dd(t.created.slice(0,10),t.done)<=p.sla*2).length;return [p,d.length,d.length?Math.round(ok/d.length*100):null];});
+  const est=S.tasks.filter(t=>t.done).reduce((n,t)=>n+t.est,0),spent=S.tasks.filter(t=>t.done).reduce((n,t)=>n+t.spent,0);
+  return '<div class="ik2-kpis">'+kpi("Tamamlanan iş",S.tasks.filter(t=>t.done).length,"Tüm zamanlar","#12936A")+kpi("Tahmin doğruluğu","%"+Math.round(spent/Math.max(1,est)*100),"Harcanan / tahmini süre","#4F46E5")+kpi("Toplam kaydedilen süre",hm(S.tasks.reduce((n,t)=>n+t.spent,0)),"Zaman kayıtları","#0EA5E9")+kpi("Açık arıza",S.tasks.filter(t=>t.type==="bug"&&isOpen(t)).length,"Hata kayıtları","#D23F4A")+'</div>'+
+  '<div class="ik2-cols"><section class="ik2-panel c7"><header><h2>Haftalık açılan / tamamlanan</h2><small>Son 8 hafta</small></header><div class="ik2-cols-chart" style="height:170px">'+weeks.map(([l,d,c])=>'<div><b>'+d+'</b><span style="display:flex;gap:3px;align-items:flex-end;height:100%;width:100%;justify-content:center"><i style="height:'+Math.max(3,c/maxW*100)+'%;background:#CBD5E1;max-width:14px"></i><i style="height:'+Math.max(3,d/maxW*100)+'%;max-width:14px;background:linear-gradient(180deg,#34D399,#12936A)"></i></span><small>'+l+'</small></div>').join("")+'</div><div class="ik2-legendrow"><span><i style="--t:#CBD5E1"></i>Açılan</span><span><i style="--t:#12936A"></i>Tamamlanan</span></div></section>'+
+  '<section class="ik2-panel c5"><header><h2>İş türüne göre</h2></header><div class="ik2-bars">'+byType.map(([t,n])=>'<div class="ik2-bar"><span>'+esc(t.name)+'</span><div class="ik2-meter"><i style="width:'+(n/maxT*100)+'%"></i></div><b>'+n+'</b></div>').join("")+'</div></section>'+
+  '<section class="ik2-panel c12"><header><h2>Önceliğe göre SLA uyumu</h2><small>Hedef çözüm süresi içinde kapanan işler</small></header><div class="ik2-tablewrap" style="border:0"><table class="ik2-table"><thead><tr><th>Öncelik</th><th>Hedef süre</th><th class="num">Tamamlanan</th><th>Uyum</th></tr></thead><tbody>'+sla.map(([p,n,pc])=>'<tr><td>'+chip(p.name,p.color)+'</td><td>'+p.sla+' iş günü</td><td class="num">'+n+'</td><td style="min-width:220px">'+(pc===null?'<small style="color:#94A3B8">Veri yok</small>':'<div style="display:flex;align-items:center;gap:10px"><div class="ik2-meter" style="flex:1;--t:'+(pc>=80?"#12936A":pc>=60?"#D97706":"#D23F4A")+'"><i style="width:'+pc+'%"></i></div><b>%'+pc+'</b></div>')+'</td></tr>').join("")+'</tbody></table></div></section></div>';
+}
+
+/* ─── Tanımlar ─── */
+function secDefs(){
+  return '<div class="ik2-cols"><section class="ik2-panel c6"><header><h2>Durumlar ve iş sınırı</h2><small>WIP = aynı anda en fazla iş</small></header><div class="ik2-rows">'+STATUSES.map((s,i)=>'<div class="ik2-row"><b style="width:20px;color:#94A3B8">'+(i+1)+'</b>'+chip(s.name,s.color)+'<div class="end">'+(s.wip?chip("En fazla "+s.wip,"#D97706"):'<small style="color:#94A3B8">Sınır yok</small>')+'<small style="color:#6B7489">'+S.tasks.filter(t=>t.status===s.id).length+' iş</small></div></div>').join("")+'</div></section>'+
+  '<section class="ik2-panel c6"><header><h2>Öncelikler ve SLA</h2></header><div class="ik2-rows">'+PRIOS.map(p=>'<div class="ik2-row">'+chip(p.name,p.color)+'<span style="color:#4A5470;font-size:13px">Hedef çözüm '+p.sla+' iş günü'+(p.id==="crit"?" · 4 saatte müdahale":"")+'</span></div>').join("")+'</div></section>'+
+  '<section class="ik2-panel c4"><header><h2>İş türleri</h2></header><div class="ik2-rows">'+TYPES.map(t=>'<div class="ik2-row">'+ic(t.icon,16)+'<b>'+t.name+'</b><div class="end"><small style="color:#6B7489">'+S.tasks.filter(x=>x.type===t.id).length+' iş</small></div></div>').join("")+'</div></section>'+
+  '<section class="ik2-panel c4"><header><h2>Etiketler</h2></header><div style="display:flex;gap:6px;flex-wrap:wrap">'+LABELS.map(l=>'<span class="w2-label" style="--t:'+l[1]+';height:26px;font-size:12px;padding:0 10px">'+esc(l[0])+' · '+S.tasks.filter(t=>t.labels.includes(l[0])).length+'</span>').join("")+'</div></section>'+
+  '<section class="ik2-panel c4"><header><h2>Şablonlar</h2></header><div class="ik2-rows">'+TEMPLATES.map(([n,s],i)=>'<div class="ik2-row"><div class="ik2-who" style="flex:1"><div><b>'+esc(n)+'</b><small>'+s.length+' alt iş: '+esc(s.join(", "))+'</small></div></div><div class="end"><button class="ik2-btn sm" data-w="tpl" data-v="'+i+'">Kullan</button></div></div>').join("")+'</div></section>'+
+  '<section class="ik2-panel c12"><header><h2>Otomasyon kuralları</h2><small>Tetikleyici → eylem</small></header><div class="ik2-rows">'+RULES.map(([a,b],i)=>'<div class="ik2-row">'+chip("Kural "+(i+1),"#4F46E5")+'<span style="font-size:13px"><b>'+esc(a)+'</b> '+ic("right",12)+' '+esc(b)+'</span><div class="end">'+chip(i===5?"Pasif":"Aktif",i===5?"#64748B":"#12936A")+'</div></div>').join("")+'</div></section>'+
+  '<section class="ik2-panel c12"><div class="ik2-alert warn" style="margin:0">'+ic("alert",16)+'<div>Örnek veriler tarayıcınızda saklanır. <button class="ik2-link" data-w="reset">Örnek verileri sıfırla</button></div></div></section></div>';
+}
+
+/* ═════════ Detay çekmecesi ═════════ */
+function drawer(id){
+  const t=W(id);if(!t)return "";const p=prj(t.project),s=stOf(t.status),tab=V.dtab;
+  const tabs=[["detail","Detay"],["subs","Alt işler ("+t.subs.length+")"],["comments","Yorumlar ("+t.comments.length+")"],["files","Ekler ("+t.files.length+")"],["time","Zaman ("+hm(t.spent)+")"],["rel","İlişkili ("+t.rel.length+")"],["history","Geçmiş"]];
+  const facts=list=>'<dl class="ik2-facts">'+list.filter(([,v])=>!blank(v)).map(([k,v,f])=>'<div class="'+(f?"full":"")+'"><dt>'+esc(k)+'</dt><dd>'+v+'</dd></div>').join("")+'</dl>';
+  let body;
+  switch(tab){
+    case "subs":body='<div class="ik2-card"><h3>Alt işler · %'+subPct(t)+'</h3><div class="w2-prog" style="margin-bottom:10px"><i style="width:'+subPct(t)+'%"></i></div>'+t.subs.map((x,i)=>'<label class="w2-sub '+(x.done?"done":"")+'"><input type="checkbox" class="w2-check" data-wsub="'+i+'" '+(x.done?"checked":"")+'><span>'+esc(x.t)+'</span></label>').join("")+'<form class="w2-addrow" data-wform="sub"><input name="t" placeholder="Yeni alt iş ekle" required><button class="ik2-btn">'+ic("plus",14)+'Ekle</button></form></div>';break;
+    case "comments":body='<form class="ik2-card" data-wform="comment"><textarea name="text" required style="width:100%;min-height:70px;border:1px solid #D9DEE8;border-radius:10px;padding:9px 11px;font:inherit;font-size:13.5px" placeholder="Yorum yaz… @ ile kişi etiketle"></textarea><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">'+["Tamamlandı, kontrol edebilirsiniz.","Bilgi bekleniyor.","Yarın ilgileneceğim."].map(q=>'<button type="button" class="ik2-btn sm" style="background:#EEF0FF;color:#4F46E5;border-color:#EEF0FF" data-w="qc" data-v="'+esc(q)+'">'+esc(q)+'</button>').join("")+'<span class="ik2-spacer"></span><button class="ik2-btn">'+ic("arrow",14)+'Gönder</button></div></form>'+
+      '<div class="ik2-card">'+(t.comments.length?t.comments.slice().reverse().map(c=>'<div class="w2-comment">'+av(c.who,"sm")+'<div><header><b>'+esc(c.who)+'</b><small style="color:#6B7489">'+ago(c.at)+'</small></header><p>'+esc(c.text).replace(/@([A-ZÇĞİÖŞÜ][a-zçğıöşü]+ [A-ZÇĞİÖŞÜ][a-zçğıöşü]+)/g,'<mark>@$1</mark>')+'</p></div></div>').join(""):'<p class="ik2-empty">Henüz yorum yok</p>')+'</div>';break;
+    case "files":body='<div class="ik2-card">'+(t.files.length?'<div class="ik2-rows">'+t.files.map(f=>'<div class="ik2-row">'+ic("file",18)+'<div class="ik2-who"><div><b>'+esc(f.name)+'</b><small>'+esc(f.size+" · "+f.who)+'</small></div></div></div>').join("")+'</div>':'<p class="ik2-empty">Ek yok</p>')+'<label class="ik2-btn" style="margin-top:10px">'+ic("upload",14)+'Dosya ekle<input type="file" data-wfile hidden multiple></label></div>';break;
+    case "time":body='<div class="ik2-preview" style="margin-bottom:12px"><div><small>Tahmini</small><b>'+hm(t.est)+'</b></div><div><small>Harcanan</small><b>'+hm(t.spent)+'</b></div><div><small>Kalan</small><b>'+hm(Math.max(0,t.est-t.spent))+'</b></div><div><small>Durum</small><b>%'+Math.round(t.spent/Math.max(1,t.est)*100)+'</b></div></div><div class="ik2-card"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><h3 style="margin:0">Zaman kayıtları</h3><span class="ik2-spacer"></span><button class="w2-timer '+(S.timer?.id===t.id?"run":"")+'" data-w="timer" data-v="'+t.id+'">'+ic("clock",12)+(S.timer?.id===t.id?"Süre ölçeri durdur":"Süre ölçeri başlat")+'</button></div><div class="ik2-rows">'+(t.timeLog.map(l=>'<div class="ik2-row">'+av(l.who,"sm")+'<span>'+esc(l.note)+'</span><div class="end"><b>'+hm(l.min)+'</b><small style="color:#6B7489">'+dlong(l.date)+'</small></div></div>').join("")||'<p class="ik2-empty">Kayıt yok</p>')+'</div><form class="w2-addrow" data-wform="time"><input name="min" type="number" min="5" step="5" placeholder="Dakika" required style="max-width:110px"><input name="note" placeholder="Ne yapıldı?"><button class="ik2-btn">Ekle</button></form></div>';break;
+    case "rel":body='<div class="ik2-card">'+(t.rel.length?t.rel.map(r=>{const o=W(r.id);return o?'<div class="w2-rel">'+chip(r.kind,r.kind==="Engelleyen"?"#D23F4A":"#4F46E5")+'<button class="ik2-link" data-w="open" data-v="'+o.id+'">'+esc(o.code+" "+o.title)+'</button><div class="end" style="margin-left:auto">'+chip(stOf(o.status).name,stOf(o.status).color)+'</div></div>':"";}).join(""):'<p class="ik2-empty">İlişkili iş yok</p>')+'<form class="w2-addrow" data-wform="rel"><select name="kind" style="height:38px;border:1px solid #D9DEE8;border-radius:10px;padding:0 8px"><option>İlgili</option><option>Engelleyen</option><option>Engellenen</option><option>Kopyası</option></select><select name="id" style="flex:1;height:38px;border:1px solid #D9DEE8;border-radius:10px;padding:0 8px">'+S.tasks.filter(x=>x.id!==t.id).map(x=>'<option value="'+x.id+'">'+esc(x.code+" "+x.title)+'</option>').join("")+'</select><button class="ik2-btn">Bağla</button></form></div>';break;
+    case "history":body='<div class="ik2-card"><div class="ik2-vsteps">'+t.history.slice().reverse().map(h=>'<div class="ik2-vstep done"><span>'+ic("clock",12)+'</span><div><b>'+esc(h.what)+'</b><small>'+esc(h.who)+' · '+ago(h.at)+'</small></div></div>').join("")+'</div></div>';break;
+    default:body='<div class="ik2-card"><h3>Durum</h3><div class="w2-status-steps">'+STATUSES.map(x=>'<button data-w="setstatus" data-v="'+x.id+'" class="'+(t.status===x.id?"on":"")+'" style="--t:'+x.color+'">'+x.name+'</button>').join("")+'</div></div>'+
+      '<div class="ik2-card"><h3>Açıklama</h3><p style="margin:0;font-size:13.5px;line-height:1.6;color:#2B3550">'+esc(t.desc)+'</p></div>'+
+      '<div class="ik2-card"><h3>İş bilgileri</h3>'+facts([["Proje",chip(p.name,p.color)],["İş türü",esc(tyOf(t.type).name)],["Öncelik",prFlag(t)],["Sorumlu",'<span class="ik2-who">'+av(t.owner,"sm")+esc(t.owner)+'</span>'],["İşi açan",esc(t.opener)],["Takip edenler",esc(t.watchers.join(", "))],["Başlangıç",dlong(t.start)],["Teslim",dueChip(t)+" "+dlong(t.due)],["Bitiş",t.done?dlong(t.done):""],["Müşteri",esc(t.customer)],["Kaynak",esc(t.source)],["SLA hedefi",prOf(t.prio).sla+" iş günü"],["Etiketler",labelsHtml(t),true]])+'</div>';
+  }
+  return '<div class="ik2-shade" data-w="close"></div><aside class="ik2-drawer" role="dialog" aria-modal="true" aria-label="'+esc(t.title)+'">'+
+    '<div class="ik2-hero"><span class="ik2-av lg" style="background:'+s.color+'">'+ic(tyOf(t.type).icon,26)+'</span><div style="min-width:0"><p style="margin:0 0 3px">'+esc(t.code)+' · '+esc(p.name)+'</p><h2>'+esc(t.title)+'</h2><div class="chips" style="margin-top:8px">'+chip(s.name,s.color)+prFlag(t)+dueChip(t)+'</div></div><button class="ik2-x" data-w="close" aria-label="Kapat">'+ic("close",18)+'</button></div>'+
+    '<nav class="ik2-tabs">'+tabs.map(([k,l])=>'<button data-w="dtab" data-v="'+k+'" class="'+(tab===k?"on":"")+'">'+l+'</button>').join("")+'</nav>'+
+    '<div class="ik2-dbody">'+body+'</div><footer class="ik2-dfoot"><small>Oluşturuldu '+ago(t.created)+' · '+esc(t.opener)+'</small><button class="ik2-btn bad" data-w="delete" data-v="'+t.id+'">'+ic("close",14)+'Sil</button><button class="ik2-btn" data-w="edit" data-v="'+t.id+'">'+ic("edit",14)+'Düzenle</button>'+(isOpen(t)?'<button class="ik2-btn ok" data-w="complete" data-v="'+t.id+'">'+ic("check",14)+'Tamamla</button>':"")+'</footer></aside>';
+}
+
+/* ═════════ Form ═════════ */
+function form(id,tpl){
+  const t=W(id)||{project:V.fProject||"PR1",type:"task",prio:"normal",owner:ME,start:T,due:shift(T,3),labels:[],est:240,title:tpl!==undefined?TEMPLATES[tpl][0]:"",desc:""};
+  const F=(label,ctl,req,full)=>'<div class="ik2-f'+(full?" full":"")+'"><label>'+esc(label)+(req?' <i>*</i>':"")+'</label>'+ctl+'</div>';
+  const sel=(n,opts,v)=>'<select name="'+n+'">'+opts.map(([a,b])=>'<option value="'+esc(a)+'" '+(String(a)===String(v)?"selected":"")+'>'+esc(b)+'</option>').join("")+'</select>';
+  const body='<form class="ik2-form" data-wform="task" data-id="'+esc(id||"")+'" data-tpl="'+(tpl??"")+'"><div class="ik2-dbody"><div class="ik2-form">'+
+    '<div class="ik2-fgroup"><h3>İş bilgileri</h3><div class="ik2-fields">'+F("Başlık",'<input name="title" required value="'+esc(t.title)+'" placeholder="Kısa ve net bir başlık">',true,true)+F("Proje",sel("project",PROJECTS.map(p=>[p.id,p.name]),t.project),true)+F("İş türü",sel("type",TYPES.map(x=>[x.id,x.name]),t.type),true)+F("Açıklama",'<textarea name="desc" placeholder="Kapsam, beklenti ve kabul kriteri">'+esc(t.desc)+'</textarea>',false,true)+'</div></div>'+
+    '<div class="ik2-fgroup"><h3>Atama ve öncelik</h3><div class="ik2-fields">'+F("Sorumlu",sel("owner",MEMBERS.map(m=>[m,m]),t.owner),true)+F("Öncelik",sel("prio",PRIOS.map(p=>[p.id,p.name+" · SLA "+p.sla+" gün"]),t.prio),true)+F("Etiketler",'<div style="display:flex;gap:6px;flex-wrap:wrap">'+LABELS.map(l=>'<label class="w2-label" style="--t:'+l[1]+';height:28px;padding:0 10px;cursor:pointer;gap:5px"><input type="checkbox" name="labels" value="'+esc(l[0])+'" '+(t.labels.includes(l[0])?"checked":"")+'>'+esc(l[0])+'</label>').join("")+'</div>',false,true)+'</div></div>'+
+    '<div class="ik2-fgroup"><h3>Planlama</h3><div class="ik2-fields">'+F("Başlangıç",'<input type="date" name="start" value="'+t.start+'" required>',true)+F("Teslim",'<input type="date" name="due" value="'+t.due+'" required>',true)+F("Tahmini süre (saat)",'<input type="number" name="est" min="0.5" step="0.5" value="'+(t.est/60)+'">')+F("Tekrar",sel("repeat",[["","Tekrarlanmaz"],["w","Her hafta"],["m","Her ay"]],""))+'</div></div>'+
+    '</div></div><footer class="ik2-dfoot"><small>* Zorunlu alan'+(tpl!==undefined&&!id?" · Şablondaki "+TEMPLATES[tpl][1].length+" alt iş eklenecek":"")+'</small><button type="button" class="ik2-btn" data-w="close" style="background:#64748B;border-color:#64748B">Vazgeç</button><button class="ik2-btn primary">'+ic("check",15)+'Kaydet</button></footer></form>';
+  return '<div class="ik2-shade" data-w="close"></div><section class="ik2-dialog" role="dialog" aria-modal="true"><div class="ik2-dhead"><div><h2>'+(id?"İşi düzenle":"Yeni iş")+'</h2><p>'+(id?esc(t.code):"Proje, sorumlu, öncelik ve teslim tarihini belirle")+'</p></div><button type="button" class="ik2-x" data-w="close" aria-label="Kapat">'+ic("close",18)+'</button></div>'+body+'</section>';
+}
+
+/* ═════════ İşlemler ═════════ */
+function layerEl(){let l=document.getElementById("is2-layer");if(!l){l=document.createElement("div");l.id="is2-layer";document.body.appendChild(l);}return l;}
+function openLayer(html,state){const l=layerEl();l.className="open ik2";l.style.cssText="position:fixed;inset:0;z-index:80;padding:0;max-width:none;margin:0";l.innerHTML=html;V.layer=state;setTimeout(()=>l.querySelector("input:not([type=checkbox]),textarea,.ik2-x")?.focus(),30);}
+function closeLayer(){const l=document.getElementById("is2-layer");if(l){l.className="";l.style.cssText="display:none";l.innerHTML="";}V.layer=null;}
+function openTask(id){V.dtab=V.layer?.id===id?V.dtab:"detail";openLayer(drawer(id),{type:"task",id});}
+function refresh(){if(route!=="is2")return;const y=window.scrollY;screen.innerHTML=page();window.scrollTo(0,y);if(V.layer?.type==="task"){const l=layerEl();const b=l.querySelector(".ik2-dbody"),st=b?b.scrollTop:0;l.innerHTML=drawer(V.layer.id);const nb=l.querySelector(".ik2-dbody");if(nb)nb.scrollTop=st;}}
+function setStatus(t,s){if(!t||t.status===s)return;const prev=t.status;t.status=s;t.done=s==="done"?T:"";if(s==="done")t.subs.forEach(x=>x.done=true);logA(t,"Durumu “"+stOf(prev).name+"” → “"+stOf(s).name+"” yaptı");}
+function stopTimer(){if(!S.timer)return;const t=W(S.timer.id),min=Math.max(1,Math.round((Date.now()-S.timer.at)/6e4));if(t){t.spent+=min;t.timeLog.push({who:ME,min,date:T,note:"Süre ölçer"});logA(t,hm(min)+" süre kaydetti");}S.timer=null;return min;}
+function page(){readSec();const map={overview:secOverview,board:secBoard,list:secList,mine:secMine,calendar:secCalendar,timeline:secTimeline,load:secLoad,projects:secProjects,reports:secReports,defs:secDefs};return '<div class="ik2 is2">'+head()+nav()+'<div class="ik2-body">'+map[V.sec]()+'</div></div>';}
+
+document.addEventListener("click",ev=>{
+  const el=ev.target.closest("[data-w]");if(!el||!el.closest(".is2,#is2-layer"))return;
+  const a=el.dataset.w,v=el.dataset.v||"";
+  if(["sel","selall","complete","timer","quick"].includes(a)||el.closest(".w2-ev,.bar")&&a==="open")ev.stopPropagation();
+  if(a!=="open"&&el.closest("[data-w='open']")!==el&&["complete","timer","sel","selall"].includes(a))ev.stopPropagation();
+  switch(a){
+    case "go":V.lateOnly=!!el.dataset.late;location.hash="#is2?s="+v;if(V.sec===v)refresh();break;
+    case "open":openTask(v);break;
+    case "close":closeLayer();break;
+    case "dtab":V.dtab=v;refresh();break;
+    case "new":openLayer(form(""),{type:"form"});break;
+    case "tpl":openLayer(form("",Number(v)),{type:"form"});break;
+    case "edit":openLayer(form(v),{type:"form"});break;
+    case "delete":{const t=W(v);if(!window.confirm(t.code+" silinsin mi?"))return;S.tasks=S.tasks.filter(x=>x.id!==v);save(t.code+" silindi.");closeLayer();refresh();break;}
+    case "setstatus":setStatus(W(V.layer.id),v);save("Durum güncellendi.");refresh();break;
+    case "complete":{ev.preventDefault();setStatus(W(v),"done");save(W(v).code+" tamamlandı.");refresh();break;}
+    case "timer":{ev.preventDefault();if(S.timer?.id===v){const m=stopTimer();save(hm(m)+" kaydedildi.");}else{if(S.timer)stopTimer();S.timer={id:v,at:Date.now()};save("Süre ölçer başladı.");}refresh();break;}
+    case "quick":V.quick=v;refresh();setTimeout(()=>document.querySelector('.w2-quick input')?.focus(),20);break;
+    case "qc":{const ta=el.closest("form").text;ta.value=v;ta.focus();break;}
+    case "clear":V.q=V.fProject=V.fOwner=V.fPrio=V.fLabel="";refresh();break;
+    case "sort":V.sortDir=V.sortKey===v?-V.sortDir:1;V.sortKey=v;refresh();break;
+    case "sel":{if(el.checked)V.sel.add(v);else V.sel.delete(v);refresh();break;}
+    case "selall":{const ids=filtered().map(t=>t.id);if(el.checked)ids.forEach(i=>V.sel.add(i));else V.sel.clear();refresh();break;}
+    case "unsel":V.sel.clear();refresh();break;
+    case "alllist":V.lateOnly=false;refresh();break;
+    case "month":{if(v==="0")V.month=T.slice(0,7);else{const [y,m]=V.month.split("-").map(Number);const d=new Date(y,m-1+Number(v),1);V.month=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}refresh();break;}
+    case "day":V.q="";V.sec="list";location.hash="#is2?s=list";break;
+    case "gshift":V.gStart=v==="0"?shift(T,-14):shift(V.gStart,Number(v));refresh();break;
+    case "proj":V.fProject=v;break;
+    case "reset":try{localStorage.removeItem(KEY);}catch{}S=seedData();save("Örnek veriler sıfırlandı.");refresh();break;
+  }
+});
+document.addEventListener("input",ev=>{if(ev.target.matches?.("[data-wq]")){V.q=ev.target.value;const pos=ev.target.selectionStart;refresh();const n=document.querySelector("[data-wq]");if(n){n.focus();n.setSelectionRange(pos,pos);}}});
+document.addEventListener("change",ev=>{
+  const el=ev.target;
+  if(el.dataset?.wf){V[el.dataset.wf]=el.value;refresh();}
+  if(el.dataset?.wbulk&&el.value){const k=el.dataset.wbulk;for(const id of V.sel){const t=W(id);if(!t)continue;if(k==="status")setStatus(t,el.value);else{t[k]=el.value;logA(t,(k==="owner"?"Sorumluyu "+el.value:"Önceliği "+prOf(el.value).name)+" yaptı");}}save(V.sel.size+" iş güncellendi.");V.sel.clear();refresh();}
+  if(el.dataset?.wsub!==undefined){const t=W(V.layer.id),x=t.subs[Number(el.dataset.wsub)];x.done=el.checked;logA(t,"Alt işi "+(x.done?"tamamladı":"yeniden açtı")+": "+x.t);if(t.subs.every(s=>s.done)&&["doing","plan","todo"].includes(t.status)){setStatus(t,"review");save("Tüm alt işler bitti; iş incelemeye alındı.");}else save();refresh();}
+  if(el.matches?.("[data-wfile]")){const t=W(V.layer.id);for(const f of el.files)t.files.push({name:f.name,size:Math.max(1,Math.round(f.size/1024))+" KB",who:ME});logA(t,el.files.length+" dosya ekledi");save("Dosya eklendi.");refresh();}
+});
+document.addEventListener("submit",ev=>{
+  const f=ev.target;if(!f.dataset?.wform)return;ev.preventDefault();
+  const v=Object.fromEntries(new FormData(f)),k=f.dataset.wform;
+  if(k==="quick"){const n=S.tasks.length;const t={id:"W"+Date.now(),code:"İŞ-"+(1001+n+Math.floor(Math.random()*90)),title:v.title,project:V.fProject||"PR1",type:"task",labels:[],status:f.dataset.status,prio:"normal",owner:ME,opener:ME,watchers:[],start:T,due:shift(T,3),created:new Date().toISOString(),done:"",est:120,spent:0,timeLog:[],desc:"",subs:[],comments:[],files:[],rel:[],customer:"",source:"Sistem",history:[]};logA(t,"İşi oluşturdu");S.tasks.unshift(t);V.quick="";save(t.code+" eklendi.");refresh();return;}
+  if(k==="task"){
+    const id=f.dataset.id,labels=new FormData(f).getAll("labels");
+    if(v.due<v.start){showSnackbar("Teslim tarihi başlangıçtan önce olamaz.");return;}
+    if(id){const t=W(id);Object.assign(t,{title:v.title,project:v.project,type:v.type,desc:v.desc,owner:v.owner,prio:v.prio,start:v.start,due:v.due,est:Number(v.est||0)*60,labels});logA(t,"İşi düzenledi");save("İş güncellendi.");closeLayer();refresh();openTask(id);return;}
+    const tpl=f.dataset.tpl===""?null:TEMPLATES[Number(f.dataset.tpl)];
+    const t={id:"W"+Date.now(),code:"İŞ-"+(1100+S.tasks.length),title:v.title,project:v.project,type:v.type,labels,status:"todo",prio:v.prio,owner:v.owner,opener:ME,watchers:[],start:v.start,due:v.due,created:new Date().toISOString(),done:"",est:Number(v.est||0)*60,spent:0,timeLog:[],desc:v.desc,subs:tpl?tpl[1].map(x=>({t:x,done:false})):[],comments:[],files:[],rel:[],customer:"",source:"Sistem",history:[]};
+    logA(t,"İşi oluşturdu ve "+v.owner+" kişisine atadı"+(v.repeat?" (yinelenen)":""));S.tasks.unshift(t);save(t.code+" oluşturuldu.");closeLayer();refresh();openTask(t.id);return;
+  }
+  const t=W(V.layer?.id);if(!t)return;
+  if(k==="sub"){t.subs.push({t:v.t,done:false});logA(t,"Alt iş ekledi: "+v.t);save();}
+  if(k==="comment"){t.comments.push({who:ME,text:v.text,at:new Date().toISOString()});logA(t,"Yorum yazdı");save("Yorum eklendi.");}
+  if(k==="time"){const m=Number(v.min);t.spent+=m;t.timeLog.push({who:ME,min:m,date:T,note:v.note||"Elle giriş"});logA(t,hm(m)+" süre kaydetti");save("Süre kaydedildi.");}
+  if(k==="rel"){t.rel.push({kind:v.kind,id:v.id});logA(t,v.kind+" iş bağladı: "+(W(v.id)?.code||""));save("İlişki eklendi.");}
+  refresh();
+});
+/* Sürükle-bırak (pano) */
+let dragId=null;
+document.addEventListener("dragstart",ev=>{const c=ev.target.closest?.("[data-drag2]");if(!c)return;dragId=c.dataset.drag2;c.classList.add("dragging");ev.dataTransfer.effectAllowed="move";ev.dataTransfer.setData("text/plain",dragId);});
+document.addEventListener("dragover",ev=>{if(!dragId)return;const col=ev.target.closest?.("[data-drop2]");document.querySelectorAll(".w2-col.over").forEach(x=>x!==col&&x.classList.remove("over"));if(col){ev.preventDefault();col.classList.add("over");}});
+document.addEventListener("drop",ev=>{const col=ev.target.closest?.("[data-drop2]");if(!col||!dragId)return;ev.preventDefault();const t=W(dragId),s=stOf(col.dataset.drop2);
+  if(s.wip&&S.tasks.filter(x=>x.status===s.id).length>=s.wip&&t.status!==s.id)showSnackbar("“"+s.name+"” sütunu sınırda ("+s.wip+"); yine de taşındı.");
+  setStatus(t,s.id);save();dragId=null;refresh();});
+document.addEventListener("dragend",()=>{dragId=null;document.querySelectorAll(".w2-col.over,.w2-card.dragging").forEach(x=>x.classList.remove("over","dragging"));});
+document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&V.layer){ev.stopPropagation();closeLayer();}if(ev.key==="Escape"&&V.quick){V.quick="";refresh();}},true);
+
+/* ═════════ Uygulamaya bağlama ═════════ */
+routes.add("is2");routeNames.is2="İş Takibi 2.0";
+const ws=groups.find(g=>g[0]==="Çalışma Alanı");if(ws&&!ws[1].some(x=>x[0]==="is2"))ws[1].splice(2,0,["is2","İş Takibi 2.0","board"]);
+const prevRender=render;
+render=function(){
+  if(route==="is2"){renderNav();renderTop();closeLayer();screen.innerHTML=page();renderPopup();document.title=SECS.find(x=>x[0]===V.sec)[1]+" · İş Takibi 2.0 · TALES ERP";return;}
+  closeLayer();prevRender();
+};
+window.is2Debug={state:()=>S,V};
+if(location.hash.startsWith("#is2"))readRoute();else renderNav();
 })();
 </script>
 
