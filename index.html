@@ -4930,5 +4930,803 @@ function stkMoves(r){
 if(location.hash.startsWith("#opportunities")||location.hash.startsWith("#finance")||location.hash.startsWith("#inventory"))readRoute();
 
 </script>
+<style id="ik2-style">
+/* ══════════════════════════════════════════════════════════════════════
+   İNSAN KAYNAKLARI 2.0 — bağımsız modül (eski İK ekranlarına dokunmaz)
+   ══════════════════════════════════════════════════════════════════════ */
+.ik2{--ac:#4F46E5;--ac2:#6366F1;--soft:#EEF0FF;--ink:#141B2D;--mut:#6B7489;--line:#E6E9F0;--bg:#F6F7FB;--ok:#12936A;--warn:#C77712;--bad:#D23F4A;
+  max-width:1560px;margin:0 auto;padding:22px 26px 56px;color:var(--ink);font-variant-numeric:tabular-nums}
+.ik2 *{box-sizing:border-box}
+.ik2 [hidden]{display:none!important}
+.ik2 button{font:inherit;cursor:pointer}
+.ik2-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.ik2-eyebrow{display:inline-flex;align-items:center;gap:6px;margin:0 0 6px;padding:4px 10px;border-radius:999px;background:var(--soft);color:var(--ac);font-size:12px;font-weight:700;letter-spacing:.02em}
+.ik2-head h1{margin:0;font-size:clamp(1.6rem,2.6vw,2.2rem);font-weight:780;letter-spacing:-.03em}
+.ik2-sub{margin:4px 0 0;color:var(--mut);font-size:14px}
+.ik2-actions{display:flex;gap:8px;flex-wrap:wrap}
+.ik2-btn{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 14px;border-radius:11px;border:1px solid var(--line);background:#fff;color:#2B3550;font-size:13.5px;font-weight:650;white-space:nowrap;transition:background .15s,border-color .15s,box-shadow .15s}
+.ik2-btn:hover{border-color:#C9CFE0;background:#FAFBFE}
+.ik2-btn.primary{background:var(--ac);border-color:var(--ac);color:#fff;box-shadow:0 4px 12px #4F46E533}
+.ik2-btn.primary:hover{background:#4338CA}
+.ik2-btn.ok{background:#E7F6EF;border-color:#BFE6D3;color:var(--ok)}.ik2-btn.ok:hover{background:#D5F0E3}
+.ik2-btn.bad{background:#FDEDEE;border-color:#F5CCD0;color:var(--bad)}.ik2-btn.bad:hover{background:#FBDDE0}
+.ik2-btn.sm{height:30px;padding:0 10px;font-size:12.5px;border-radius:9px}
+.ik2-count{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--bad);color:#fff;font-size:11px;display:inline-grid;place-items:center}
+/* Bölüm gezintisi */
+.ik2-nav{display:flex;gap:4px;padding:5px;margin:0 0 18px;background:#fff;border:1px solid var(--line);border-radius:14px;overflow-x:auto;scrollbar-width:thin}
+.ik2-nav a{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:10px;color:#4A5470;font-size:13.5px;font-weight:620;text-decoration:none;white-space:nowrap;transition:background .15s,color .15s}
+.ik2-nav a:hover{background:var(--bg);color:var(--ink)}
+.ik2-nav a.on{background:var(--ac);color:#fff;box-shadow:0 3px 10px #4F46E533}
+.ik2-nav a em{font-style:normal;font-size:11px;font-weight:750;padding:1px 6px;border-radius:999px;background:#FDE8EA;color:var(--bad)}
+.ik2-nav a.on em{background:#ffffff2e;color:#fff}
+/* Kartlar, paneller */
+.ik2-grid{display:grid;gap:14px}
+.ik2-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin-bottom:14px}
+.ik2-kpi{position:relative;padding:15px 16px;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.ik2-kpi::after{content:"";position:absolute;right:-22px;top:-22px;width:80px;height:80px;border-radius:50%;background:color-mix(in srgb,var(--t,#4F46E5) 9%,transparent)}
+.ik2-kpi>span{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:color-mix(in srgb,var(--t,#4F46E5) 13%,#fff);color:var(--t,#4F46E5);margin-bottom:10px}
+.ik2-kpi small{display:block;color:var(--mut);font-size:12.5px;font-weight:600}
+.ik2-kpi b{display:block;font-size:1.6rem;font-weight:780;letter-spacing:-.02em;margin-top:2px}
+.ik2-kpi em{font-style:normal;font-size:12px;color:var(--t,#4F46E5);font-weight:650}
+.ik2-panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;min-width:0}
+.ik2-panel>header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.ik2-panel h2{margin:0;font-size:15px;font-weight:720}
+.ik2-panel>header small{color:var(--mut);font-size:12.5px}
+.ik2-panel>header a,.ik2-link{color:var(--ac);font-size:12.5px;font-weight:650;text-decoration:none;background:none;border:0;padding:0}
+.ik2-cols{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+.c4{grid-column:span 4}.c5{grid-column:span 5}.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:1/-1}
+@media(max-width:1100px){.c4,.c5,.c6,.c7,.c8{grid-column:1/-1}}
+/* Avatar, çip */
+.ik2-av{display:inline-grid;place-items:center;flex:none;width:34px;height:34px;border-radius:50%;color:#fff;font-size:12px;font-weight:750;box-shadow:0 0 0 2px #fff}
+.ik2-av.sm{width:26px;height:26px;font-size:10px}.ik2-av.lg{width:64px;height:64px;font-size:20px;box-shadow:0 0 0 4px #fff,0 6px 18px #141B2D22}
+.ik2-chip{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;font-weight:680;white-space:nowrap;background:color-mix(in srgb,var(--t,#64748B) 12%,#fff);color:var(--t,#475569)}
+.ik2-chip i{width:6px;height:6px;border-radius:50%;background:currentColor}
+.ik2-who{display:flex;align-items:center;gap:10px;min-width:0}
+.ik2-who b{display:block;font-size:13.5px;font-weight:680;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ik2-who small{display:block;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ik2-who>div{min-width:0}
+/* Liste satırları */
+.ik2-rows{display:grid}
+.ik2-row{display:flex;align-items:center;gap:12px;padding:10px 2px;border-top:1px solid #F0F2F7}
+.ik2-row:first-child{border-top:0}
+.ik2-row .end{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none}
+.ik2-empty{padding:26px 10px;text-align:center;color:var(--mut);font-size:13px}
+/* Tablolar */
+.ik2-table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+.ik2-tablewrap{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:auto}
+.ik2-table th{position:sticky;top:0;background:#FAFBFD;text-align:left;font-size:11.5px;font-weight:700;color:var(--mut);letter-spacing:.03em;text-transform:uppercase;padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+.ik2-table td{padding:11px 14px;border-bottom:1px solid #F0F2F7;vertical-align:middle;white-space:nowrap}
+.ik2-table tr:last-child td{border-bottom:0}
+.ik2-table tbody tr{transition:background .12s}
+.ik2-table tbody tr[data-ik]{cursor:pointer}
+.ik2-table tbody tr:hover{background:#FAFBFF}
+.ik2-table .num{text-align:right}
+.ik2-code{font:600 11.5px/1 ui-monospace,Consolas,monospace;color:var(--mut)}
+/* Araç çubuğu */
+.ik2-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.ik2-search{display:flex;align-items:center;gap:8px;height:40px;min-width:min(320px,100%);padding:0 12px;background:#fff;border:1px solid var(--line);border-radius:12px;color:var(--mut)}
+.ik2-search:focus-within{border-color:var(--ac);box-shadow:0 0 0 3px #4F46E522}
+.ik2-search input{flex:1;border:0!important;outline:0;background:transparent!important;box-shadow:none!important;font:inherit;font-size:13.5px;color:var(--ink);min-width:0}
+.ik2-seg{display:inline-flex;gap:2px;padding:3px;background:#EEF0F5;border-radius:11px}
+.ik2-seg button{height:32px;padding:0 12px;border:0;border-radius:9px;background:transparent;color:#4A5470;font-size:12.5px;font-weight:650;display:inline-flex;align-items:center;gap:6px}
+.ik2-seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px #141B2D1f}
+.ik2-seg button em{font-style:normal;font-size:11px;color:var(--mut)}
+.ik2-spacer{flex:1}
+/* Personel kartları */
+.ik2-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.ik2-pcard{display:grid;gap:10px;text-align:left;padding:16px;background:#fff;border:1px solid var(--line);border-radius:16px;transition:border-color .15s,box-shadow .15s,transform .15s}
+.ik2-pcard:hover{border-color:#CBD0F5;box-shadow:0 8px 22px #141B2D12;transform:translateY(-2px)}
+.ik2-pcard header{display:flex;align-items:center;gap:11px}
+.ik2-pcard header .ik2-av{width:46px;height:46px;font-size:15px}
+.ik2-pcard dl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0;padding-top:10px;border-top:1px solid #F0F2F7}
+.ik2-pcard dt{font-size:11px;color:var(--mut);font-weight:600}.ik2-pcard dd{margin:0;font-size:13px;font-weight:650}
+.ik2-meter{height:6px;border-radius:9px;background:#EEF0F5;overflow:hidden}.ik2-meter i{display:block;height:100%;border-radius:9px;background:var(--t,var(--ac))}
+/* Bar listesi */
+.ik2-bars{display:grid;gap:9px}
+.ik2-bar{display:grid;grid-template-columns:130px 1fr 44px;align-items:center;gap:10px;font-size:13px}
+.ik2-bar span{color:#4A5470;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ik2-bar b{text-align:right}
+/* Donut */
+.ik2-donut{width:132px;height:132px;border-radius:50%;flex:none;display:grid;place-items:center;-webkit-mask:radial-gradient(circle,transparent 0 46px,#000 47px);mask:radial-gradient(circle,transparent 0 46px,#000 47px)}
+.ik2-donutwrap{display:flex;align-items:center;gap:20px}
+.ik2-legend{display:grid;gap:7px;font-size:13px;flex:1}
+.ik2-legend div{display:flex;align-items:center;gap:8px}.ik2-legend i{width:10px;height:10px;border-radius:3px}.ik2-legend b{margin-left:auto}
+/* Aylık sütun grafik */
+.ik2-cols-chart{display:flex;align-items:flex-end;gap:6px;height:130px;padding-top:6px}
+.ik2-cols-chart div{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.ik2-cols-chart i{width:100%;max-width:28px;border-radius:7px 7px 3px 3px;background:linear-gradient(180deg,#818CF8,#4F46E5)}
+.ik2-cols-chart small{font-size:11px;color:var(--mut)}.ik2-cols-chart b{font-size:11px}
+/* Adım göstergesi */
+.ik2-steps{display:flex;align-items:center;gap:4px}
+.ik2-steps i{width:18px;height:6px;border-radius:9px;background:#E4E7EE}
+.ik2-steps i.done{background:var(--ok)}.ik2-steps i.now{background:var(--warn)}.ik2-steps i.no{background:var(--bad)}
+.ik2-vsteps{display:grid;gap:0;margin:4px 0}
+.ik2-vstep{display:grid;grid-template-columns:30px 1fr;gap:12px;position:relative;padding-bottom:16px}
+.ik2-vstep::before{content:"";position:absolute;left:14px;top:30px;bottom:0;width:2px;background:#E4E7EE}
+.ik2-vstep:last-child::before{display:none}
+.ik2-vstep>span{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#EEF0F5;color:var(--mut);font-size:12px;font-weight:750}
+.ik2-vstep.done>span{background:var(--ok);color:#fff}.ik2-vstep.now>span{background:var(--warn);color:#fff;box-shadow:0 0 0 5px #C777121f}.ik2-vstep.no>span{background:var(--bad);color:#fff}
+.ik2-vstep b{font-size:13.5px}.ik2-vstep small{display:block;color:var(--mut);font-size:12px;margin-top:2px}
+.ik2-vstep p{margin:6px 0 0;padding:8px 10px;border-radius:10px;background:var(--bg);font-size:12.5px;color:#3B4560}
+/* Takvim (ekip zaman çizelgesi) */
+.ik2-cal{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:16px}
+.ik2-cal table{border-collapse:separate;border-spacing:0;font-size:12px;min-width:100%}
+.ik2-cal th,.ik2-cal td{border-bottom:1px solid #F0F2F7;border-right:1px solid #F4F5F9;height:36px;padding:0;text-align:center;min-width:30px}
+.ik2-cal th{position:sticky;top:0;background:#FAFBFD;font-weight:700;color:var(--mut);font-size:11px;z-index:1}
+.ik2-cal th small{display:block;font-weight:600;font-size:10px}
+.ik2-cal td.name,.ik2-cal th.name{position:sticky;left:0;background:#fff;text-align:left;padding:0 12px;min-width:190px;z-index:2}
+.ik2-cal th.name{background:#FAFBFD;z-index:3}
+.ik2-cal .we{background:#F8F9FB}.ik2-cal .hol{background:#FFF6E8}.ik2-cal .today{box-shadow:inset 0 0 0 2px var(--ac)}
+.ik2-cal .lv{display:block;margin:5px 1px;height:24px;border-radius:6px;background:var(--t);opacity:.9}
+.ik2-cal .lv.pend{background:repeating-linear-gradient(45deg,var(--t),var(--t) 4px,#fff 4px,#fff 7px);opacity:.75}
+.ik2-legendrow{display:flex;gap:14px;flex-wrap:wrap;margin:10px 2px;font-size:12px;color:var(--mut)}
+.ik2-legendrow span{display:inline-flex;align-items:center;gap:6px}.ik2-legendrow i{width:12px;height:12px;border-radius:4px;background:var(--t)}
+/* Kanban (işe alım) */
+.ik2-kanban{display:grid;grid-template-columns:repeat(5,minmax(230px,1fr));gap:12px;overflow-x:auto;padding-bottom:6px}
+.ik2-lane{background:#F4F5FA;border-radius:16px;padding:10px;min-height:240px}
+.ik2-lane>header{display:flex;align-items:center;gap:8px;padding:4px 4px 10px;font-weight:700;font-size:13.5px}
+.ik2-lane>header i{width:9px;height:9px;border-radius:50%;background:var(--t)}
+.ik2-lane>header em{font-style:normal;margin-left:auto;font-size:12px;color:var(--mut)}
+.ik2-ccard{display:grid;gap:6px;padding:12px;margin-bottom:8px;background:#fff;border:1px solid var(--line);border-radius:13px;font-size:12.5px}
+.ik2-ccard b{font-size:13.5px}.ik2-ccard small{color:var(--mut)}
+.ik2-stars{color:#F5A524;letter-spacing:1px;font-size:12px}
+/* Organizasyon şeması */
+.ik2-org{display:grid;justify-items:center;gap:22px}
+.ik2-orgtop{position:relative}
+.ik2-orgnode{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 2px 8px #141B2D0d;text-align:left}
+.ik2-orgunits{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;width:100%}
+.ik2-orgunit{background:#fff;border:1px solid var(--line);border-top:3px solid var(--t);border-radius:14px;padding:12px}
+.ik2-orgunit h3{margin:0 0 10px;font-size:14px;display:flex;align-items:center;gap:8px}
+.ik2-orgunit h3 em{font-style:normal;margin-left:auto;font-size:12px;color:var(--mut)}
+.ik2-orgunit .mgr{padding:8px;border-radius:11px;background:color-mix(in srgb,var(--t) 8%,#fff);margin-bottom:8px}
+.ik2-orgunit ul{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid #EEF0F5;display:grid;gap:6px}
+/* Katman: çekmece ve pencere */
+#ik2-layer{position:fixed;inset:0;z-index:80;display:none}
+#ik2-layer.open{display:block}
+.ik2-shade{position:absolute;inset:0;background:#141B2D59;backdrop-filter:blur(2px);animation:ik2fade .15s ease}
+.ik2-drawer{position:absolute;right:0;top:0;bottom:0;width:min(860px,100%);background:#F7F8FB;box-shadow:-18px 0 40px #141B2D2e;display:flex;flex-direction:column;animation:ik2slide .22s cubic-bezier(.22,1,.36,1)}
+.ik2-dialog{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(820px,calc(100% - 24px));max-height:calc(100% - 40px);background:#F7F8FB;border-radius:20px;box-shadow:0 30px 70px #141B2D40;display:flex;flex-direction:column;overflow:hidden;animation:ik2pop .18s cubic-bezier(.22,1,.36,1)}
+.ik2-dialog.sm{width:min(480px,calc(100% - 24px))}
+@keyframes ik2fade{from{opacity:0}}@keyframes ik2slide{from{transform:translateX(40px);opacity:0}}@keyframes ik2pop{from{transform:translate(-50%,-48%) scale(.98);opacity:0}}
+.ik2-dhead{display:flex;align-items:center;gap:14px;padding:18px 22px;background:#fff;border-bottom:1px solid var(--line)}
+.ik2-dhead h2{margin:0;font-size:18px;font-weight:760}.ik2-dhead p{margin:2px 0 0;color:var(--mut);font-size:13px}
+.ik2-x{margin-left:auto;width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:#fff;display:grid;place-items:center;color:var(--mut)}
+.ik2-dbody{flex:1;overflow:auto;padding:18px 22px}
+.ik2-dfoot{display:flex;align-items:center;gap:8px;justify-content:flex-end;padding:14px 22px;background:#fff;border-top:1px solid var(--line)}
+.ik2-dfoot small{margin-right:auto;color:var(--mut);font-size:12px}
+.ik2-hero{display:flex;align-items:center;gap:16px;padding:20px 22px;background:linear-gradient(135deg,#fff 0%,#F2F3FF 100%);border-bottom:1px solid var(--line)}
+.ik2-hero h2{margin:0;font-size:20px;font-weight:780}.ik2-hero p{margin:3px 0 8px;color:var(--mut);font-size:13px}
+.ik2-hero .chips{display:flex;gap:6px;flex-wrap:wrap}
+.ik2-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 22px;background:#fff;border-bottom:1px solid var(--line)}
+.ik2-stats div{padding:8px 10px;border-radius:12px;background:var(--bg)}.ik2-stats small{display:block;font-size:11.5px;color:var(--mut);font-weight:600}.ik2-stats b{font-size:16px}
+.ik2-tabs{display:flex;gap:2px;padding:0 16px;background:#fff;border-bottom:1px solid var(--line);overflow-x:auto}
+.ik2-tabs button{height:44px;padding:0 12px;border:0;background:none;color:var(--mut);font-size:13px;font-weight:650;white-space:nowrap;border-bottom:2px solid transparent}
+.ik2-tabs button.on{color:var(--ac);border-bottom-color:var(--ac)}
+.ik2-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+.ik2-card h3{margin:0 0 10px;font-size:14px;font-weight:720}
+.ik2-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px;margin:0}
+.ik2-facts div{padding:8px 0;border-top:1px solid #F0F2F7}
+.ik2-facts div:nth-child(-n+2){border-top:0}
+.ik2-facts dt{font-size:11.5px;color:var(--mut);font-weight:600}.ik2-facts dd{margin:2px 0 0;font-size:13.5px;font-weight:620;overflow-wrap:anywhere}
+.ik2-facts .full{grid-column:1/-1}
+/* Formlar */
+.ik2-form{display:grid;gap:12px}
+.ik2-fgroup{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+.ik2-fgroup h3{margin:0 0 10px;font-size:13.5px;font-weight:720}
+.ik2-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ik2-f{display:grid;gap:5px;min-width:0}
+.ik2-f.full{grid-column:1/-1}
+.ik2-f label{font-size:12px;font-weight:650;color:#4A5470}.ik2-f label i{color:var(--bad);font-style:normal}
+.ik2-f input,.ik2-f select,.ik2-f textarea{width:100%;height:40px;padding:0 11px;border:1px solid #D9DEE8!important;border-radius:10px!important;background:#fff!important;font:inherit;font-size:13.5px;color:var(--ink);box-shadow:none!important}
+.ik2-f textarea{height:auto;min-height:74px;padding:9px 11px;resize:vertical}
+.ik2-f input:focus,.ik2-f select:focus,.ik2-f textarea:focus{outline:0;border-color:var(--ac)!important;box-shadow:0 0 0 3px #4F46E522!important}
+.ik2-f .hint{font-size:11.5px;color:var(--mut)}
+.ik2-check{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+.ik2-preview{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ik2-preview div{padding:10px 12px;border-radius:12px;background:var(--soft)}
+.ik2-preview small{display:block;font-size:11.5px;color:var(--mut);font-weight:600}.ik2-preview b{font-size:17px}
+.ik2-alert{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;font-size:13px;margin-top:10px}
+.ik2-alert.warn{background:#FFF6E8;color:#8A5310}.ik2-alert.bad{background:#FDEDEE;color:#A32E37}.ik2-alert.info{background:#EEF0FF;color:#3730A3}
+@media(max-width:720px){.ik2{padding:14px 10px 40px}.ik2-fields,.ik2-facts{grid-template-columns:minmax(0,1fr)}.ik2-stats,.ik2-preview{grid-template-columns:1fr 1fr}.ik2-bar{grid-template-columns:100px 1fr 36px}}
+</style>
+<script>
+"use strict";
+(()=>{
+/* ═════════════ Yardımcılar ═════════════ */
+const KEY="tales-ik2-v1",T=day(),D=n=>shift(T,n);
+const ic=(n,s=16)=>svg(n,s),esc=e;
+const money=v=>new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY",maximumFractionDigits:0}).format(Number(v)||0);
+const dshort=v=>v?new Intl.DateTimeFormat("tr-TR",{day:"numeric",month:"short"}).format(asDate(v)):"—";
+const dlong=v=>v?dateText(v):"—";
+const dd=(a,b)=>Math.round((asDate(b)-asDate(a))/864e5);
+const yearsBetween=(a,b=T)=>{const x=asDate(a),y=asDate(b);let n=y.getFullYear()-x.getFullYear();if(y.getMonth()<x.getMonth()||y.getMonth()===x.getMonth()&&y.getDate()<x.getDate())n--;return n;};
+const chip=(t,tone)=>'<span class="ik2-chip" style="--t:'+tone+'"><i></i>'+esc(t)+'</span>';
+const av=(name,cls="")=>'<span class="ik2-av '+cls+'" style="background:'+personTone(name)+'">'+esc(initials(name))+'</span>';
+const STATUS_TONE={"Onay bekliyor":"#C77712","Onaylandı":"#12936A","Reddedildi":"#D23F4A","İptal":"#64748B","Taslak":"#64748B","Ödendi":"#12936A","Aktif":"#12936A","İzinde":"#0EA5E9","Pasif":"#64748B","Deneme süresinde":"#7C3AED"};
+const st=s=>chip(s,STATUS_TONE[s]||"#64748B");
+const ago=iso=>{const m=Math.max(1,Math.round((Date.now()-new Date(iso))/6e4));return m<60?m+" dk önce":m<1440?Math.round(m/60)+" saat önce":Math.round(m/1440)+" gün önce";};
+
+/* 2026 resmî tatilleri (yarım günler arife) */
+const HOL=[["2026-01-01","Yılbaşı"],["2026-03-19","Ramazan Bayramı arifesi",.5],["2026-03-20","Ramazan Bayramı 1. gün"],["2026-03-21","Ramazan Bayramı 2. gün"],["2026-03-22","Ramazan Bayramı 3. gün"],["2026-04-23","Ulusal Egemenlik ve Çocuk Bayramı"],["2026-05-01","Emek ve Dayanışma Günü"],["2026-05-19","Atatürk'ü Anma, Gençlik ve Spor Bayramı"],["2026-05-26","Kurban Bayramı arifesi",.5],["2026-05-27","Kurban Bayramı 1. gün"],["2026-05-28","Kurban Bayramı 2. gün"],["2026-05-29","Kurban Bayramı 3. gün"],["2026-05-30","Kurban Bayramı 4. gün"],["2026-07-15","Demokrasi ve Millî Birlik Günü"],["2026-08-30","Zafer Bayramı"],["2026-10-28","Cumhuriyet Bayramı arifesi",.5],["2026-10-29","Cumhuriyet Bayramı"]];
+const isHol=d=>HOL.find(h=>h[0]===d&&!h[2]);
+const isWe=d=>[0,6].includes(asDate(d).getDay());
+const workDays=(a,b,half=false)=>{if(!a||!b||b<a)return 0;let n=0;for(let d=a;d<=b;d=shift(d,1))if(!isWe(d)&&!isHol(d))n++;return half?Math.max(.5,n-.5):n;};
+const nextWork=d=>{let x=shift(d,1);while(isWe(x)||isHol(x))x=shift(x,1);return x;};
+
+/* İzin türleri — yasal dayanak ve kurallar (4857 sayılı İş Kanunu) */
+const LT=[
+  {id:"annual",name:"Yıllık ücretli izin",color:"#4F46E5",paid:true,balance:true,rule:"Kıdeme göre 14 / 20 / 26 iş günü",law:"İK m.53",doc:false},
+  {id:"excuse",name:"Mazeret izni",color:"#0EA5E9",paid:true,balance:false,max:3,rule:"Yılda en fazla 3 gün",law:"İç yönetmelik",doc:false},
+  {id:"marriage",name:"Evlilik izni",color:"#DB2777",paid:true,balance:false,fixed:3,rule:"3 iş günü",law:"İK Ek m.2",doc:true},
+  {id:"death",name:"Ölüm izni",color:"#475569",paid:true,balance:false,fixed:3,rule:"Birinci derece yakın için 3 gün",law:"İK Ek m.2",doc:true,degree:true},
+  {id:"paternity",name:"Babalık izni",color:"#0D9488",paid:true,balance:false,fixed:5,rule:"5 iş günü",law:"İK Ek m.2",doc:true},
+  {id:"maternity",name:"Doğum izni",color:"#C026D3",paid:true,balance:false,fixed:112,rule:"Doğumdan önce 8, sonra 8 hafta",law:"İK m.74",doc:true,calendar:true},
+  {id:"sick",name:"Raporlu (hastalık)",color:"#D97706",paid:false,balance:false,rule:"Sağlık raporu süresi kadar",law:"SGK geçici iş göremezlik",doc:true},
+  {id:"unpaid",name:"Ücretsiz izin",color:"#64748B",paid:false,balance:false,rule:"Yönetici ve İK onayıyla",law:"İç yönetmelik",doc:false},
+  {id:"admin",name:"İdari izin",color:"#7C3AED",paid:true,balance:false,rule:"Şirket kararıyla",law:"İç yönetmelik",doc:false}
+];
+const lt=id=>LT.find(x=>x.id===id)||LT[0];
+const DEGREES=["Eş","Çocuk","Anne","Baba","Kardeş","Büyükanne / Büyükbaba","Kayınvalide / Kayınpeder"];
+
+/* Birimler, unvanlar */
+const UNITS=[["BT","Bilgi Teknolojileri","#4F46E5"],["IK","İnsan Kaynakları","#DB2777"],["SAT","Satış","#0EA5E9"],["FIN","Finans","#12936A"],["OPR","Operasyon","#D97706"],["IDR","İdari İşler","#7C3AED"]];
+const unitOf=c=>UNITS.find(u=>u[0]===c)||UNITS[0];
+const TITLES={BT:["BT Müdürü","Kıdemli Yazılım Uzmanı","Mobil Geliştirme Uzmanı","İş Analisti"],IK:["İK Müdürü","İK Uzmanı","Bordro Uzmanı","İşe Alım Uzmanı"],SAT:["Satış Müdürü","Kıdemli Satış Temsilcisi","Satış Destek Sorumlusu","Bölge Satış Temsilcisi"],FIN:["Finans Müdürü","Muhasebe Uzmanı","Finans Uzmanı","Muhasebe Uzman Yardımcısı"],OPR:["Operasyon Müdürü","Saha Mühendisi","Depo Sorumlusu","Lojistik Uzmanı"],IDR:["İdari İşler Müdürü","Satın Alma Uzmanı","Ofis Yöneticisi","Teknik Destek Teknisyeni"]};
+const SHIFTS=[{id:"G",name:"Gündüz",time:"09:00–18:00",color:"#4F46E5",hours:8},{id:"E",name:"Erken",time:"07:00–16:00",color:"#0EA5E9",hours:8},{id:"A",name:"Akşam",time:"14:00–23:00",color:"#D97706",hours:8},{id:"F",name:"Esnek",time:"Çekirdek 10:00–16:00",color:"#12936A",hours:8},{id:"H",name:"Hafta tatili",time:"—",color:"#94A3B8",hours:0}];
+const FLOWS=[{id:"leave",name:"İzin talebi",steps:["Birim yöneticisi","İK uzmanı","Genel müdür (5 günü aşan)"]},{id:"overtime",name:"Fazla mesai",steps:["Birim yöneticisi","İK uzmanı"]},{id:"advance",name:"Avans talebi",steps:["Birim yöneticisi","Finans müdürü"]},{id:"expense",name:"Masraf beyanı",steps:["Birim yöneticisi","Muhasebe"]},{id:"asset",name:"Zimmet teslim",steps:["İdari işler","Personel onayı"]}];
+
+/* ═════════════ Örnek veri ═════════════ */
+function seedData(){
+  const FN=["Deniz","Elif","Burak","Selin","Mert","Ece","Can","Zeynep","Emre","Ayşe","Kerem","Buse","Onur","Derya","Tolga","Melis","Barış","İpek","Serkan","Gizem","Umut","Cansu","Kaan","Nazlı"];
+  const LN=["Kaya","Arslan","Demir","Aydın","Yıldız","Şahin","Çelik","Koç","Öztürk","Aksoy","Polat","Erdem","Kılıç","Doğan","Kurt","Özkan","Tekin","Güneş","Bulut","Acar","Uçar","Sezer","Ateş","Korkmaz"];
+  const FEM=new Set(["Elif","Selin","Ece","Zeynep","Ayşe","Buse","Derya","Melis","İpek","Gizem","Cansu","Nazlı"]);
+  const CITY=["Ankara","İstanbul","İzmir","Bursa","Eskişehir","Konya"],SCHOOL=[["ODTÜ","Bilgisayar Mühendisliği","Lisans"],["Hacettepe Üniversitesi","İşletme","Lisans"],["Bilkent Üniversitesi","Endüstri Mühendisliği","Yüksek lisans"],["Gazi Üniversitesi","İktisat","Lisans"],["Ankara Üniversitesi","Kamu Yönetimi","Lisans"],["Anadolu Üniversitesi","Lojistik","Ön lisans"]];
+  const LANGS=[["İngilizce","C1"],["Almanca","B1"],["İngilizce","B2"],["Fransızca","A2"],["İngilizce","B1"],["Arapça","A2"]];
+  const thisMonth=Number(T.slice(5,7));
+  const people=FN.map((fn,i)=>{
+    const u=UNITS[i%6],rank=Math.floor(i/6),name=fn+" "+LN[i];
+    const startYear=2026-[11,7,4,2,9,1,13,5,3,0,6,8,2,10,1,4,16,3,0,7,5,2,12,1][i];
+    const bMonth=i%5===0?thisMonth:((i*5)%12)+1,bDay=((i*7)%27)+1;
+    const birth=(1972+((i*7)%26))+"-"+String(bMonth).padStart(2,"0")+"-"+String(bDay).padStart(2,"0");
+    const start=startYear+"-"+String(((i*3)%12)+1).padStart(2,"0")+"-"+String(((i*11)%27)+1).padStart(2,"0");
+    const sch=SCHOOL[i%6],lang=LANGS[i%6];
+    const probation=startYear===2026&&i%3!==0;
+    return {id:"P"+String(i+1).padStart(3,"0"),sicil:"SCL-"+(1040+i*7),name,first:fn,last:LN[i],gender:FEM.has(fn)?"Kadın":"Erkek",birth,start,
+      unit:u[0],title:TITLES[u[0]][Math.min(rank,3)],manager:rank===0?"P000":"P"+String((i%6)+1).padStart(3,"0"),
+      status:i===17?"Pasif":probation?"Deneme süresinde":"Aktif",exitDate:i===17?D(-40):"",exitReason:i===17?"İstifa":"",
+      contract:i%7===3?"Belirli süreli":"Belirsiz süreli",contractEnd:i%7===3?D(25+i):"",probationEnd:probation?shift(start,60):"",
+      model:["Ofis","Hibrit","Ofis","Saha","Hibrit","Ofis"][i%6],shift:u[0]==="OPR"?(i%2?"E":"A"):"G",
+      gsm:"05"+(30+i%9)+" "+(210+i*3)+" "+String(10+i).padStart(2,"0")+" "+String(40+i*2).padStart(2,"0"),email:fn.toLocaleLowerCase("tr").replace(/[çğıöşü]/g,c=>({ç:"c",ğ:"g",ı:"i",ö:"o",ş:"s",ü:"u"})[c])+"."+LN[i].toLocaleLowerCase("tr").replace(/[çğıöşü]/g,c=>({ç:"c",ğ:"g",ı:"i",ö:"o",ş:"s",ü:"u"})[c])+"@tales.example",
+      ext:String(200+i),city:CITY[i%6],address:CITY[i%6]+", "+["Çankaya","Kadıköy","Bornova","Nilüfer","Tepebaşı","Selçuklu"][i%6]+" · Örnek Mah. "+(i+3)+". Sk. No:"+(i+12),
+      blood:["A Rh+","0 Rh+","B Rh+","AB Rh+","A Rh-","0 Rh-"][i%6],marital:i%3?"Evli":"Bekâr",children:i%3?(i%4):0,disability:i===9?"%40 (görme)":"Yok",
+      military:FEM.has(fn)?"—":(i%4===1?"Tecilli":"Yapıldı"),license:["B","B","Yok","B, C","B","Yok"][i%6],
+      emergency:{name:["Ayten","Hasan","Gül","Mehmet","Sevgi","Ali"][i%6]+" "+LN[i],rel:["Anne","Baba","Eş","Kardeş","Eş","Anne"][i%6],phone:"05"+(40+i%7)+" 555 "+String(20+i).padStart(2,"0")+" "+String(60+i).padStart(2,"0")},
+      edu:[{school:sch[0],dept:sch[1],degree:sch[2],year:String(startYear-2-(i%3))}],langs:[{name:lang[0],level:lang[1]}],certs:i%2?["İSG Temel Eğitimi"]:["İSG Temel Eğitimi","Etkili İletişim"],
+      bank:"Örnek Bankası · TR** **** **** **** **"+String(10+i).padStart(2,"0"),salaryBand:["B4","B3","B2","B1"][Math.min(rank,3)],sgk:"SGK-"+(48200+i*13),
+      carry:(i*3)%9,usedBase:(i*5)%9,
+      score:{award:20+((i*13)%55),penalty:(i*7)%18},
+      assets:[{name:"Dizüstü bilgisayar",serial:"NB-"+(4100+i),date:shift(start,2),state:"Teslim edildi"},{name:"Personel giriş kartı",serial:"KRT-"+(1120+i),date:shift(start,1),state:"Teslim edildi"}].concat(i%3===0?[{name:"Cep telefonu",serial:"TEL-"+(700+i),date:shift(start,30),state:"Teslim edildi"}]:[]).concat(i===2?[{name:"Taşınabilir ekran",serial:"EKR-55",date:D(-1),state:"Onay bekliyor"}]:[]),
+      docs:[{name:"İş sözleşmesi",date:start,exp:""},{name:"Nüfus cüzdanı fotokopisi",date:start,exp:""},{name:"Sağlık raporu",date:shift(start,-5),exp:D([12,180,320,45,-6,210][i%6])},{name:"İSG eğitim sertifikası",date:D(-300+i*5),exp:D([65,20,400,-2,90,30][i%6])}],
+      career:[{date:start,type:"İşe giriş",detail:TITLES[u[0]][Math.min(rank+1,3)]+" · "+u[1]}].concat(i%2?[{date:shift(start,500),type:"Terfi",detail:TITLES[u[0]][Math.min(rank,3)]}]:[])
+    };
+  });
+  people.forEach(p=>{if(p.manager==="P000")p.manager="";});
+  const types=["annual","annual","excuse","annual","sick","annual","marriage","annual","death","unpaid","annual","paternity","annual","excuse","annual","admin","annual","annual","sick","annual","annual","excuse","annual","annual","annual","annual","annual","annual"];
+  const statuses=["Onay bekliyor","Onaylandı","Onaylandı","Onay bekliyor","Onaylandı","Reddedildi","Onaylandı","Onay bekliyor","Onaylandı","Onaylandı","Onaylandı","Onaylandı","Onay bekliyor","İptal","Onaylandı","Onaylandı","Onay bekliyor","Onaylandı","Onaylandı","Reddedildi","Onaylandı","Onay bekliyor","Onaylandı","Onaylandı","Taslak","Onay bekliyor","Onaylandı","Onaylandı"];
+  const offs=[3,-2,-12,9,-1,6,-30,14,-45,-60,-3,-20,21,-8,-75,-90,1,-120,-15,-25,-150,5,-180,-200,30,0,-6,-210];
+  const lens=[5,4,1,3,2,2,3,10,3,5,5,5,2,1,7,1,1,10,3,4,5,1,3,8,4,2,3,5];
+  const leaves=types.map((t,i)=>{
+    const p=people[(i*5+3)%24];let s=D(offs[i]);while(isWe(s)||isHol(s))s=shift(s,1);
+    let end=s,n=1;while(n<lens[i]){end=shift(end,1);if(!isWe(end)&&!isHol(end))n++;}
+    if(lt(t).fixed&&lt(t).fixed<10){end=s;n=1;while(n<lt(t).fixed){end=shift(end,1);if(!isWe(end)&&!isHol(end))n++;}}
+    const status=statuses[i],days=workDays(s,end);
+    const flow=["Birim yöneticisi","İK uzmanı"].concat(days>5?["Genel müdür"]:[]);
+    const mgr=people.find(x=>x.id===p.manager)||people[0];
+    const steps=flow.map((name,k)=>{
+      let state="wait";
+      if(status==="Onaylandı")state="done";
+      else if(status==="Reddedildi")state=k===0?"done":k===1?"no":"skip";
+      else if(status==="Onay bekliyor")state=k<(i%2)?"done":k===(i%2)?"now":"wait";
+      else if(status==="İptal"||status==="Taslak")state="skip";
+      const who=k===0?mgr.name:k===1?"Elif Arslan":"Deniz Kaya";
+      return {name,who,state,date:state==="done"||state==="no"?shift(s,-3+k):"",note:state==="no"?"Aynı dönemde ekipte iki kişi izinde; tarihi bir hafta kaydırabilir misin?":state==="done"&&k===0&&i%3===0?"Uygundur, işleri "+people[(i+1)%24].name+" devralacak.":""};
+    });
+    return {id:"L"+(100+i),code:"İZN-26-"+String(100+i).padStart(4,"0"),person:p.id,type:t,start:s,end,days:t==="maternity"?112:days,half:false,
+      ret:nextWork(end),status,steps,substitute:people[(i*5+4)%24].id,place:["Antalya","İzmir","Ankara","Muğla","Trabzon","İstanbul"][i%6],phone:p.gsm,
+      degree:t==="death"?"Baba":"",note:["Aile ziyareti","Yaz tatili","Resmî işlem","Dinlenme","Bayram ziyareti","Taşınma"][i%6],created:new Date(asDate(s).getTime()-(5+i%6)*864e5).toISOString()};
+  });
+  const overtime=[0,1,2,3,4,5,6,7,8,9].map(i=>{const p=people[(i*7+2)%24];const we=i%3===2;return {id:"O"+(10+i),code:"FM-26-"+(310+i),person:p.id,date:D(-(i*3)-1),hours:[2,3,4,2.5,6,3,8,2,4,5][i],kind:we?"Hafta sonu":i===6?"Resmî tatil":"Hafta içi",rate:we?1.5:i===6?2:1.5,reason:["Ay sonu kapanış","Müşteri canlıya geçişi","Sistem bakımı","Sayım","Teklif hazırlığı","Sevkiyat yoğunluğu","Bayram nöbeti","Rapor teslimi","Saha kurulumu","Denetim hazırlığı"][i],status:i<3?"Onay bekliyor":i===4?"Reddedildi":"Onaylandı",pay:i%2?"Ücret":"Serbest zaman"};});
+  const expenses=[0,1,2,3,4,5,6,7,8,9,10].map(i=>{const p=people[(i*5+1)%24];const adv=i%4===0;return {id:"X"+(20+i),code:(adv?"AVN-":"MSR-")+"26-"+(500+i),person:p.id,kind:adv?"Avans":"Masraf",cat:adv?["Maaş avansı","İş avansı"][i%2]:["Yol","Konaklama","Yemek","Akaryakıt","Kırtasiye","Temsil-ağırlama"][i%6],amount:adv?[15000,8000,12000][i%3]:[1250,4800,680,2150,340,3900,920,1500][i%8],date:D(-(i*2)-1),receipt:!adv&&i%5!==3,installments:adv?[3,1,2][i%3]:0,status:i<3?"Onay bekliyor":i===5?"Reddedildi":i%3===0?"Ödendi":"Onaylandı",note:adv?"Kişisel ihtiyaç":"Müşteri ziyareti · "+["Ankara","İzmir","Bursa"][i%3]};});
+  const candidates=[["Arda Yüce","Kıdemli Yazılım Uzmanı","LinkedIn",4,"Başvuru"],["Sena Ilgaz","Kıdemli Yazılım Uzmanı","Kariyer.net",3,"Ön eleme"],["Ozan Gül","İşe Alım Uzmanı","Referans",5,"Mülakat"],["Duru Kılıç","Muhasebe Uzmanı","Kariyer.net",4,"Teklif"],["İdil Tan","Mobil Geliştirme Uzmanı","LinkedIn",5,"Mülakat"],["Efe Saral","Saha Mühendisi","Web sitesi",3,"Başvuru"],["Lara Eke","Satış Destek Sorumlusu","Referans",4,"Ön eleme"],["Bora Tez","Saha Mühendisi","LinkedIn",2,"Başvuru"],["Yağmur Er","İK Uzmanı","Kariyer.net",4,"İşe alındı"],["Toprak Acar","Lojistik Uzmanı","Web sitesi",3,"Mülakat"],["Ela Sönmez","Muhasebe Uzmanı","LinkedIn",3,"Ön eleme"],["Rüzgar Oy","Mobil Geliştirme Uzmanı","Referans",4,"Teklif"]].map(([name,pos,src,score,stage],i)=>({id:"C"+(i+1),name,pos,src,score,stage,date:D(-(i*3)-2),interview:stage==="Mülakat"?D(i%4+1):"",salary:stage==="Teklif"?[68000,82000][i%2]:0}));
+  const positions=[["Kıdemli Yazılım Uzmanı","BT",2],["Mobil Geliştirme Uzmanı","BT",1],["Muhasebe Uzmanı","FIN",1],["Saha Mühendisi","OPR",2],["İşe Alım Uzmanı","IK",1],["Satış Destek Sorumlusu","SAT",1],["Lojistik Uzmanı","OPR",1]];
+  const trainings=[["İş Sağlığı ve Güvenliği (yıllık)",true,D(20),"Zorunlu",16],["Bilgi Güvenliği Farkındalığı",true,D(35),"Zorunlu",8],["KVKK Temel Eğitimi",true,D(-10),"Zorunlu",4],["Etkili Geri Bildirim",false,D(48),"Gelişim",6],["İleri Excel ile Raporlama",false,D(15),"Gelişim",12],["Müşteri Deneyimi Yönetimi",false,D(70),"Gelişim",8]].map(([name,req,due,kind,hours],i)=>({id:"T"+(i+1),name,req,due,kind,hours,people:people.filter((_,k)=>req||k%(i+2)===0).map((p,k)=>({id:p.id,done:(k+i)%3!==0}))}));
+  const goals=[["Müşteri memnuniyeti puanını 4,5'e çıkar","SAT",72],["Ay sonu kapanışını 3 iş gününe indir","FIN",85],["Mobil uygulama sürümünü yayınla","BT",64],["Depo sayım farkını %0,5 altına düşür","OPR",48],["İşe alım süresini 30 güne indir","IK",57],["Enerji tüketimini %10 azalt","IDR",33]];
+  const scores=[[3,"Ödül","Müşteri teşekkür mektubu",15],[7,"Ödül","Proje zamanında teslim",20],[11,"Ceza","Geç kalma (3. kez)",-5],[2,"Ödül","Yılın ekip arkadaşı adaylığı",25],[15,"Ödül","Maliyet tasarrufu önerisi",15],[20,"Ceza","Zimmet tutanağı gecikmesi",-3],[5,"Ödül","Mentorluk",10]].map(([pi,kind,reason,pts],i)=>({id:"S"+i,person:people[pi].id,kind,reason,pts,date:D(-(i*6)-2),by:"Deniz Kaya"}));
+  return {v:1,people,leaves,overtime,expenses,candidates,positions,trainings,goals,scores,log:[]};
+}
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY)||"null");}catch{S=null;}
+if(!S||S.v!==1)S=seedData();
+const save=msg=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch{}if(msg)showSnackbar(msg);};
+const P=id=>S.people.find(p=>p.id===id);
+const pname=id=>P(id)?.name||"—";
+const active=()=>S.people.filter(p=>p.status!=="Pasif");
+
+/* Yıllık izin hakkı (İş Kanunu m.53): 1–5 yıl 14, 5–15 yıl 20, 15+ yıl 26; 18 yaş altı ve 50 üstü en az 20 */
+function entitlement(p){const y=yearsBetween(p.start),age=yearsBetween(p.birth);if(y<1)return 0;let n=y<5?14:y<15?20:26;if(age<18||age>=50)n=Math.max(n,20);return n;}
+function balance(p){
+  const yr=T.slice(0,4),mine=S.leaves.filter(l=>l.person===p.id&&l.type==="annual"&&l.start.slice(0,4)===yr);
+  const used=p.usedBase+mine.filter(l=>l.status==="Onaylandı"&&l.start<=T).reduce((n,l)=>n+l.days,0);
+  const planned=mine.filter(l=>l.status==="Onaylandı"&&l.start>T).reduce((n,l)=>n+l.days,0);
+  const pending=mine.filter(l=>l.status==="Onay bekliyor").reduce((n,l)=>n+l.days,0);
+  const earned=entitlement(p),total=earned+p.carry;
+  return {earned,carry:p.carry,used,planned,pending,total,left:total-used-planned};
+}
+const onLeave=(id,d=T)=>S.leaves.find(l=>l.person===id&&l.status==="Onaylandı"&&l.start<=d&&l.end>=d);
+const pendingAll=()=>[...S.leaves.filter(l=>l.status==="Onay bekliyor").map(x=>["leave",x]),...S.overtime.filter(o=>o.status==="Onay bekliyor").map(x=>["overtime",x]),...S.expenses.filter(x=>x.status==="Onay bekliyor").map(x=>["expense",x]),...S.people.flatMap(p=>p.assets.filter(a=>a.state==="Onay bekliyor").map(a=>["asset",{...a,person:p.id,id:p.id+"|"+a.serial}]))];
+
+/* Bugünün PDKS hareketleri (tohum + gün) */
+function attendance(){
+  return active().map((p,i)=>{
+    const lv=onLeave(p.id);if(lv)return {p,state:"İzinli",tone:"#0EA5E9",lv};
+    if(isWe(T)||isHol(T))return {p,state:"Tatil",tone:"#94A3B8"};
+    const seed=(Number(T.slice(8))+i*7)%23;
+    if(seed===4)return {p,state:"Gelmedi",tone:"#D23F4A"};
+    const sh=SHIFTS.find(s=>s.id===p.shift)||SHIFTS[0],base=sh.id==="E"?7*60:sh.id==="A"?14*60:9*60;
+    const inMin=base-25+((seed*7)%45),late=inMin>base+10;
+    const where=p.model==="Saha"?"Saha":p.model==="Hibrit"&&seed%2?"Uzaktan":"Merkez Ofis";
+    const now=new Date(),nowMin=now.getHours()*60+now.getMinutes();
+    const outMin=nowMin>base+9*60?base+9*60+((seed*5)%50):null;
+    const f=m=>String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+    return {p,state:late?"Geç geldi":where==="Uzaktan"?"Uzaktan":where==="Saha"?"Sahada":"Ofiste",tone:late?"#C77712":where==="Uzaktan"?"#7C3AED":where==="Saha"?"#0D9488":"#12936A",
+      in:f(inMin),out:outMin?f(outMin):"",lateMin:late?inMin-base:0,where,gps:seed===11?"Şüpheli konum":"",shift:sh,
+      worked:outMin?((outMin-inMin)/60).toFixed(1)+" sa":Math.max(0,(Math.min(nowMin,base+9*60)-inMin)/60).toFixed(1)+" sa"};
+  });
+}
+
+/* ═════════════ Bölümler ═════════════ */
+const SECS=[["home","Panorama","home","Ekibin bugünkü durumu, yaklaşan olaylar ve bekleyen işler"],["people","Personeller","people","Personel rehberi, özlük dosyası ve kadro bilgileri"],["leave","İzin Yönetimi","calendar","Talepler, ekip takvimi, bakiyeler ve izin kuralları"],["approvals","Onay Merkezi","check","İzin, fazla mesai, avans, masraf ve zimmet onayları tek kutuda"],["attendance","PDKS & Vardiya","clock","Bugünün giriş-çıkışları, geç kalmalar ve haftalık vardiya planı"],["overtime","Fazla Mesai","flag","Fazla çalışma talepleri, oranlar ve yıllık 270 saat sınırı"],["expense","Avans & Masraf","money","Avans talepleri, masraf beyanları ve ödeme durumu"],["org","Organizasyon","flow","Birimler, yönetici zinciri ve kadro dağılımı"],["recruit","İşe Alım","briefcase","Açık pozisyonlar ve aday süreci"],["training","Eğitim","award","Zorunlu ve gelişim eğitimleri, katılım ve belge süreleri"],["perf","Performans","target","Ödül-ceza puanları ve birim hedefleri"],["defs","Tanımlar","settings","İzin türleri, vardiyalar, onay akışları ve resmî tatiller"]];
+const IK={sec:"home",q:"",unit:"",pstatus:"",pview:"cards",lstat:"Onay bekliyor",lview:"list",apv:"pending",calMonth:T.slice(0,7),xkind:"",layer:null};
+function readSec(){const q=new URLSearchParams((location.hash.split("?")[1])||"");const s=q.get("s");IK.sec=SECS.some(x=>x[0]===s)?s:"home";}
+
+function head(){
+  const sec=SECS.find(x=>x[0]===IK.sec),pend=pendingAll().length;
+  return '<header class="ik2-head"><div><p class="ik2-eyebrow">'+ic("people",14)+' İnsan Kaynakları 2.0</p><h1>'+esc(sec[1])+'</h1><p class="ik2-sub">'+esc(sec[3])+'</p></div>'+
+    '<div class="ik2-actions"><button class="ik2-btn" data-ik="go" data-v="approvals">'+ic("check",16)+'Onay kutusu'+(pend?'<b class="ik2-count">'+pend+'</b>':"")+'</button>'+
+    '<button class="ik2-btn" data-ik="new-person">'+ic("user",16)+'Yeni personel</button><button class="ik2-btn primary" data-ik="new-leave">'+ic("plus",16)+'İzin talebi</button></div></header>';
+}
+function nav(){
+  const badge={leave:S.leaves.filter(l=>l.status==="Onay bekliyor").length,approvals:pendingAll().length,overtime:S.overtime.filter(o=>o.status==="Onay bekliyor").length,expense:S.expenses.filter(x=>x.status==="Onay bekliyor").length};
+  return '<nav class="ik2-nav" aria-label="İK bölümleri">'+SECS.map(([id,label,icon])=>'<a href="#ik2?s='+id+'" class="'+(IK.sec===id?"on":"")+'">'+ic(icon,16)+label+(badge[id]?'<em>'+badge[id]+'</em>':"")+'</a>').join("")+'</nav>';
+}
+const kpi=(label,val,sub,icon,tone)=>'<div class="ik2-kpi" style="--t:'+tone+'"><span>'+ic(icon,18)+'</span><small>'+esc(label)+'</small><b>'+val+'</b><em>'+esc(sub)+'</em></div>';
+const who=(p,sub)=>'<div class="ik2-who">'+av(p.name)+'<div><b>'+esc(p.name)+'</b><small>'+esc(sub??p.title)+'</small></div></div>';
+
+/* ─── Panorama ─── */
+function secHome(){
+  const act=active(),att=attendance(),inToday=att.filter(a=>["Ofiste","Geç geldi","Uzaktan","Sahada"].includes(a.state)).length;
+  const leaveToday=S.leaves.filter(l=>l.status==="Onaylandı"&&l.start<=T&&l.end>=T);
+  const pend=pendingAll(),late=att.filter(a=>a.state==="Geç geldi").length;
+  const newHires=S.people.filter(p=>p.start.slice(0,4)===T.slice(0,4)).length,leavers=S.people.filter(p=>p.status==="Pasif").length;
+  const upcoming=[];
+  for(const p of act){
+    const b=T.slice(0,4)+p.birth.slice(4);let n=dd(T,b);if(n<0)n=dd(T,(Number(T.slice(0,4))+1)+p.birth.slice(4));
+    if(n<=30)upcoming.push({n,p,kind:"Doğum günü",icon:"award",text:(yearsBetween(p.birth)+1)+". yaş"});
+    const a=T.slice(0,4)+p.start.slice(4);let m=dd(T,a);if(m<0)m=dd(T,(Number(T.slice(0,4))+1)+p.start.slice(4));
+    const yrs=yearsBetween(p.start)+(m>0?1:0);if(m<=30&&yrs>0)upcoming.push({n:m,p,kind:"İş yıldönümü",icon:"flag",text:yrs+". yıl"});
+  }
+  upcoming.sort((a,b)=>a.n-b.n);
+  const crit=[];
+  for(const p of act){
+    if(p.probationEnd){const n=dd(T,p.probationEnd);if(n>=-5&&n<=45)crit.push({n,p,t:"Deneme süresi bitiyor",d:p.probationEnd,tone:"#7C3AED"});}
+    if(p.contractEnd){const n=dd(T,p.contractEnd);if(n<=60)crit.push({n,p,t:"Belirli süreli sözleşme bitiyor",d:p.contractEnd,tone:"#D23F4A"});}
+    for(const doc of p.docs)if(doc.exp){const n=dd(T,doc.exp);if(n<=30)crit.push({n,p,t:doc.name+(n<0?" süresi geçti":" süresi doluyor"),d:doc.exp,tone:n<0?"#D23F4A":"#C77712"});}
+  }
+  crit.sort((a,b)=>a.n-b.n);
+  const byUnit=UNITS.map(u=>[u,act.filter(p=>p.unit===u[0]).length]),maxU=Math.max(...byUnit.map(x=>x[1]),1);
+  const fem=act.filter(p=>p.gender==="Kadın").length,deg=fem/act.length*360;
+  const ages=[["18–29",0,29],["30–39",30,39],["40–49",40,49],["50+",50,99]].map(([l,a,b])=>[l,act.filter(p=>{const y=yearsBetween(p.birth);return y>=a&&y<=b;}).length]);
+  const months=["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"].map((m,i)=>{const key=T.slice(0,4)+"-"+String(i+1).padStart(2,"0");return [m,S.leaves.filter(l=>l.status==="Onaylandı"&&l.start.slice(0,7)===key).reduce((n,l)=>n+Math.min(l.days,20),0)];});
+  const maxM=Math.max(...months.map(m=>m[1]),1);
+  return '<div class="ik2-kpis">'+
+    kpi("Aktif personel",act.length,newHires+" yeni giriş bu yıl","people","#4F46E5")+
+    kpi("Bugün işte",inToday+" / "+act.length,isWe(T)||isHol(T)?"Bugün çalışma günü değil":"%"+Math.round(inToday/act.length*100)+" katılım","clock","#12936A")+
+    kpi("Bugün izinli",leaveToday.length,leaveToday.length?leaveToday.map(l=>pname(l.person).split(" ")[0]).join(", "):"Kimse izinde değil","calendar","#0EA5E9")+
+    kpi("Bekleyen onay",pend.length,"İzin, mesai, avans, masraf","check","#C77712")+
+    kpi("Geç kalan",late,"Bugün tolerans sonrası","alert","#D23F4A")+
+    kpi("Personel devir hızı","%"+(leavers/(S.people.length)*100).toFixed(1),leavers+" ayrılış · yıllık","flow","#7C3AED")+'</div>'+
+  '<div class="ik2-cols">'+
+    '<section class="ik2-panel c4"><header><h2>Onay bekleyenler</h2><a href="#ik2?s=approvals">Tümü</a></header><div class="ik2-rows">'+(pend.slice(0,6).map(([k,x])=>approvalLine(k,x,true)).join("")||'<p class="ik2-empty">Bekleyen onay yok 🎉</p>')+'</div></section>'+
+    '<section class="ik2-panel c4"><header><h2>Yaklaşan kutlamalar</h2><small>30 gün</small></header><div class="ik2-rows">'+(upcoming.slice(0,7).map(u=>'<div class="ik2-row">'+who(u.p,u.kind+" · "+u.text)+'<div class="end">'+chip(u.n===0?"Bugün":u.n===1?"Yarın":u.n+" gün",u.kind==="Doğum günü"?"#DB2777":"#4F46E5")+'</div></div>').join("")||'<p class="ik2-empty">Yakın tarihte kutlama yok</p>')+'</div></section>'+
+    '<section class="ik2-panel c4"><header><h2>Kritik tarihler</h2><small>Deneme, sözleşme, belge</small></header><div class="ik2-rows">'+(crit.slice(0,7).map(c=>'<div class="ik2-row" data-ik="person" data-v="'+c.p.id+'" style="cursor:pointer">'+who(c.p,c.t)+'<div class="end">'+chip(c.n<0?Math.abs(c.n)+" gün geçti":c.n===0?"Bugün":c.n+" gün",c.tone)+'</div></div>').join("")||'<p class="ik2-empty">Yaklaşan kritik tarih yok</p>')+'</div></section>'+
+    '<section class="ik2-panel c5"><header><h2>Birimlere göre kadro</h2><small>'+act.length+' kişi</small></header><div class="ik2-bars">'+byUnit.map(([u,n])=>'<div class="ik2-bar"><span>'+esc(u[1])+'</span><div class="ik2-meter" style="--t:'+u[2]+'"><i style="width:'+(n/maxU*100)+'%"></i></div><b>'+n+'</b></div>').join("")+'</div></section>'+
+    '<section class="ik2-panel c4"><header><h2>Cinsiyet ve yaş</h2></header><div class="ik2-donutwrap"><div class="ik2-donut" style="background:conic-gradient(#DB2777 0 '+deg+'deg,#4F46E5 '+deg+'deg 360deg)"></div><div class="ik2-legend"><div><i style="background:#DB2777"></i>Kadın<b>'+fem+'</b></div><div><i style="background:#4F46E5"></i>Erkek<b>'+(act.length-fem)+'</b></div>'+ages.map(([l,n])=>'<div><i style="background:#CBD5E1"></i>'+l+' yaş<b>'+n+'</b></div>').join("")+'</div></div></section>'+
+    '<section class="ik2-panel c3" style="grid-column:span 3"><header><h2>Bugün izinde</h2></header><div class="ik2-rows">'+(leaveToday.map(l=>'<div class="ik2-row" data-ik="leave" data-v="'+l.id+'" style="cursor:pointer">'+who(P(l.person),lt(l.type).name+" · dönüş "+dshort(l.ret))+'</div>').join("")||'<p class="ik2-empty">Bugün izinli personel yok</p>')+'</div></section>'+
+    '<section class="ik2-panel c12"><header><h2>Aylık izin kullanımı</h2><small>'+T.slice(0,4)+' · onaylanan izin günleri</small></header><div class="ik2-cols-chart">'+months.map(([m,n])=>'<div><b>'+(n||"")+'</b><i style="height:'+Math.max(4,n/maxM*100)+'%"></i><small>'+m+'</small></div>').join("")+'</div></section>'+
+  '</div>';
+}
+
+/* ─── Personeller ─── */
+function peopleList(){
+  const q=lc(IK.q);
+  return S.people.filter(p=>(!IK.unit||p.unit===IK.unit)&&(!IK.pstatus||p.status===IK.pstatus)&&(!q||lc(p.name+" "+p.title+" "+p.sicil+" "+unitOf(p.unit)[1]+" "+p.city).includes(q)));
+}
+function secPeople(){
+  const list=peopleList(),stats=["Aktif","Deneme süresinde","Pasif"];
+  const tools='<div class="ik2-tools"><label class="ik2-search">'+ic("search",16)+'<input data-ikq="people" placeholder="Ad, unvan, sicil, birim veya şehir ara" value="'+esc(IK.q)+'"></label>'+
+    '<div class="ik2-seg"><button data-ik="punit" data-v="" class="'+(!IK.unit?"on":"")+'">Tüm birimler</button>'+UNITS.map(u=>'<button data-ik="punit" data-v="'+u[0]+'" class="'+(IK.unit===u[0]?"on":"")+'">'+esc(u[1].split(" ")[0])+'</button>').join("")+'</div>'+
+    '<div class="ik2-seg"><button data-ik="pstatus" data-v="" class="'+(!IK.pstatus?"on":"")+'">Tümü</button>'+stats.map(s=>'<button data-ik="pstatus" data-v="'+s+'" class="'+(IK.pstatus===s?"on":"")+'">'+s+'</button>').join("")+'</div><span class="ik2-spacer"></span>'+
+    '<div class="ik2-seg"><button data-ik="pview" data-v="cards" class="'+(IK.pview==="cards"?"on":"")+'">'+ic("grid",15)+'Kart</button><button data-ik="pview" data-v="list" class="'+(IK.pview==="list"?"on":"")+'">'+ic("list",15)+'Liste</button></div>'+
+    '<button class="ik2-btn" data-ik="export-people">'+ic("download",15)+'CSV</button></div>';
+  return tools+'<div id="ik2-people-res">'+peopleResults(list)+'</div>';
+}
+function peopleResults(list){
+  if(!list.length)return '<div class="ik2-panel ik2-empty">Aramaya uyan personel yok.</div>';
+  if(IK.pview==="list")return '<div class="ik2-tablewrap"><table class="ik2-table"><thead><tr><th>Personel</th><th>Sicil</th><th>Birim</th><th>Yönetici</th><th>İşe giriş</th><th>Kıdem</th><th>Çalışma</th><th class="num">Kalan izin</th><th>Durum</th></tr></thead><tbody>'+
+    list.map(p=>{const b=balance(p),u=unitOf(p.unit);return '<tr data-ik="person" data-v="'+p.id+'"><td>'+who(p)+'</td><td><span class="ik2-code">'+esc(p.sicil)+'</span></td><td>'+chip(u[1],u[2])+'</td><td>'+esc(pname(p.manager))+'</td><td>'+dlong(p.start)+'</td><td>'+yearsBetween(p.start)+' yıl</td><td>'+esc(p.model)+'</td><td class="num"><b>'+b.left+'</b> gün</td><td>'+st(onLeave(p.id)?"İzinde":p.status)+'</td></tr>';}).join("")+'</tbody></table></div>';
+  return '<div class="ik2-cards">'+list.map(p=>{const b=balance(p),u=unitOf(p.unit),pct=b.total?Math.round(b.left/b.total*100):0;
+    return '<button class="ik2-pcard" data-ik="person" data-v="'+p.id+'"><header>'+av(p.name)+'<div class="ik2-who"><div><b>'+esc(p.name)+'</b><small>'+esc(p.title)+'</small></div></div></header>'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap">'+chip(u[1],u[2])+st(onLeave(p.id)?"İzinde":p.status)+'</div>'+
+      '<dl><div><dt>Kıdem</dt><dd>'+yearsBetween(p.start)+' yıl</dd></div><div><dt>Kalan izin</dt><dd>'+b.left+' / '+b.total+' gün</dd></div><div><dt>Çalışma</dt><dd>'+esc(p.model)+'</dd></div><div><dt>Dahili</dt><dd>'+esc(p.ext)+'</dd></div></dl>'+
+      '<div class="ik2-meter" style="--t:'+(pct<25?"#D23F4A":"#4F46E5")+'"><i style="width:'+pct+'%"></i></div></button>';}).join("")+'</div>';
+}
+
+/* ─── İzin yönetimi ─── */
+function leaveRow(l){
+  const p=P(l.person),t=lt(l.type);
+  return '<tr data-ik="leave" data-v="'+l.id+'"><td><span class="ik2-code">'+esc(l.code)+'</span></td><td>'+who(p)+'</td><td>'+chip(t.name,t.color)+'</td><td>'+dshort(l.start)+' – '+dshort(l.end)+'</td><td class="num"><b>'+l.days+'</b> gün</td><td>'+dshort(l.ret)+'</td><td>'+stepsMini(l.steps)+'</td><td>'+st(l.status)+'</td><td class="num">'+(l.status==="Onay bekliyor"?'<button class="ik2-btn sm ok" data-ik="approve" data-k="leave" data-v="'+l.id+'">'+ic("check",14)+'Onayla</button>':"")+'</td></tr>';
+}
+const stepsMini=steps=>'<span class="ik2-steps" title="'+esc(steps.map(s=>s.name+": "+({done:"onaylandı",now:"bekliyor",no:"reddedildi",wait:"sırada",skip:"—"})[s.state]).join(" · "))+'">'+steps.map(s=>'<i class="'+s.state+'"></i>').join("")+'</span>';
+function secLeave(){
+  const counts=s=>S.leaves.filter(l=>!s||l.status===s).length;
+  const tabs='<div class="ik2-tools"><div class="ik2-seg">'+[["list","Talepler","list"],["cal","Ekip takvimi","calendar"],["bal","Bakiyeler","chart"],["types","İzin türleri","layers"]].map(([v,l,i])=>'<button data-ik="lview" data-v="'+v+'" class="'+(IK.lview===v?"on":"")+'">'+ic(i,15)+l+'</button>').join("")+'</div><span class="ik2-spacer"></span><button class="ik2-btn primary" data-ik="new-leave">'+ic("plus",16)+'Yeni izin talebi</button></div>';
+  if(IK.lview==="cal")return tabs+leaveCalendar();
+  if(IK.lview==="bal")return tabs+leaveBalances();
+  if(IK.lview==="types")return tabs+leaveTypes();
+  const rows=S.leaves.filter(l=>!IK.lstat||l.status===IK.lstat).sort((a,b)=>b.start.localeCompare(a.start));
+  return tabs+'<div class="ik2-tools"><div class="ik2-seg">'+["","Onay bekliyor","Onaylandı","Reddedildi","İptal","Taslak"].map(s=>'<button data-ik="lstat" data-v="'+s+'" class="'+(IK.lstat===s?"on":"")+'">'+(s||"Tümü")+' <em>'+counts(s)+'</em></button>').join("")+'</div></div>'+
+    (rows.length?'<div class="ik2-tablewrap"><table class="ik2-table"><thead><tr><th>Kod</th><th>Personel</th><th>Tür</th><th>Tarih</th><th class="num">Süre</th><th>İşe dönüş</th><th>Onay adımları</th><th>Durum</th><th></th></tr></thead><tbody>'+rows.map(leaveRow).join("")+'</tbody></table></div>':'<div class="ik2-panel ik2-empty">Bu durumda talep yok.</div>');
+}
+function leaveCalendar(){
+  const [y,m]=IK.calMonth.split("-").map(Number),days=new Date(y,m,0).getDate(),first=IK.calMonth+"-01";
+  const list=Array.from({length:days},(_,i)=>shift(first,i));
+  const label=new Intl.DateTimeFormat("tr-TR",{month:"long",year:"numeric"}).format(asDate(first));
+  const wd=d=>new Intl.DateTimeFormat("tr-TR",{weekday:"short"}).format(asDate(d));
+  const rows=active().map(p=>{
+    const ls=S.leaves.filter(l=>l.person===p.id&&["Onaylandı","Onay bekliyor"].includes(l.status));
+    return '<tr><td class="name">'+who(p,unitOf(p.unit)[1])+'</td>'+list.map(d=>{const l=ls.find(x=>x.start<=d&&x.end>=d);const cls=(isWe(d)?"we ":"")+(isHol(d)?"hol ":"")+(d===T?"today":"");
+      return '<td class="'+cls+'" title="'+esc(d+(isHol(d)?" · "+isHol(d)[1]:"")+(l?" · "+lt(l.type).name+" ("+l.status+")":""))+'">'+(l&&!isWe(d)&&!isHol(d)?'<span class="lv '+(l.status==="Onay bekliyor"?"pend":"")+'" style="--t:'+lt(l.type).color+'" data-ik="leave" data-v="'+l.id+'"></span>':"")+'</td>';}).join("")+'</tr>';
+  }).join("");
+  return '<div class="ik2-tools"><button class="ik2-btn sm" data-ik="cal" data-v="-1">'+ic("left",15)+'</button><b style="min-width:150px;text-align:center;text-transform:capitalize">'+esc(label)+'</b><button class="ik2-btn sm" data-ik="cal" data-v="1">'+ic("right",15)+'</button><button class="ik2-btn sm" data-ik="cal" data-v="0">Bu ay</button></div>'+
+    '<div class="ik2-cal"><table><thead><tr><th class="name">Personel</th>'+list.map(d=>'<th class="'+(isWe(d)?"we ":"")+(isHol(d)?"hol":"")+'">'+Number(d.slice(8))+'<small>'+esc(wd(d))+'</small></th>').join("")+'</tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '<div class="ik2-legendrow">'+LT.filter(t=>S.leaves.some(l=>l.type===t.id)).map(t=>'<span><i style="--t:'+t.color+'"></i>'+esc(t.name)+'</span>').join("")+'<span><i style="--t:#C77712;background:repeating-linear-gradient(45deg,#C77712,#C77712 3px,#fff 3px,#fff 6px)"></i>Onay bekliyor</span><span><i style="--t:#FFE9C7"></i>Resmî tatil</span></div>';
+}
+function leaveBalances(){
+  return '<div class="ik2-tablewrap"><table class="ik2-table"><thead><tr><th>Personel</th><th>Kıdem</th><th>Yaş</th><th class="num">Hak edilen</th><th class="num">Devreden</th><th class="num">Kullanılan</th><th class="num">Planlanan</th><th class="num">Onay bekleyen</th><th class="num">Kalan</th><th style="min-width:140px">Kullanım</th></tr></thead><tbody>'+
+    active().map(p=>{const b=balance(p),pct=b.total?Math.round((b.used+b.planned)/b.total*100):0;return '<tr data-ik="person" data-v="'+p.id+'" data-tab="leave"><td>'+who(p,unitOf(p.unit)[1])+'</td><td>'+yearsBetween(p.start)+' yıl</td><td>'+yearsBetween(p.birth)+'</td><td class="num">'+b.earned+'</td><td class="num">'+b.carry+'</td><td class="num">'+b.used+'</td><td class="num">'+b.planned+'</td><td class="num">'+(b.pending||"—")+'</td><td class="num"><b style="color:'+(b.left<3?"#D23F4A":"inherit")+'">'+b.left+'</b></td><td><div class="ik2-meter" style="--t:'+(pct>85?"#D23F4A":"#4F46E5")+'"><i style="width:'+Math.min(100,pct)+'%"></i></div></td></tr>';}).join("")+
+    '</tbody></table></div><div class="ik2-alert info">'+ic("alert",16)+'<div>Hak edişler 4857 sayılı İş Kanunu m.53\'e göre hesaplanır: 1–5 yıl 14, 5–15 yıl 20, 15 yıl ve üstü 26 iş günü. 18 yaş altı ve 50 yaş üstü çalışanlara en az 20 gün verilir. Hafta sonu ve resmî tatiller izin süresinden sayılmaz.</div></div>';
+}
+function leaveTypes(){
+  return '<div class="ik2-tablewrap"><table class="ik2-table"><thead><tr><th>İzin türü</th><th>Kural</th><th>Ücret</th><th>Bakiyeden düşer</th><th>Belge</th><th>Dayanak</th><th class="num">Bu yıl</th></tr></thead><tbody>'+
+    LT.map(t=>'<tr><td>'+chip(t.name,t.color)+'</td><td>'+esc(t.rule)+'</td><td>'+(t.paid?"Ücretli":"Ücretsiz")+'</td><td>'+(t.balance?"Evet":"Hayır")+'</td><td>'+(t.doc?"Gerekli":"—")+'</td><td>'+esc(t.law)+'</td><td class="num">'+S.leaves.filter(l=>l.type===t.id&&l.status==="Onaylandı").length+'</td></tr>').join("")+'</tbody></table></div>';
+}
+
+/* ─── Onay merkezi ─── */
+const KIND={leave:["İzin","calendar","#4F46E5"],overtime:["Fazla mesai","clock","#D97706"],expense:["Avans / masraf","money","#12936A"],asset:["Zimmet","box","#7C3AED"]};
+function approvalSummary(k,x){
+  if(k==="leave")return lt(x.type).name+" · "+dshort(x.start)+"–"+dshort(x.end)+" · "+x.days+" gün";
+  if(k==="overtime")return x.kind+" · "+dshort(x.date)+" · "+x.hours+" saat ("+x.reason+")";
+  if(k==="expense")return x.kind+" · "+x.cat+" · "+money(x.amount);
+  return x.name+" · "+x.serial;
+}
+function approvalLine(k,x,compact){
+  const p=P(x.person),kd=KIND[k];
+  return '<div class="ik2-row"><span class="ik2-av sm" style="background:'+kd[2]+'">'+ic(kd[1],13)+'</span><div class="ik2-who" style="flex:1"><div><b>'+esc(p.name)+' · '+kd[0]+'</b><small>'+esc(approvalSummary(k,x))+'</small></div></div><div class="end">'+(compact?"":'<button class="ik2-btn sm" data-ik="'+(k==="leave"?"leave":k==="asset"?"person":"none")+'" data-v="'+(k==="asset"?x.person:x.id)+'">Detay</button>')+
+    '<button class="ik2-btn sm ok" data-ik="approve" data-k="'+k+'" data-v="'+esc(x.id)+'" title="Onayla">'+ic("check",14)+(compact?"":"Onayla")+'</button><button class="ik2-btn sm bad" data-ik="reject" data-k="'+k+'" data-v="'+esc(x.id)+'" title="Reddet">'+ic("close",14)+(compact?"":"Reddet")+'</button></div></div>';
+}
+function secApprovals(){
+  const pend=pendingAll().filter(([k])=>!IK.xkind||k===IK.xkind);
+  const done=[...S.leaves.filter(l=>["Onaylandı","Reddedildi"].includes(l.status)).map(x=>["leave",x,x.steps.filter(s=>s.date).map(s=>s.date).sort().pop()||x.start]),...S.overtime.filter(o=>o.status!=="Onay bekliyor").map(x=>["overtime",x,x.date]),...S.expenses.filter(o=>o.status!=="Onay bekliyor").map(x=>["expense",x,x.date])].filter(([k])=>!IK.xkind||k===IK.xkind).sort((a,b)=>b[2].localeCompare(a[2])).slice(0,25);
+  const kinds=Object.entries(KIND);
+  return '<div class="ik2-tools"><div class="ik2-seg"><button data-ik="apv" data-v="pending" class="'+(IK.apv==="pending"?"on":"")+'">Bekleyen <em>'+pendingAll().length+'</em></button><button data-ik="apv" data-v="done" class="'+(IK.apv==="done"?"on":"")+'">Sonuçlanan</button></div>'+
+    '<div class="ik2-seg"><button data-ik="xkind" data-v="" class="'+(!IK.xkind?"on":"")+'">Tümü</button>'+kinds.map(([k,v])=>'<button data-ik="xkind" data-v="'+k+'" class="'+(IK.xkind===k?"on":"")+'">'+ic(v[1],14)+v[0]+'</button>').join("")+'</div><span class="ik2-spacer"></span>'+
+    (IK.apv==="pending"&&pend.length>1?'<button class="ik2-btn ok" data-ik="approve-all">'+ic("check",16)+'Görünenlerin tümünü onayla</button>':"")+'</div>'+
+    (IK.apv==="pending"?'<section class="ik2-panel"><div class="ik2-rows">'+(pend.map(([k,x])=>approvalLine(k,x,false)).join("")||'<p class="ik2-empty">Bekleyen onay yok. Harika!</p>')+'</div></section>':
+    '<div class="ik2-tablewrap"><table class="ik2-table"><thead><tr><th>Tür</th><th>Personel</th><th>Özet</th><th>Tarih</th><th>Sonuç</th></tr></thead><tbody>'+done.map(([k,x,d])=>'<tr '+(k==="leave"?'data-ik="leave" data-v="'+x.id+'"':"")+'><td>'+chip(KIND[k][0],KIND[k][2])+'</td><td>'+who(P(x.person))+'</td><td>'+esc(approvalSummary(k,x))+'</td><td>'+dlong(d)+'</td><td>'+st(x.status)+'</td></tr>').join("")+'</tbody></table></div>');
+}
+
+/* ─── PDKS ve vardiya ─── */
+function secAttendance(){
+  const att=attendance(),cnt=s=>att.filter(a=>a.state===s).length;
+  const order=["Geç geldi","Gelmedi","Ofiste","Uzaktan","Sahada","İzinli","Tatil"];
+  const sorted=[...att].sort((a,b)=>order.indexOf(a.state)-order.indexOf(b.state));
+  const week=Array.from({length:7},(_,i)=>shift(week0(),i));
+  return '<div class="ik2-kpis">'+[["Ofiste","building","#12936A"],["Uzaktan","home","#7C3AED"],["Sahada","pin","#0D9488"],["Geç geldi","alert","#C77712"],["Gelmedi","close","#D23F4A"],["İzinli","calendar","#0EA5E9"]].map(([s,i,t])=>kpi(s,cnt(s),s==="Geç geldi"?"10 dk tolerans sonrası":s==="Gelmedi"?"Bildirimsiz devamsızlık":"Bugün",i,t)).join("")+'</div>'+
+    '<div class="ik2-cols"><section class="c8"><div class="ik2-tablewrap"><table class="ik2-table"><thead><tr><th>Personel</th><th>Vardiya</th><th>Giriş</th><th>Çıkış</th><th>Süre</th><th>Konum</th><th>Durum</th></tr></thead><tbody>'+
+    sorted.map(a=>'<tr data-ik="person" data-v="'+a.p.id+'" data-tab="pdks"><td>'+who(a.p,unitOf(a.p.unit)[1])+'</td><td>'+(a.shift?chip(a.shift.name+" "+a.shift.time,a.shift.color):"—")+'</td><td>'+(a.in||"—")+(a.lateMin?' <small style="color:#C77712">+'+a.lateMin+' dk</small>':"")+'</td><td>'+(a.out||(a.in?'<small style="color:#6B7489">içeride</small>':"—"))+'</td><td>'+(a.worked||"—")+'</td><td>'+esc(a.where||(a.lv?lt(a.lv.type).name:"—"))+(a.gps?' '+chip(a.gps,"#D23F4A"):"")+'</td><td>'+chip(a.state,a.tone)+'</td></tr>').join("")+'</tbody></table></div></section>'+
+    '<section class="ik2-panel c4"><header><h2>Uyarılar</h2></header><div class="ik2-rows">'+att.filter(a=>a.gps||a.state==="Gelmedi"||a.lateMin>20).map(a=>'<div class="ik2-row">'+who(a.p,a.gps?"Sahte GPS şüphesi · "+a.in:a.state==="Gelmedi"?"Giriş kaydı yok, izin talebi de yok":a.lateMin+" dk geç giriş")+'</div>').join("")+'</div><div class="ik2-alert info">'+ic("alert",16)+'<div>Geç kalma toleransı 10 dakikadır. Ayda 3 geç kalma otomatik olarak performans ceza puanına (-5) yansır.</div></div></section>'+
+    '<section class="c12"><div class="ik2-panel"><header><h2>Haftalık vardiya planı</h2><small>'+dshort(week[0])+' – '+dshort(week[6])+'</small></header><div class="ik2-cal" style="border:0"><table><thead><tr><th class="name">Personel</th>'+week.map(d=>'<th class="'+(isWe(d)?"we":"")+'">'+new Intl.DateTimeFormat("tr-TR",{weekday:"short",day:"numeric"}).format(asDate(d))+'</th>').join("")+'</tr></thead><tbody>'+
+    active().map(p=>'<tr><td class="name">'+who(p,unitOf(p.unit)[1])+'</td>'+week.map(d=>{const lv=onLeave(p.id,d);const sh=lv?null:isWe(d)?(p.unit==="OPR"&&asDate(d).getDay()===6?SHIFTS.find(s=>s.id===p.shift):SHIFTS[4]):SHIFTS.find(s=>s.id===p.shift);return '<td class="'+(isWe(d)?"we ":"")+(d===T?"today":"")+'">'+(lv?'<span class="ik2-chip" style="--t:'+lt(lv.type).color+'">İzin</span>':'<span class="ik2-chip" style="--t:'+sh.color+'">'+sh.name+'</span>')+'</td>';}).join("")+'</tr>').join("")+'</tbody></table></div></div></section></div>';
+}
+function week0(){const d=asDate(T);const off=(d.getDay()+6)%7;return shift(T,-off);}
+
+/* ─── Fazla mesai ─── */
+function secOvertime(){
+  const ok=S.overtime.filter(o=>o.status==="Onaylandı"),hrs=ok.reduce((n,o)=>n+o.hours,0);
+  const est=ok.reduce((n,o)=>n+o.hours*o.rate*285,0);
+  const perPerson={};for(const o of ok)perPerson[o.person]=(perPerson[o.person]||0)+o.hours;
+  const top=Object.entries(perPerson).sort((a,b)=>b[1]-a[1]);
+  return '<div class="ik2-kpis">'+kpi("Onaylı fazla mesai",hrs+" sa","Bu dönem","clock","#D97706")+kpi("Tahmini maliyet",money(est),"Saatlik ort. ₺285 × oran","money","#12936A")+kpi("Bekleyen talep",S.overtime.filter(o=>o.status==="Onay bekliyor").length,"Yönetici ve İK onayı","check","#C77712")+kpi("Yıllık yasal sınır","270 sa","Kişi başı (İK m.41)","shield","#4F46E5")+'</div>'+
+  '<div class="ik2-tools"><span class="ik2-spacer"></span><button class="ik2-btn primary" data-ik="new-overtime">'+ic("plus",16)+'Fazla mesai talebi</button></div>'+
+  '<div class="ik2-cols"><section class="c8"><div class="ik2-tablewrap"><table class="ik2-table"><thead><tr><th>Kod</th><th>Personel</th><th>Tarih</th><th>Tür</th><th class="num">Saat</th><th class="num">Oran</th><th>Karşılık</th><th>Gerekçe</th><th>Durum</th><th></th></tr></thead><tbody>'+
+  S.overtime.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(o=>'<tr><td><span class="ik2-code">'+o.code+'</span></td><td>'+who(P(o.person))+'</td><td>'+dlong(o.date)+'</td><td>'+esc(o.kind)+'</td><td class="num"><b>'+o.hours+'</b></td><td class="num">×'+o.rate+'</td><td>'+esc(o.pay)+'</td><td>'+esc(o.reason)+'</td><td>'+st(o.status)+'</td><td>'+(o.status==="Onay bekliyor"?'<button class="ik2-btn sm ok" data-ik="approve" data-k="overtime" data-v="'+o.id+'">'+ic("check",14)+'</button> <button class="ik2-btn sm bad" data-ik="reject" data-k="overtime" data-v="'+o.id+'">'+ic("close",14)+'</button>':"")+'</td></tr>').join("")+'</tbody></table></div></section>'+
+  '<section class="ik2-panel c4"><header><h2>Kişi başı (onaylı)</h2><small>270 saat sınırına göre</small></header><div class="ik2-bars">'+top.map(([id,h])=>'<div class="ik2-bar"><span>'+esc(pname(id))+'</span><div class="ik2-meter" style="--t:'+(h>200?"#D23F4A":"#D97706")+'"><i style="width:'+Math.min(100,h/270*100*8)+'%"></i></div><b>'+h+' sa</b></div>').join("")+'</div><div class="ik2-alert info">'+ic("alert",16)+'<div>Hafta içi ve hafta sonu fazla çalışma %50 zamlı (×1,5), resmî tatil çalışması %100 zamlı (×2) ödenir. Çalışan isterse ücret yerine her saat için 1,5 saat serbest zaman kullanabilir.</div></div></section></div>';
+}
+
+/* ─── Avans ve masraf ─── */
+function secExpense(){
+  const sum=f=>S.expenses.filter(f).reduce((n,x)=>n+x.amount,0);
+  return '<div class="ik2-kpis">'+kpi("Bekleyen tutar",money(sum(x=>x.status==="Onay bekliyor")),S.expenses.filter(x=>x.status==="Onay bekliyor").length+" talep","clock","#C77712")+kpi("Onaylı, ödenecek",money(sum(x=>x.status==="Onaylandı")),"Finans ödeme listesinde","check","#4F46E5")+kpi("Ödenen",money(sum(x=>x.status==="Ödendi")),"Bu dönem","money","#12936A")+kpi("Belgesiz masraf",S.expenses.filter(x=>x.kind==="Masraf"&&!x.receipt).length,"Fiş/fatura eksik","alert","#D23F4A")+'</div>'+
+  '<div class="ik2-tools"><span class="ik2-spacer"></span><button class="ik2-btn" data-ik="new-expense" data-v="Avans">'+ic("money",16)+'Avans talebi</button><button class="ik2-btn primary" data-ik="new-expense" data-v="Masraf">'+ic("plus",16)+'Masraf beyanı</button></div>'+
+  '<div class="ik2-tablewrap"><table class="ik2-table"><thead><tr><th>Kod</th><th>Personel</th><th>Tür</th><th>Kategori</th><th>Tarih</th><th class="num">Tutar</th><th>Taksit / Belge</th><th>Açıklama</th><th>Durum</th><th></th></tr></thead><tbody>'+
+  S.expenses.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(x=>'<tr><td><span class="ik2-code">'+x.code+'</span></td><td>'+who(P(x.person))+'</td><td>'+chip(x.kind,x.kind==="Avans"?"#4F46E5":"#12936A")+'</td><td>'+esc(x.cat)+'</td><td>'+dlong(x.date)+'</td><td class="num"><b>'+money(x.amount)+'</b></td><td>'+(x.kind==="Avans"?x.installments+" taksit":x.receipt?"Fiş ekli":'<span style="color:#D23F4A">Belge yok</span>')+'</td><td>'+esc(x.note)+'</td><td>'+st(x.status)+'</td><td>'+(x.status==="Onay bekliyor"?'<button class="ik2-btn sm ok" data-ik="approve" data-k="expense" data-v="'+x.id+'">'+ic("check",14)+'</button> <button class="ik2-btn sm bad" data-ik="reject" data-k="expense" data-v="'+x.id+'">'+ic("close",14)+'</button>':x.status==="Onaylandı"?'<button class="ik2-btn sm" data-ik="pay" data-v="'+x.id+'">Ödendi işaretle</button>':"")+'</td></tr>').join("")+'</tbody></table></div>';
+}
+
+/* ─── Organizasyon ─── */
+function secOrg(){
+  const act=active(),gm=S.people[0];
+  return '<div class="ik2-org"><div class="ik2-orgnode">'+av(gm.name,"lg")+'<div><small style="color:#6B7489;font-weight:650">Genel Müdür</small><b style="display:block;font-size:16px">'+esc(gm.name)+'</b><small style="color:#6B7489">'+act.length+' kişilik organizasyon · '+UNITS.length+' birim</small></div></div>'+
+    '<div class="ik2-orgunits">'+UNITS.map(u=>{const mem=act.filter(p=>p.unit===u[0]),mgr=mem.find(p=>!p.manager)||mem[0];return '<div class="ik2-orgunit" style="--t:'+u[2]+'"><h3>'+esc(u[1])+'<em>'+mem.length+' kişi</em></h3>'+(mgr?'<div class="mgr" data-ik="person" data-v="'+mgr.id+'" style="cursor:pointer">'+who(mgr)+'</div>':"")+'<ul>'+mem.filter(p=>p!==mgr).map(p=>'<li data-ik="person" data-v="'+p.id+'" style="cursor:pointer">'+who(p)+'</li>').join("")+'</ul></div>';}).join("")+'</div></div>';
+}
+
+/* ─── İşe alım ─── */
+function secRecruit(){
+  const stages=[["Başvuru","#64748B"],["Ön eleme","#0EA5E9"],["Mülakat","#4F46E5"],["Teklif","#D97706"],["İşe alındı","#12936A"]];
+  return '<div class="ik2-kpis">'+kpi("Açık pozisyon",S.positions.reduce((n,p)=>n+p[2],0),S.positions.length+" farklı unvan","briefcase","#4F46E5")+kpi("Aktif aday",S.candidates.filter(c=>c.stage!=="İşe alındı").length,"Süreçte","people","#0EA5E9")+kpi("Bu hafta mülakat",S.candidates.filter(c=>c.interview&&dd(T,c.interview)<=7).length,"Takvimde","calendar","#D97706")+kpi("Ortalama işe alım süresi","34 gün","Hedef 30 gün","clock","#12936A")+'</div>'+
+    '<div class="ik2-cols"><section class="c12"><div class="ik2-kanban">'+stages.map(([s,t])=>{const list=S.candidates.filter(c=>c.stage===s);return '<div class="ik2-lane"><header style="--t:'+t+'"><i></i>'+s+'<em>'+list.length+'</em></header>'+list.map(c=>'<div class="ik2-ccard"><div class="ik2-who">'+av(c.name,"sm")+'<div><b>'+esc(c.name)+'</b><small>'+esc(c.pos)+'</small></div></div><div style="display:flex;justify-content:space-between;align-items:center"><span class="ik2-stars">'+"★".repeat(c.score)+'<span style="color:#E4E7EE">'+"★".repeat(5-c.score)+'</span></span><small>'+esc(c.src)+'</small></div>'+(c.interview?'<small>'+ic("calendar",12)+' Mülakat: '+dlong(c.interview)+'</small>':"")+(c.salary?'<small>Teklif: '+money(c.salary)+' brüt</small>':"")+(s!=="İşe alındı"?'<button class="ik2-btn sm" data-ik="advance-cand" data-v="'+c.id+'">'+ic("right",14)+'Sonraki aşama</button>':"")+'</div>').join("")+'</div>';}).join("")+'</div></section>'+
+    '<section class="ik2-panel c12"><header><h2>Açık pozisyonlar</h2></header><div class="ik2-tablewrap" style="border:0"><table class="ik2-table"><thead><tr><th>Pozisyon</th><th>Birim</th><th class="num">Kadro</th><th class="num">Aday</th><th>En ileri aşama</th></tr></thead><tbody>'+S.positions.map(([pos,u,n])=>{const cs=S.candidates.filter(c=>c.pos===pos);const best=stages.map(x=>x[0]).filter(s=>cs.some(c=>c.stage===s)).pop()||"—";return '<tr><td><b>'+esc(pos)+'</b></td><td>'+chip(unitOf(u)[1],unitOf(u)[2])+'</td><td class="num">'+n+'</td><td class="num">'+cs.length+'</td><td>'+esc(best)+'</td></tr>';}).join("")+'</tbody></table></div></section></div>';
+}
+
+/* ─── Eğitim ─── */
+function secTraining(){
+  const exp=[];for(const p of active())for(const d of p.docs)if(d.exp&&dd(T,d.exp)<=60)exp.push({p,d,n:dd(T,d.exp)});exp.sort((a,b)=>a.n-b.n);
+  return '<div class="ik2-cols"><section class="c8"><div class="ik2-cards" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">'+S.trainings.map(t=>{const done=t.people.filter(x=>x.done).length,pct=Math.round(done/t.people.length*100),late=dd(T,t.due)<0&&pct<100;
+    return '<div class="ik2-pcard" style="cursor:default"><div style="display:flex;gap:6px">'+chip(t.kind,t.req?"#D23F4A":"#4F46E5")+chip(t.hours+" saat","#64748B")+'</div><b style="font-size:15px">'+esc(t.name)+'</b><small style="color:'+(late?"#D23F4A":"#6B7489")+'">Son tarih: '+dlong(t.due)+(late?" · gecikmede":"")+'</small><div style="display:flex;justify-content:space-between;font-size:12.5px"><span>'+done+' / '+t.people.length+' tamamladı</span><b>%'+pct+'</b></div><div class="ik2-meter" style="--t:'+(pct===100?"#12936A":late?"#D23F4A":"#4F46E5")+'"><i style="width:'+pct+'%"></i></div><div style="display:flex">'+t.people.filter(x=>!x.done).slice(0,6).map(x=>'<span title="'+esc(pname(x.id))+' · tamamlamadı" style="margin-right:-6px">'+av(pname(x.id),"sm")+'</span>').join("")+'</div></div>';}).join("")+'</div></section>'+
+    '<section class="ik2-panel c4"><header><h2>Süresi dolan belgeler</h2><small>60 gün</small></header><div class="ik2-rows">'+(exp.map(x=>'<div class="ik2-row" data-ik="person" data-v="'+x.p.id+'" data-tab="docs" style="cursor:pointer">'+who(x.p,x.d.name)+'<div class="end">'+chip(x.n<0?Math.abs(x.n)+" gün geçti":x.n+" gün",x.n<0?"#D23F4A":x.n<15?"#C77712":"#4F46E5")+'</div></div>').join("")||'<p class="ik2-empty">Yakında süresi dolan belge yok</p>')+'</div></section></div>';
+}
+
+/* ─── Performans ─── */
+function secPerf(){
+  const rank=active().map(p=>[p,p.score.award-p.score.penalty+S.scores.filter(s=>s.person===p.id).reduce((n,s)=>n+s.pts,0)]).sort((a,b)=>b[1]-a[1]);
+  return '<div class="ik2-cols"><section class="ik2-panel c5"><header><h2>Puan sıralaması</h2><small>Ödül − ceza</small></header><div class="ik2-rows">'+rank.slice(0,10).map(([p,n],i)=>'<div class="ik2-row" data-ik="person" data-v="'+p.id+'" data-tab="perf" style="cursor:pointer"><b style="width:22px;color:'+(i<3?"#D97706":"#94A3B8")+'">'+(i+1)+'</b>'+who(p,unitOf(p.unit)[1])+'<div class="end"><b>'+n+'</b><small style="color:#6B7489">puan</small></div></div>').join("")+'</div></section>'+
+    '<section class="ik2-panel c7"><header><h2>Birim hedefleri</h2><small>'+T.slice(0,4)+' dönemi</small></header><div class="ik2-rows">'+S.goals.map(([g,u,pct])=>'<div class="ik2-row" style="display:grid;grid-template-columns:1fr 160px 44px;gap:12px"><div><b style="font-size:13.5px">'+esc(g)+'</b><div>'+chip(unitOf(u)[1],unitOf(u)[2])+'</div></div><div class="ik2-meter" style="--t:'+(pct>=70?"#12936A":pct>=45?"#D97706":"#D23F4A")+'"><i style="width:'+pct+'%"></i></div><b>%'+pct+'</b></div>').join("")+'</div></section>'+
+    '<section class="ik2-panel c12"><header><h2>Son ödül ve ceza kayıtları</h2><button class="ik2-link" data-ik="new-score">+ Puan ver</button></header><div class="ik2-rows">'+S.scores.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(s=>'<div class="ik2-row">'+who(P(s.person),s.reason)+'<div class="end">'+chip(s.kind,s.kind==="Ödül"?"#12936A":"#D23F4A")+'<b style="color:'+(s.pts>0?"#12936A":"#D23F4A")+'">'+(s.pts>0?"+":"")+s.pts+'</b><small style="color:#6B7489">'+dlong(s.date)+'</small></div></div>').join("")+'</div></section></div>';
+}
+
+/* ─── Tanımlar ─── */
+function secDefs(){
+  return '<div class="ik2-cols"><section class="ik2-panel c12"><header><h2>İzin türleri</h2><small>'+LT.length+' tür</small></header>'+leaveTypes()+'</section>'+
+    '<section class="ik2-panel c6"><header><h2>Vardiyalar</h2></header><div class="ik2-rows">'+SHIFTS.map(s=>'<div class="ik2-row"><span class="ik2-av sm" style="background:'+s.color+'">'+s.id+'</span><div class="ik2-who"><div><b>'+s.name+'</b><small>'+s.time+(s.hours?" · "+s.hours+" saat":"")+'</small></div></div><div class="end"><small style="color:#6B7489">'+active().filter(p=>p.shift===s.id).length+' kişi</small></div></div>').join("")+'</div></section>'+
+    '<section class="ik2-panel c6"><header><h2>Onay akışları</h2></header><div class="ik2-rows">'+FLOWS.map(f=>'<div class="ik2-row" style="flex-wrap:wrap"><b style="min-width:130px">'+f.name+'</b><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'+f.steps.map((s,i)=>(i?ic("right",12):"")+chip((i+1)+". "+s,"#4F46E5")).join(" ")+'</div></div>').join("")+'</div></section>'+
+    '<section class="ik2-panel c8"><header><h2>Resmî tatiller '+T.slice(0,4)+'</h2><small>İzin süresinden düşülmez</small></header><div class="ik2-rows">'+HOL.map(h=>'<div class="ik2-row"><b style="min-width:110px">'+dlong(h[0])+'</b><span>'+esc(h[1])+'</span><div class="end">'+(h[2]?chip("Yarım gün","#C77712"):chip(new Intl.DateTimeFormat("tr-TR",{weekday:"long"}).format(asDate(h[0])),isWe(h[0])?"#94A3B8":"#4F46E5"))+'</div></div>').join("")+'</div></section>'+
+    '<section class="ik2-panel c4"><header><h2>Genel ayarlar</h2></header><dl class="ik2-facts"><div><dt>Geç kalma toleransı</dt><dd>10 dakika</dd></div><div><dt>Haftalık çalışma</dt><dd>45 saat</dd></div><div><dt>Deneme süresi</dt><dd>2 ay</dd></div><div><dt>Yıllık mesai sınırı</dt><dd>270 saat</dd></div><div><dt>Mazeret izni</dt><dd>Yılda 3 gün</dd></div><div><dt>Devreden izin</dt><dd>Sınırsız</dd></div></dl><div class="ik2-alert warn">'+ic("alert",16)+'<div>Örnek veriler tarayıcınızda saklanır. Baştan başlamak için verileri sıfırlayabilirsiniz.</div></div><button class="ik2-btn bad" style="margin-top:10px" data-ik="reset">Örnek verileri sıfırla</button></section></div>';
+}
+
+/* ═════════════ Çekmece: personel dosyası ═════════════ */
+function personDrawer(id,tab){
+  const p=P(id),b=balance(p),u=unitOf(p.unit),mgr=P(p.manager);
+  const myL=S.leaves.filter(l=>l.person===id).sort((a,c)=>c.start.localeCompare(a.start));
+  const score=p.score.award-p.score.penalty+S.scores.filter(s=>s.person===id).reduce((n,s)=>n+s.pts,0);
+  const tabs=[["general","Genel"],["personal","Özlük & iletişim"],["edu","Eğitim & dil"],["career","Kariyer"],["leave","İzinler"],["pdks","PDKS"],["assets","Zimmet"],["perf","Performans"],["docs","Belgeler"],["pay","Bordro & banka"]];
+  const facts=list=>'<dl class="ik2-facts">'+list.map(([k,v,full])=>'<div class="'+(full?"full":"")+'"><dt>'+esc(k)+'</dt><dd>'+(v===undefined||v===""?"—":v)+'</dd></div>').join("")+'</dl>';
+  let body;
+  switch(tab){
+    case "personal":body='<div class="ik2-card"><h3>Kimlik ve özlük</h3>'+facts([["Ad",esc(p.first)],["Soyad",esc(p.last)],["Doğum tarihi",dlong(p.birth)+" ("+yearsBetween(p.birth)+" yaş)"],["Cinsiyet",esc(p.gender)],["Medeni durum",esc(p.marital)],["Çocuk sayısı",p.children],["Kan grubu",esc(p.blood)],["Engellilik",esc(p.disability)],["Askerlik",esc(p.military)],["Ehliyet",esc(p.license)]])+'</div><div class="ik2-card"><h3>İletişim</h3>'+facts([["GSM",esc(p.gsm)],["Dahili",esc(p.ext)],["İş e-postası",esc(p.email)],["Şehir",esc(p.city)],["Adres",esc(p.address),true]])+'</div><div class="ik2-card"><h3>Acil durumda ulaşılacak kişi</h3>'+facts([["Ad soyad",esc(p.emergency.name)],["Yakınlık",esc(p.emergency.rel)],["Telefon",esc(p.emergency.phone)]])+'</div>';break;
+    case "edu":body='<div class="ik2-card"><h3>Eğitim</h3>'+p.edu.map(x=>facts([["Okul",esc(x.school)],["Bölüm",esc(x.dept)],["Derece",esc(x.degree)],["Mezuniyet",esc(x.year)]])).join("")+'</div><div class="ik2-card"><h3>Yabancı dil</h3><div class="ik2-rows">'+p.langs.map(l=>'<div class="ik2-row"><b>'+esc(l.name)+'</b><div class="end">'+chip(l.level,"#4F46E5")+'</div></div>').join("")+'</div></div><div class="ik2-card"><h3>Sertifikalar</h3><div class="ik2-rows">'+p.certs.map(c=>'<div class="ik2-row">'+ic("award",16)+'<b>'+esc(c)+'</b></div>').join("")+'</div></div>';break;
+    case "career":body='<div class="ik2-card"><h3>Görev ve kadro</h3>'+facts([["Birim",esc(u[1])],["Unvan",esc(p.title)],["Yönetici",esc(mgr?.name||"Genel Müdür")],["Sözleşme",esc(p.contract)+(p.contractEnd?" · bitiş "+dlong(p.contractEnd):"")],["Çalışma modeli",esc(p.model)],["Vardiya",esc((SHIFTS.find(s=>s.id===p.shift)||{}).name||"")]])+'</div><div class="ik2-card"><h3>Kariyer geçmişi</h3><div class="ik2-vsteps">'+p.career.slice().reverse().map(c=>'<div class="ik2-vstep done"><span>'+ic("flag",13)+'</span><div><b>'+esc(c.type)+'</b><small>'+dlong(c.date)+' · '+esc(c.detail)+'</small></div></div>').join("")+'</div></div>';break;
+    case "leave":body='<div class="ik2-preview" style="margin-bottom:12px">'+[["Hak edilen",b.earned],["Devreden",b.carry],["Kullanılan",b.used],["Kalan",b.left]].map(([k,v])=>'<div><small>'+k+'</small><b>'+v+' gün</b></div>').join("")+'</div><div class="ik2-card"><h3>İzin talepleri</h3>'+(myL.length?'<div class="ik2-rows">'+myL.map(l=>'<div class="ik2-row" data-ik="leave" data-v="'+l.id+'" style="cursor:pointer">'+chip(lt(l.type).name,lt(l.type).color)+'<span>'+dshort(l.start)+' – '+dshort(l.end)+' · <b>'+l.days+' gün</b></span><div class="end">'+st(l.status)+'</div></div>').join("")+'</div>':'<p class="ik2-empty">İzin kaydı yok</p>')+'</div>';break;
+    case "pdks":{const a=attendance().find(x=>x.p.id===id);const hist=Array.from({length:10},(_,i)=>shift(T,-i-1)).filter(d=>!isWe(d)&&!isHol(d)).slice(0,7);
+      body='<div class="ik2-card"><h3>Bugün</h3>'+(a?facts([["Durum",chip(a.state,a.tone)],["Vardiya",a.shift?esc(a.shift.name+" "+a.shift.time):"—"],["Giriş",a.in||"—"],["Çıkış",a.out||"—"],["Konum",esc(a.where||"—")],["GPS",a.gps?chip(a.gps,"#D23F4A"):"Doğrulandı"]]):"<p class='ik2-empty'>Kayıt yok</p>")+'</div><div class="ik2-card"><h3>Son hareketler</h3><div class="ik2-rows">'+hist.map((d,i)=>{const lv=onLeave(id,d);const m=8*60+40+((i*13+Number(id.slice(1)))%40);return '<div class="ik2-row"><b style="min-width:110px">'+dlong(d)+'</b>'+(lv?chip("İzinli","#0EA5E9"):'<span>'+String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0")+' → 18:'+String(5+i*3).padStart(2,"0")+'</span>')+'<div class="end">'+(lv?"":m>9*60+10?chip("Geç","#C77712"):chip("Zamanında","#12936A"))+'</div></div>';}).join("")+'</div></div>';break;}
+    case "assets":body='<div class="ik2-card"><h3>Zimmetli varlıklar</h3><div class="ik2-rows">'+p.assets.map(a=>'<div class="ik2-row">'+ic("box",18)+'<div class="ik2-who"><div><b>'+esc(a.name)+'</b><small>'+esc(a.serial)+' · '+dlong(a.date)+'</small></div></div><div class="end">'+st(a.state==="Teslim edildi"?"Onaylandı":a.state)+(a.state==="Onay bekliyor"?'<button class="ik2-btn sm ok" data-ik="approve" data-k="asset" data-v="'+esc(p.id+"|"+a.serial)+'">Teslim al</button>':"")+'</div></div>').join("")+'</div></div>';break;
+    case "perf":body='<div class="ik2-preview" style="margin-bottom:12px"><div><small>Ödül puanı</small><b>'+p.score.award+'</b></div><div><small>Ceza puanı</small><b>'+p.score.penalty+'</b></div><div><small>Net puan</small><b>'+score+'</b></div><div><small>Sıralama</small><b>'+(active().map(x=>[x.id,x.score.award-x.score.penalty+S.scores.filter(s=>s.person===x.id).reduce((n,s)=>n+s.pts,0)]).sort((a,c)=>c[1]-a[1]).findIndex(x=>x[0]===id)+1)+'.</b></div></div><div class="ik2-card"><h3>Puan kayıtları</h3><div class="ik2-rows">'+(S.scores.filter(s=>s.person===id).map(s=>'<div class="ik2-row">'+chip(s.kind,s.kind==="Ödül"?"#12936A":"#D23F4A")+'<span>'+esc(s.reason)+'</span><div class="end"><b>'+(s.pts>0?"+":"")+s.pts+'</b><small style="color:#6B7489">'+dlong(s.date)+'</small></div></div>').join("")||'<p class="ik2-empty">Bu dönem puan kaydı yok</p>')+'</div></div>';break;
+    case "docs":body='<div class="ik2-card"><h3>Özlük belgeleri</h3><div class="ik2-rows">'+p.docs.map(d=>{const n=d.exp?dd(T,d.exp):null;return '<div class="ik2-row">'+ic("file",18)+'<div class="ik2-who"><div><b>'+esc(d.name)+'</b><small>Yüklenme '+dlong(d.date)+(d.exp?" · geçerlilik "+dlong(d.exp):"")+'</small></div></div><div class="end">'+(n===null?chip("Süresiz","#64748B"):n<0?chip("Süresi geçti","#D23F4A"):n<=30?chip(n+" gün kaldı","#C77712"):chip("Geçerli","#12936A"))+'</div></div>';}).join("")+'</div></div>';break;
+    case "pay":body='<div class="ik2-card"><h3>Bordro bilgileri</h3>'+facts([["Ücret bandı",esc(p.salaryBand)],["SGK sicil",esc(p.sgk)],["Banka / IBAN",esc(p.bank),true],["Ödeme günü","Her ayın son iş günü"],["Asgari geçim / vergi","Bordro modülünden"]])+'</div><div class="ik2-alert info">'+ic("shield",16)+'<div>Ücret tutarları gizlilik nedeniyle yalnızca bordro yetkisi olan kullanıcılara gösterilir.</div></div>';break;
+    default:body='<div class="ik2-card"><h3>Özet</h3>'+facts([["Sicil no",esc(p.sicil)],["Birim",chip(u[1],u[2])],["Unvan",esc(p.title)],["Yönetici",esc(mgr?.name||"Genel Müdür")],["İşe giriş",dlong(p.start)],["Kıdem",yearsBetween(p.start)+" yıl"],["Sözleşme",esc(p.contract)],["Çalışma modeli",esc(p.model)],["E-posta",esc(p.email)],["GSM",esc(p.gsm)]].concat(p.probationEnd?[["Deneme süresi bitişi",dlong(p.probationEnd)]]:[]).concat(p.status==="Pasif"?[["Çıkış",dlong(p.exitDate)+" · "+esc(p.exitReason)]]:[]))+'</div>'+
+      '<div class="ik2-card"><h3>Ekip arkadaşları</h3><div style="display:flex;gap:8px;flex-wrap:wrap">'+active().filter(x=>x.unit===p.unit&&x.id!==id).map(x=>'<button class="ik2-btn sm" data-ik="person" data-v="'+x.id+'">'+av(x.name,"sm")+esc(x.name)+'</button>').join("")+'</div></div>';
+  }
+  return '<div class="ik2-shade" data-ik="close"></div><aside class="ik2-drawer" role="dialog" aria-modal="true" aria-label="'+esc(p.name)+' personel dosyası">'+
+    '<div class="ik2-hero">'+av(p.name,"lg")+'<div style="min-width:0"><h2>'+esc(p.name)+'</h2><p>'+esc(p.title)+' · '+esc(u[1])+' · '+esc(p.sicil)+'</p><div class="chips">'+st(onLeave(id)?"İzinde":p.status)+chip(p.contract,"#4F46E5")+chip(p.model,"#0D9488")+'</div></div><button class="ik2-x" data-ik="close" aria-label="Kapat">'+ic("close",18)+'</button></div>'+
+    '<div class="ik2-stats"><div><small>Kıdem</small><b>'+yearsBetween(p.start)+' yıl</b></div><div><small>Kalan izin</small><b>'+b.left+' gün</b></div><div><small>Yaş</small><b>'+yearsBetween(p.birth)+'</b></div><div><small>Net puan</small><b>'+score+'</b></div></div>'+
+    '<nav class="ik2-tabs">'+tabs.map(([k,l])=>'<button data-ik="ptab" data-v="'+k+'" class="'+(tab===k?"on":"")+'">'+l+'</button>').join("")+'</nav>'+
+    '<div class="ik2-dbody">'+body+'</div><footer class="ik2-dfoot"><small>Son güncelleme: bugün</small><button class="ik2-btn" data-ik="new-leave" data-v="'+id+'">'+ic("calendar",15)+'İzin talebi aç</button><button class="ik2-btn primary" data-ik="edit-person" data-v="'+id+'">'+ic("edit",15)+'Düzenle</button></footer></aside>';
+}
+
+/* ─── İzin detayı ─── */
+function leaveDrawer(id){
+  const l=S.leaves.find(x=>x.id===id),p=P(l.person),t=lt(l.type),b=balance(p);
+  const icon={done:ic("check",14),now:ic("clock",14),no:ic("close",14),wait:"",skip:"–"};
+  return '<div class="ik2-shade" data-ik="close"></div><aside class="ik2-drawer" role="dialog" aria-modal="true">'+
+    '<div class="ik2-hero"><span class="ik2-av lg" style="background:'+t.color+'">'+ic("calendar",26)+'</span><div><h2>'+esc(t.name)+'</h2><p>'+esc(l.code)+' · '+esc(p.name)+' · talep '+ago(l.created)+'</p><div class="chips">'+st(l.status)+chip(l.days+" iş günü","#4F46E5")+(t.paid?chip("Ücretli","#12936A"):chip("Ücretsiz","#64748B"))+'</div></div><button class="ik2-x" data-ik="close" aria-label="Kapat">'+ic("close",18)+'</button></div>'+
+    '<div class="ik2-dbody"><div class="ik2-cols"><div class="c7"><div class="ik2-card"><h3>Talep bilgileri</h3><dl class="ik2-facts">'+[["Personel",who(p)],["Görev",esc(p.title)],["Başlangıç",dlong(l.start)],["Bitiş",dlong(l.end)],["İşe dönüş",dlong(l.ret)],["Süre",l.days+" iş günü"+(l.half?" (yarım gün dahil)":"")],["Yerine bakacak",esc(pname(l.substitute))],["İzinde ulaşım",esc(l.phone)],["Geçireceği yer",esc(l.place)]].concat(l.degree?[["Yakınlık derecesi",esc(l.degree)]]:[]).concat([["Açıklama",esc(l.note),true]]).map(([k,v,f])=>'<div class="'+(f?"full":"")+'"><dt>'+k+'</dt><dd>'+v+'</dd></div>').join("")+'</dl></div>'+
+    (t.balance?'<div class="ik2-card"><h3>Yıllık izin bakiyesi</h3><div class="ik2-preview">'+[["Hak edilen",b.earned],["Kullanılan",b.used],["Planlanan",b.planned],["Kalan",b.left]].map(([k,v])=>'<div><small>'+k+'</small><b>'+v+'</b></div>').join("")+'</div></div>':"")+'</div>'+
+    '<div class="c5"><div class="ik2-card"><h3>Onay süreci</h3><div class="ik2-vsteps">'+l.steps.map((s,i)=>'<div class="ik2-vstep '+s.state+'"><span>'+(icon[s.state]||i+1)+'</span><div><b>'+esc(s.name)+'</b><small>'+esc(s.who)+' · '+({done:"Onayladı",now:"Onay bekliyor",no:"Reddetti",wait:"Sırada",skip:"Atlandı"})[s.state]+(s.date?" · "+dlong(s.date):"")+'</small>'+(s.note?'<p>'+esc(s.note)+'</p>':"")+'</div></div>').join("")+'</div></div></div></div></div>'+
+    '<footer class="ik2-dfoot"><small>Talep '+dlong(l.created.slice(0,10))+' tarihinde oluşturuldu</small>'+(l.status==="Onay bekliyor"?'<button class="ik2-btn bad" data-ik="reject" data-k="leave" data-v="'+l.id+'">'+ic("close",15)+'Reddet</button><button class="ik2-btn ok" data-ik="approve" data-k="leave" data-v="'+l.id+'">'+ic("check",15)+'Onayla</button>':"")+(["Onay bekliyor","Taslak"].includes(l.status)||l.status==="Onaylandı"&&l.start>T?'<button class="ik2-btn" data-ik="cancel-leave" data-v="'+l.id+'">Talebi iptal et</button>':"")+'</footer></aside>';
+}
+
+/* ─── Formlar ─── */
+const F=(name,label,ctl,req,full,hint)=>'<div class="ik2-f'+(full?" full":"")+'"><label for="ik2f-'+name+'">'+esc(label)+(req?' <i>*</i>':"")+'</label>'+ctl+(hint?'<span class="hint">'+esc(hint)+'</span>':"")+'</div>';
+const inp=(name,val="",type="text",extra="")=>'<input id="ik2f-'+name+'" name="'+name+'" type="'+type+'" value="'+esc(val)+'" '+extra+'>';
+const sel=(name,opts,val="",extra="")=>'<select id="ik2f-'+name+'" name="'+name+'" '+extra+'>'+opts.map(o=>{const [v,l]=Array.isArray(o)?o:[o,o];return '<option value="'+esc(v)+'" '+(String(v)===String(val)?"selected":"")+'>'+esc(l)+'</option>';}).join("")+'</select>';
+const people_opts=(blank)=>(blank?[["","Seçiniz"]]:[]).concat(active().map(p=>[p.id,p.name+" · "+p.title]));
+function dialog(title,sub,body,foot,size=""){return '<div class="ik2-shade" data-ik="close"></div><section class="ik2-dialog '+size+'" role="dialog" aria-modal="true"><div class="ik2-dhead"><div><h2>'+esc(title)+'</h2><p>'+esc(sub)+'</p></div><button type="button" class="ik2-x" data-ik="close" aria-label="Kapat">'+ic("close",18)+'</button></div>'+body+'</section>';}
+function leaveForm(pid){
+  const start=nextWork(T),p=P(pid)||active()[3];
+  const body='<form class="ik2-form" data-ikform="leave"><div class="ik2-dbody"><div class="ik2-form">'+
+    '<div class="ik2-fgroup"><h3>Personel ve izin türü</h3><div class="ik2-fields">'+F("person","Personel",sel("person",people_opts(),p.id),true)+F("type","İzin türü",sel("type",LT.map(t=>[t.id,t.name]),"annual"),true)+
+      '<div class="ik2-f full" data-show="degree" hidden>'+'<label for="ik2f-degree">Yakınlık derecesi <i>*</i></label>'+sel("degree",DEGREES,"Anne")+'</div>'+
+      '<div class="ik2-f full"><span class="hint" data-typehint></span></div></div></div>'+
+    '<div class="ik2-fgroup"><h3>Tarihler</h3><div class="ik2-fields">'+F("start","Başlangıç tarihi",inp("start",start,"date"),true)+F("end","Bitiş tarihi",inp("end",shift(start,2),"date"),true)+
+      '<label class="ik2-check ik2-f full"><input type="checkbox" name="half"> Son gün yarım gün (öğleden sonra işe başlayacak)</label></div><div class="ik2-preview" data-preview style="margin-top:12px"></div><div data-warn></div></div>'+
+    '<div class="ik2-fgroup"><h3>İzin süresince</h3><div class="ik2-fields">'+F("substitute","Yerine bakacak kişi",sel("substitute",people_opts(true),""),false)+F("phone","İzinde ulaşılacak numara",inp("phone",p.gsm,"tel"),false)+F("place","İzni geçireceği yer",inp("place","","text",'placeholder="Şehir / adres"'),false)+F("doc","Belge",inp("doc","","file",'accept=".pdf,.jpg,.png"'),false,false,"Evlilik, ölüm, doğum ve rapor için zorunlu")+F("note","Açıklama",'<textarea id="ik2f-note" name="note" placeholder="Yöneticine iletmek istediğin not"></textarea>',false,true)+'</div></div>'+
+    '</div></div><footer class="ik2-dfoot"><small>Talep; birim yöneticisi → İK uzmanı'+' (5 günü aşarsa → genel müdür) onayına gider.</small><button type="button" class="ik2-btn" data-ik="close">Vazgeç</button><button type="submit" name="draft" value="1" class="ik2-btn">Taslak kaydet</button><button type="submit" class="ik2-btn primary">'+ic("check",15)+'Onaya gönder</button></footer></form>';
+  return dialog("Yeni izin talebi","Süre, hafta sonu ve resmî tatiller düşülerek otomatik hesaplanır",body);
+}
+function updateLeavePreview(form){
+  const v=Object.fromEntries(new FormData(form)),t=lt(v.type),p=P(v.person);
+  form.querySelector('[data-show="degree"]').hidden=!t.degree;
+  form.querySelector("[data-typehint]").textContent=t.name+": "+t.rule+" · "+(t.paid?"ücretli":"ücretsiz")+" · dayanak "+t.law+(t.doc?" · belge gerekli":"");
+  if(t.fixed&&t.fixed<10&&v.start){let end=v.start,n=1;while(n<t.fixed){end=shift(end,1);if(!isWe(end)&&!isHol(end))n++;}if(form.end.dataset.auto!=="off"){form.end.value=end;}}
+  if(t.id==="maternity"&&v.start){form.end.value=shift(v.start,111);}
+  const s=form.start.value,en=form.end.value;
+  const days=t.calendar?(en>=s?dd(s,en)+1:0):workDays(s,en,!!v.half),cal=en>=s?dd(s,en)+1:0,hol=en>=s?HOL.filter(h=>h[0]>=s&&h[0]<=en&&!h[2]&&!isWe(h[0])).length:0;
+  const b=p?balance(p):null;
+  form.querySelector("[data-preview]").innerHTML=[["İzin süresi",days+" gün"],["Takvim günü",cal+" gün"],["Düşülen tatil",hol+" gün"],["İşe dönüş",en?dshort(nextWork(en)):"—"]].map(([k,x])=>'<div><small>'+k+'</small><b>'+x+'</b></div>').join("");
+  const warns=[];
+  if(en<s)warns.push(["bad","Bitiş tarihi başlangıçtan önce olamaz."]);
+  if(t.balance&&b&&days>b.left)warns.push(["bad","Yetersiz bakiye: kalan "+b.left+" gün, talep "+days+" gün. Ücretsiz izin olarak açabilirsin."]);
+  else if(t.balance&&b)warns.push(["info","Bu talepten sonra kalan yıllık izin: "+(b.left-days)+" gün (onay bekleyen "+b.pending+" gün hariç)."]);
+  if(t.max&&days>t.max)warns.push(["bad",t.name+" en fazla "+t.max+" gün olabilir."]);
+  if(p&&s){const clash=S.leaves.filter(l=>l.person!==p.id&&["Onaylandı","Onay bekliyor"].includes(l.status)&&P(l.person)?.unit===p.unit&&l.start<=en&&l.end>=s);if(clash.length)warns.push(["warn","Aynı birimden "+clash.map(l=>pname(l.person)).join(", ")+" bu tarihlerde izinde."]);}
+  if(s&&s<T)warns.push(["warn","Geçmiş tarihli talep: yönetici onayında gerekçe istenir."]);
+  form.querySelector("[data-warn]").innerHTML=warns.map(([k,m])=>'<div class="ik2-alert '+k+'">'+ic("alert",16)+'<div>'+esc(m)+'</div></div>').join("");
+  return {days,ok:!warns.some(w=>w[0]==="bad")};
+}
+function personForm(id){
+  const p=P(id)||{};
+  const body='<form class="ik2-form" data-ikform="person" data-id="'+esc(id||"")+'"><div class="ik2-dbody"><div class="ik2-form">'+
+    '<div class="ik2-fgroup"><h3>Kimlik</h3><div class="ik2-fields">'+F("first","Ad",inp("first",p.first||"","text","required"),true)+F("last","Soyad",inp("last",p.last||"","text","required"),true)+F("birth","Doğum tarihi",inp("birth",p.birth||"1995-01-01","date"),true)+F("gender","Cinsiyet",sel("gender",["Kadın","Erkek"],p.gender),true)+F("marital","Medeni durum",sel("marital",["Bekâr","Evli"],p.marital))+F("blood","Kan grubu",sel("blood",["A Rh+","A Rh-","B Rh+","B Rh-","AB Rh+","AB Rh-","0 Rh+","0 Rh-"],p.blood))+'</div></div>'+
+    '<div class="ik2-fgroup"><h3>Görev ve sözleşme</h3><div class="ik2-fields">'+F("unit","Birim",sel("unit",UNITS.map(u=>[u[0],u[1]]),p.unit),true)+F("title","Unvan",inp("title",p.title||"","text",'list="ik2-titles" required'),true)+'<datalist id="ik2-titles">'+Object.values(TITLES).flat().map(t=>'<option value="'+esc(t)+'">').join("")+'</datalist>'+F("manager","Yönetici",sel("manager",people_opts(true),p.manager||""))+F("start","İşe giriş tarihi",inp("start",p.start||T,"date"),true)+F("contract","Sözleşme türü",sel("contract",["Belirsiz süreli","Belirli süreli"],p.contract))+F("contractEnd","Sözleşme bitişi",inp("contractEnd",p.contractEnd||"","date"),false,false,"Yalnızca belirli süreli sözleşmede")+F("model","Çalışma modeli",sel("model",["Ofis","Hibrit","Uzaktan","Saha"],p.model))+F("shift","Vardiya",sel("shift",SHIFTS.slice(0,4).map(s=>[s.id,s.name+" "+s.time]),p.shift||"G"))+'</div></div>'+
+    '<div class="ik2-fgroup"><h3>İletişim</h3><div class="ik2-fields">'+F("gsm","GSM",inp("gsm",p.gsm||"","tel",'placeholder="05xx xxx xx xx"'))+F("email","İş e-postası",inp("email",p.email||"","email",'placeholder="ad.soyad@tales.example"'))+F("city","Şehir",inp("city",p.city||""))+F("ext","Dahili",inp("ext",p.ext||""))+F("address","Adres",'<textarea id="ik2f-address" name="address">'+esc(p.address||"")+'</textarea>',false,true)+'</div></div>'+
+    '</div></div><footer class="ik2-dfoot"><small>* Zorunlu alan · Sicil numarası otomatik verilir</small><button type="button" class="ik2-btn" data-ik="close">Vazgeç</button><button type="submit" class="ik2-btn primary">'+ic("check",15)+'Kaydet</button></footer></form>';
+  return dialog(id?"Personeli düzenle":"Yeni personel",id?p.name+" · "+p.sicil:"İşe giriş kaydı ve özlük dosyası",body);
+}
+function overtimeForm(){
+  const body='<form class="ik2-form" data-ikform="overtime"><div class="ik2-dbody"><div class="ik2-fgroup"><div class="ik2-fields">'+F("person","Personel",sel("person",people_opts(),active()[2].id),true)+F("date","Tarih",inp("date",T,"date"),true)+F("hours","Süre (saat)",inp("hours","2","number",'min="0.5" max="11" step="0.5"'),true,false,"Günlük çalışma 11 saati aşamaz")+F("kind","Tür",sel("kind",["Hafta içi","Hafta sonu","Resmî tatil"]),true)+F("pay","Karşılık",sel("pay",["Ücret","Serbest zaman"]),true)+F("reason","Gerekçe",inp("reason","","text",'required placeholder="Örn. ay sonu kapanış"'),true)+'</div></div></div><footer class="ik2-dfoot"><button type="button" class="ik2-btn" data-ik="close">Vazgeç</button><button type="submit" class="ik2-btn primary">Onaya gönder</button></footer></form>';
+  return dialog("Fazla mesai talebi","Birim yöneticisi → İK uzmanı onayına gider",body,"","sm");
+}
+function expenseForm(kind){
+  const adv=kind==="Avans";
+  const body='<form class="ik2-form" data-ikform="expense" data-kind="'+kind+'"><div class="ik2-dbody"><div class="ik2-fgroup"><div class="ik2-fields">'+F("person","Personel",sel("person",people_opts(),active()[1].id),true)+F("cat","Kategori",sel("cat",adv?["Maaş avansı","İş avansı"]:["Yol","Konaklama","Yemek","Akaryakıt","Kırtasiye","Temsil-ağırlama"]),true)+F("amount","Tutar (₺)",inp("amount","","number",'min="1" required'),true)+(adv?F("installments","Taksit",sel("installments",["1","2","3","4","6"]),true):F("date","Harcama tarihi",inp("date",T,"date"),true))+(adv?"":F("receipt","Fiş / fatura",inp("receipt","","file",'accept=".pdf,.jpg,.png"'),false,true))+F("note","Açıklama",inp("note","","text",'placeholder="'+(adv?"Avans gerekçesi":"Müşteri, proje veya ziyaret")+'"'),false,true)+'</div></div></div><footer class="ik2-dfoot"><button type="button" class="ik2-btn" data-ik="close">Vazgeç</button><button type="submit" class="ik2-btn primary">Onaya gönder</button></footer></form>';
+  return dialog(adv?"Avans talebi":"Masraf beyanı",adv?"Maaştan taksitle kesilir":"Fiş veya fatura eklemeyi unutma",body,"","sm");
+}
+function rejectForm(k,id){
+  const body='<form class="ik2-form" data-ikform="reject" data-k="'+k+'" data-id="'+esc(id)+'"><div class="ik2-dbody">'+F("reason","Ret gerekçesi",'<textarea id="ik2f-reason" name="reason" required placeholder="Talep sahibine iletilecek açıklama"></textarea>',true,true)+'</div><footer class="ik2-dfoot"><button type="button" class="ik2-btn" data-ik="close">Vazgeç</button><button type="submit" class="ik2-btn bad">'+ic("close",15)+'Reddet</button></footer></form>';
+  return dialog("Talebi reddet","Gerekçe talep sahibine bildirilir",body,"","sm");
+}
+function scoreForm(){
+  const body='<form class="ik2-form" data-ikform="score"><div class="ik2-dbody"><div class="ik2-fields">'+F("person","Personel",sel("person",people_opts(),""),true)+F("kind","Tür",sel("kind",["Ödül","Ceza"]),true)+F("pts","Puan",inp("pts","10","number",'min="1" max="50"'),true)+F("reason","Gerekçe",inp("reason","","text","required"),true)+'</div></div><footer class="ik2-dfoot"><button type="button" class="ik2-btn" data-ik="close">Vazgeç</button><button type="submit" class="ik2-btn primary">Kaydet</button></footer></form>';
+  return dialog("Puan ver","Ödül veya ceza puanı",body,"","sm");
+}
+
+/* ═════════════ İşlemler ═════════════ */
+function decide(k,id,ok,reason){
+  if(k==="leave"){
+    const l=S.leaves.find(x=>x.id===id);if(!l||l.status!=="Onay bekliyor")return;
+    const i=l.steps.findIndex(s=>s.state==="now"||s.state==="wait");if(i<0)return;
+    const step=l.steps[i];step.state=ok?"done":"no";step.date=T;step.who=step.who||"Deniz Kaya";if(reason)step.note=reason;
+    if(!ok){l.status="Reddedildi";l.steps.forEach(s=>{if(s.state==="wait")s.state="skip";});}
+    else if(l.steps[i+1]){l.steps[i+1].state="now";}
+    else l.status="Onaylandı";
+    save(ok?(l.status==="Onaylandı"?"İzin onaylandı, bakiyeden düşüldü.":step.name+" onayı verildi, sıradaki adıma geçti."):"İzin talebi reddedildi.");
+  }else if(k==="overtime"||k==="expense"){
+    const x=S[k==="overtime"?"overtime":"expenses"].find(y=>y.id===id);if(!x)return;x.status=ok?"Onaylandı":"Reddedildi";if(reason)x.reason2=reason;save(ok?"Talep onaylandı.":"Talep reddedildi.");
+  }else if(k==="asset"){
+    const [pid,serial]=id.split("|"),a=P(pid)?.assets.find(z=>z.serial===serial);if(a){a.state=ok?"Teslim edildi":"Reddedildi";save(ok?"Zimmet teslim alındı.":"Zimmet reddedildi.");}
+  }
+}
+function openLayer(html,kind){
+  let layer=document.getElementById("ik2-layer");
+  if(!layer){layer=document.createElement("div");layer.id="ik2-layer";document.body.appendChild(layer);}
+  layer.className="open ik2";layer.style.cssText="padding:0;max-width:none;margin:0";layer.innerHTML=html;IK.layer=kind;
+  const form=layer.querySelector('form[data-ikform="leave"]');if(form)updateLeavePreview(form);
+  setTimeout(()=>layer.querySelector("input,select,textarea,.ik2-x")?.focus(),30);
+}
+function closeLayer(){const layer=document.getElementById("ik2-layer");if(layer){layer.className="";layer.innerHTML="";}IK.layer=null;}
+function refresh(){if(route!=="ik2")return;screen.innerHTML=ik2Page();if(IK.layer)reopen();renderTop();}
+function reopen(){const L=IK.layer;if(!L)return;if(L.type==="person")openLayer(personDrawer(L.id,L.tab),L);else if(L.type==="leave")openLayer(leaveDrawer(L.id),L);}
+function exportPeople(){
+  const rows=[["Sicil","Ad soyad","Birim","Unvan","Yönetici","İşe giriş","Kıdem (yıl)","Kalan izin","Durum","E-posta","GSM"],...peopleList().map(p=>[p.sicil,p.name,unitOf(p.unit)[1],p.title,pname(p.manager),p.start,yearsBetween(p.start),balance(p).left,p.status,p.email,p.gsm])];
+  const blob=new Blob(["﻿"+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(";")).join("\r\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="TALES-IK-personel.csv";a.click();
+}
+function ik2Page(){readSec();const map={home:secHome,people:secPeople,leave:secLeave,approvals:secApprovals,attendance:secAttendance,overtime:secOvertime,expense:secExpense,org:secOrg,recruit:secRecruit,training:secTraining,perf:secPerf,defs:secDefs};return '<div class="ik2">'+head()+nav()+'<div class="ik2-body">'+map[IK.sec]()+'</div></div>';}
+
+document.addEventListener("click",ev=>{
+  const t=ev.target.closest("[data-ik]");if(!t||!t.closest(".ik2,#ik2-layer"))return;
+  const a=t.dataset.ik,v=t.dataset.v||"";
+  if(t.tagName==="SPAN"&&a==="leave")ev.stopPropagation();
+  switch(a){
+    case "go":location.hash="#ik2?s="+v;break;
+    case "close":closeLayer();break;
+    case "person":openLayer(personDrawer(v,t.dataset.tab||"general"),{type:"person",id:v,tab:t.dataset.tab||"general"});break;
+    case "ptab":IK.layer.tab=v;openLayer(personDrawer(IK.layer.id,v),IK.layer);break;
+    case "leave":openLayer(leaveDrawer(v),{type:"leave",id:v});break;
+    case "new-leave":openLayer(leaveForm(v),{type:"form"});break;
+    case "new-person":openLayer(personForm(""),{type:"form"});break;
+    case "edit-person":openLayer(personForm(v),{type:"form"});break;
+    case "new-overtime":openLayer(overtimeForm(),{type:"form"});break;
+    case "new-expense":openLayer(expenseForm(v),{type:"form"});break;
+    case "new-score":openLayer(scoreForm(),{type:"form"});break;
+    case "approve":decide(t.dataset.k,v,true);refresh();break;
+    case "approve-all":pendingAll().filter(([k])=>!IK.xkind||k===IK.xkind).forEach(([k,x])=>{if(k==="leave"){while(S.leaves.find(l=>l.id===x.id).status==="Onay bekliyor")decide(k,x.id,true);}else decide(k,x.id,true);});save("Görünen tüm talepler onaylandı.");refresh();break;
+    case "reject":openLayer(rejectForm(t.dataset.k,v),{type:"form"});break;
+    case "cancel-leave":{const l=S.leaves.find(x=>x.id===v);l.status="İptal";l.steps.forEach(s=>{if(s.state!=="done")s.state="skip";});save("İzin talebi iptal edildi.");refresh();break;}
+    case "pay":{const x=S.expenses.find(y=>y.id===v);x.status="Ödendi";save("Ödeme kaydedildi.");refresh();break;}
+    case "advance-cand":{const c=S.candidates.find(y=>y.id===v),order=["Başvuru","Ön eleme","Mülakat","Teklif","İşe alındı"];c.stage=order[Math.min(4,order.indexOf(c.stage)+1)];if(c.stage==="Mülakat"&&!c.interview)c.interview=D(3);save(c.name+" → "+c.stage);refresh();break;}
+    case "punit":IK.unit=v;refresh();break;
+    case "pstatus":IK.pstatus=v;refresh();break;
+    case "pview":IK.pview=v;refresh();break;
+    case "lview":IK.lview=v;refresh();break;
+    case "lstat":IK.lstat=v;refresh();break;
+    case "apv":IK.apv=v;refresh();break;
+    case "xkind":IK.xkind=v;refresh();break;
+    case "cal":{if(v==="0")IK.calMonth=T.slice(0,7);else{const [y,m]=IK.calMonth.split("-").map(Number);const d=new Date(y,m-1+Number(v),1);IK.calMonth=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}refresh();break;}
+    case "export-people":exportPeople();break;
+    case "reset":try{localStorage.removeItem(KEY);}catch{}S=seedData();save("Örnek veriler sıfırlandı.");refresh();break;
+  }
+});
+document.addEventListener("input",ev=>{
+  if(ev.target.dataset?.ikq==="people"){IK.q=ev.target.value;const r=document.getElementById("ik2-people-res");if(r)r.innerHTML=peopleResults(peopleList());}
+  const f=ev.target.closest?.('form[data-ikform="leave"]');if(f){if(ev.target.name==="end")f.end.dataset.auto="off";if(ev.target.name==="type")f.end.dataset.auto="";updateLeavePreview(f);}
+});
+document.addEventListener("change",ev=>{const f=ev.target.closest?.('form[data-ikform="leave"]');if(f){if(ev.target.name==="type")f.end.dataset.auto="";updateLeavePreview(f);}});
+document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&IK.layer){ev.stopPropagation();closeLayer();}},true);
+document.addEventListener("submit",ev=>{
+  const f=ev.target;if(!f.dataset?.ikform)return;ev.preventDefault();
+  const v=Object.fromEntries(new FormData(f)),kind=f.dataset.ikform;
+  if(kind==="leave"){
+    const {days,ok}=updateLeavePreview(f);const draft=ev.submitter?.name==="draft";
+    if(!ok&&!draft){f.querySelector("[data-warn]").scrollIntoView({block:"center"});return;}
+    const p=P(v.person),mgr=P(p.manager)||S.people[0],n=S.leaves.length+100;
+    const flow=["Birim yöneticisi","İK uzmanı"].concat(days>5?["Genel müdür"]:[]);
+    S.leaves.unshift({id:"L"+Date.now(),code:"İZN-26-"+String(n).padStart(4,"0"),person:p.id,type:v.type,start:v.start,end:v.end,days,half:!!v.half,ret:nextWork(v.end),status:draft?"Taslak":"Onay bekliyor",
+      steps:flow.map((name,i)=>({name,who:i===0?mgr.name:i===1?"Elif Arslan":"Deniz Kaya",state:draft?"wait":i===0?"now":"wait",date:"",note:""})),substitute:v.substitute,place:v.place,phone:v.phone,degree:lt(v.type).degree?v.degree:"",note:v.note,created:new Date().toISOString()});
+    save(draft?"Taslak kaydedildi.":"İzin talebi "+mgr.name+" onayına gönderildi.");closeLayer();IK.lstat=draft?"Taslak":"Onay bekliyor";refresh();
+  }else if(kind==="person"){
+    const id=f.dataset.id;
+    if(id){Object.assign(P(id),{...v,name:v.first+" "+v.last});save("Personel kaydı güncellendi.");closeLayer();refresh();return;}
+    const np={id:"P"+String(S.people.length+1).padStart(3,"0")+Date.now().toString(36).slice(-3),sicil:"SCL-"+(2000+S.people.length),name:v.first+" "+v.last,...v,status:"Deneme süresinde",probationEnd:shift(v.start,60),exitDate:"",exitReason:"",children:0,disability:"Yok",military:"—",license:"—",emergency:{name:"—",rel:"—",phone:"—"},edu:[],langs:[],certs:[],bank:"—",salaryBand:"B4",sgk:"—",carry:0,usedBase:0,score:{award:0,penalty:0},assets:[],docs:[{name:"İş sözleşmesi",date:v.start,exp:""}],career:[{date:v.start,type:"İşe giriş",detail:v.title+" · "+unitOf(v.unit)[1]}]};
+    S.people.push(np);save(np.name+" personel olarak eklendi.");closeLayer();refresh();openLayer(personDrawer(np.id,"general"),{type:"person",id:np.id,tab:"general"});
+  }else if(kind==="overtime"){
+    S.overtime.unshift({id:"O"+Date.now(),code:"FM-26-"+(400+S.overtime.length),person:v.person,date:v.date,hours:Number(v.hours),kind:v.kind,rate:v.kind==="Resmî tatil"?2:1.5,reason:v.reason,status:"Onay bekliyor",pay:v.pay});save("Fazla mesai talebi gönderildi.");closeLayer();refresh();
+  }else if(kind==="expense"){
+    const k=f.dataset.kind;S.expenses.unshift({id:"X"+Date.now(),code:(k==="Avans"?"AVN-":"MSR-")+"26-"+(600+S.expenses.length),person:v.person,kind:k,cat:v.cat,amount:Number(v.amount),date:v.date||T,receipt:!!(v.receipt&&v.receipt.size),installments:Number(v.installments||0),status:"Onay bekliyor",note:v.note||"—"});save(k+" talebi gönderildi.");closeLayer();refresh();
+  }else if(kind==="reject"){decide(f.dataset.k,f.dataset.id,false,v.reason);closeLayer();refresh();
+  }else if(kind==="score"){S.scores.unshift({id:"S"+Date.now(),person:v.person,kind:v.kind,reason:v.reason,pts:(v.kind==="Ceza"?-1:1)*Number(v.pts),date:T,by:"Deniz Kaya"});save("Puan kaydedildi.");closeLayer();refresh();}
+});
+
+/* ═════════════ Uygulamaya bağlama ═════════════ */
+routes.add("ik2");routeNames.ik2="İnsan Kaynakları 2.0";
+const org=groups.find(g=>g[0]==="Organizasyon");if(org&&!org[1].some(x=>x[0]==="ik2"))org[1].splice(1,0,["ik2","İK 2.0","award"]);
+const baseRender=render;
+render=function(){
+  if(route==="ik2"){renderNav();renderTop();closeLayer();screen.innerHTML=ik2Page();renderPopup();document.title=SECS.find(x=>x[0]===IK.sec)[1]+" · İK 2.0 · TALES ERP";return;}
+  closeLayer();baseRender();
+};
+window.ik2Debug={state:()=>S,page:ik2Page};
+if(location.hash.startsWith("#ik2"))readRoute();else renderNav();
+})();
+</script>
+
 </body>
 </html>
