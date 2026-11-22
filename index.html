@@ -7188,13 +7188,13 @@ function recordsOf(row){
   return row.workLog;
 }
 function planOf(row){return row.planMin||((((Number(String(row.id).replace(/\D/g,""))||1)%4)+2)*240);}
+const hrCard=(attrs,code,title,rows)=>'<button class="hr-card" '+attrs+'><span class="hr-body"><span class="hr-code">'+code+'</span><span class="hr-main"><span class="hr-text"><b>'+title+'</b>'+rows.map(([i,t])=>'<span class="hr-line"><i>'+svg(i,13)+'</i>'+t+'</span>').join("")+'</span>'+svg("right",22)+'</span></span></button>';
 function other(row,events){
   const checks=row.checklist||[],rel=relatedOf(row),recs=recordsOf(row),spent=recs.reduce((n,r)=>n+r.min,0),plan=planOf(row);
   const hm=m=>(m>=60?Math.floor(m/60)+" sa ":"")+(m%60?m%60+" dk":m>=60?"":"0 dk");
   const back='<button class="mt-back" data-mt="other" data-v="">'+svg("left",16)+'Diğer</button>';
-  if(MT.other==="related")return back+'<div class="mt-subhead"><h3>İlgili işler</h3><em>'+rel.length+' iş</em></div>'+(rel.map(t=>'<button class="mt-rec" data-action="open" data-value="tasks|'+e(t.id)+'"><span class="mt-rec-top"><span class="o">'+e(t.code)+'</span><span class="mt-status" style="--t:'+statusTone(t.status)+'">'+e(t.status)+'</span></span><b>'+e(t.name)+'</b><span class="r">'+svg("flag",14)+'Aşama: '+e(t.status)+' · Öncelik: '+e(t.priority||"Normal")+'</span><span class="r">'+svg("projects",14)+e(display("tasks",t,"project"))+'</span><span class="tail">'+avatar(t.owner)+'<small style="color:#8592A6;flex:1">'+e(t.owner)+'</small><small style="color:#8592A6">'+svg("calendar",12)+' '+e(dateText(t.end))+'</small></span></button>').join("")||'<p class="mempty">İlgili iş yok.</p>');
-  if(MT.other==="sub"){const ow=i=>[row.owner||ME,...team.filter(t=>t!==row.owner)][i%3],st=c=>c.done?["Tamamlandı","#1B9C6B"]:["İşlemde","#4361EE"];
-    return back+'<div class="mt-subhead"><h3>Alt işler</h3><em>'+checks.filter(c=>c.done).length+' / '+checks.length+' tamamlandı</em></div>'+checks.map((c,i)=>{const s=st(c),due=shift(row.start||day(),i+1);return '<label class="mt-rec'+(c.done?" done":"")+'" style="cursor:pointer"><span class="mt-rec-top"><span class="o">'+e(row.code)+'.'+(i+1)+'</span><span class="mt-status" style="--t:'+s[1]+'">'+s[0]+'</span></span><b><input type="checkbox" data-check-index="'+i+'" data-task="'+e(row.id)+'" '+(c.done?"checked":"")+' style="margin-right:8px">'+e(c.title)+'</b><span class="r">'+svg("flag",14)+'Aşama: '+s[0]+'</span><span class="r">'+svg("projects",14)+e(display("tasks",row,"project"))+'</span><span class="tail">'+avatar(ow(i))+'<small style="color:#8592A6;flex:1">'+e(ow(i))+'</small><small style="color:#8592A6">'+svg("calendar",12)+' '+e(dateText(due))+'</small></span></label>';}).join("")+'<form class="mt-addform" style="grid-template-columns:1fr auto" data-form="checklist" data-task="'+e(row.id)+'"><label class="grow">Yeni alt iş<input name="title" required maxlength="140" placeholder="Alt iş başlığı"></label><button>Ekle</button></form>';}
+  if(MT.other==="related")return back+'<div class="mt-subhead"><h3>İlgili işler</h3><em>'+rel.length+' iş</em></div>'+(rel.map(t=>hrCard('data-action="open" data-value="tasks|'+e(t.id)+'"',e(t.code),e(t.name),[["flag","Aşama: "+e(t.status)]])).join("")||'<p class="mempty">İlgili iş yok.</p>');
+  if(MT.other==="sub")return back+'<div class="mt-subhead"><h3>Alt işler</h3><em>'+checks.length+' iş</em></div>'+(checks.map((c,i)=>hrCard('type="button"',e(row.code)+"."+(i+1),e(c.title),[["flag","Aşama: "+(c.done?"Tamamlandı":"İşlemde")]])).join("")||'<p class="mempty">Alt iş yok.</p>');
   if(MT.other==="time"){const d=plan-spent,over=d<0,ratio=Math.min(1.5,spent/Math.max(1,plan)),t=over?"#D23F4A":ratio>.8?"#D98B21":"#1B9C6B";
     return back+'<div class="mt-subhead"><h3>Süre</h3><span class="mt-status" style="--t:'+(over?"#D23F4A":"#1B9C6B")+'">'+(over?"Süre aşıldı":"Süre içinde")+'</span></div><div class="mt-strip"><div><small>Planlanan</small><b>'+hm(plan)+'</b></div><i></i><div><small>Harcanan</small><b>'+hm(spent)+'</b></div><i></i><div><small>'+(over?"Sapma":"Kalan")+'</small><b style="color:'+(over?"#D23F4A":"#14243C")+'">'+hm(Math.abs(d))+'</b></div></div><div class="mt-usage" style="--t:'+t+'"><div class="bar"><i style="width:'+Math.min(100,ratio*100)+'%"></i></div><b>%'+Math.round(spent/Math.max(1,plan)*100)+'</b></div>'+
       '<div class="mt-subhead"><h3>Kişi bazında</h3></div>'+[...new Set(recs.map(r=>r.who))].map(w=>{const m=recs.filter(r=>r.who===w).reduce((n,r)=>n+r.min,0);return '<div class="mt-rec" style="cursor:default"><span class="tail">'+avatar(w)+'<b style="flex:1">'+e(w)+'</b><b>'+hm(m)+'</b></span><div class="mt-usage" style="margin:0;--t:#3158C9"><div class="bar"><i style="width:'+(m/spent*100)+'%"></i></div><b>%'+Math.round(m/spent*100)+'</b></div></div>';}).join("");}
@@ -7205,8 +7205,8 @@ function other(row,events){
       '<div class="mt-strip"><div><small>Toplam</small><b>'+hm(spent)+'</b></div><i></i><div><small>Çalışma</small><b>'+hm(work)+'</b></div><i></i><div><small>Fazla mesai</small><b style="color:'+(ot?"#7C3AED":"#14243C")+'">'+hm(ot)+'</b></div></div>'+
       (MT.addRec?'<form class="mt-addform" data-form="mt-record" data-task="'+e(row.id)+'"><label>Tarih<input type="date" name="date" value="'+day()+'" required></label><label class="sm">Başlangıç<input type="time" name="start" value="09:00" required></label><label class="sm">Süre (dk)<input type="number" name="min" min="5" step="5" value="60" required></label><label class="grow">Not<input name="note" placeholder="Yapılan iş"></label><span class="chk"><input type="checkbox" name="over" id="mt-over"><label for="mt-over">Fazla mesai</label></span><button>Kaydet</button></form>':"")+
       historyTimeline(ev);}
-  const tiles=[["related","İlgili işler","work","#4361EE",rel.length],["sub","Alt işler","flow","#1B9C6B",checks.length],["time","Süre","clock","#3158C9",null],["activity","Aktivite","chart","#64748B",events.length],["records","İş kayıtları","settings","#D23F4A",recs.length]];
-  return '<div class="mt-menu-grid">'+tiles.map(([k,l,i,t,c])=>'<button class="mt-tile" style="--t:'+t+'" data-mt="other" data-v="'+k+'"><span class="i">'+svg(i,22)+'</span><b>'+l+'</b>'+(c!==null?'<span class="c">'+c+'</span>':"")+svg("right",16)+'</button>').join("")+'</div>';
+  const tiles=[["related","İlgili işler","work","#3B5BDB",rel.length],["sub","Alt işler","flow","#1B9C6B",checks.length],["time","Süre","clock","#2F80ED",null],["activity","Aktivite","chart","#8A94A6",null],["records","İş","settings","#D23F4A",null]];
+  return '<div class="mt-menu-grid">'+tiles.map(([k,l,i,t,c])=>'<button class="mt-tile" style="--t:'+t+'" data-mt="other" data-v="'+k+'"><span class="i">'+svg(i,24)+'</span><span class="l"><b>'+l+'</b>'+(c!==null?'<span class="c">'+c+'</span>':"")+'</span>'+svg("right",16)+'</button>').join("")+'</div>';
 }
 
 /* ─── Mevcut İş Takip detayına bağlama ─── */
@@ -7658,5 +7658,25 @@ html body :is(.op2,#op2-layer) .ik2-dfoot{gap:8px!important;background:#fff!impo
 .op2 .btn.primary,.op2 [data-o="new"].primary{background:#1D3A8A!important;border-color:#1D3A8A!important;border-radius:10px!important;box-shadow:0 1px 2px #0F172A1f!important}
 </style>
 <script id="is2-drop">document.addEventListener("dragover",e=>{const z=e.target.closest?.("#is2-layer .o2-drop");if(z){e.preventDefault();z.classList.add("over");}});document.addEventListener("dragleave",e=>{e.target.closest?.("#is2-layer .o2-drop")?.classList.remove("over");});document.addEventListener("drop",e=>{const z=e.target.closest?.("#is2-layer .o2-drop");if(!z)return;e.preventDefault();const i=z.querySelector("[data-wfile]");if(i&&e.dataTransfer.files.length){i.files=e.dataTransfer.files;i.dispatchEvent(new Event("change",{bubbles:true}));}});</script>
+<style id="mt-hr">
+.hr-card{display:block;width:100%;margin:0 0 10px;padding:12px 12px 12px 16px;border:.8px solid #E4E9F1;border-radius:19px;background:#fff;box-shadow:0 4px 14px #0F1F3D0b;text-align:left;font:inherit;cursor:pointer;transition:background .12s}
+.hr-card:hover{background:#FBFCFF}
+.hr-body{display:grid;gap:6px}
+.hr-code{font-size:12px;font-weight:700;letter-spacing:.2px;color:#3158C9}
+.hr-main{display:flex;align-items:center;gap:4px}
+.hr-text{flex:1;min-width:0;display:grid;gap:8px}
+.hr-text b{font-size:16px;font-weight:700;line-height:1.2;letter-spacing:-.25px;color:#141B2D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hr-line{display:flex;align-items:center;gap:7px;font-size:13.5px;color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hr-line i{width:24px;height:24px;box-sizing:border-box;border-radius:50%;background:#F8FAFD;border:1.2px solid #3158C9;color:#3158C9;display:grid;place-items:center;flex:none}
+.hr-main>svg{color:#C5CEDB;flex:none}
+html body .mt-menu-grid{display:flex!important;flex-wrap:wrap;justify-content:center;gap:16px!important}
+html body .mt-tile{width:120px!important;height:132px!important;flex:none;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:10px!important;padding:8px 6px!important;border:0!important;border-radius:18px!important;background:#fff!important;box-shadow:0 4px 14px #0F172A0f!important;text-align:center!important;transform:none!important}
+html body .mt-tile:hover{background:#FBFCFF!important}
+html body .mt-tile .i{width:48px!important;height:48px!important;border-radius:50%!important;background:var(--t)!important;color:#fff!important;opacity:.95}
+html body .mt-tile .l{display:flex;align-items:center;justify-content:center;gap:4px;max-width:100%}
+html body .mt-tile .l b{flex:none!important;font-size:13.5px!important;font-weight:600!important;color:#334155!important;line-height:1.25}
+html body .mt-tile .l .c{min-width:0!important;height:auto!important;padding:1px 6px!important;border-radius:10px!important;background:#E8F5EF!important;color:#1B9C6B!important;font-size:12px!important;font-weight:700!important;display:inline-block!important}
+html body .mt-tile>svg{display:none!important}
+</style>
 </body>
 </html>
