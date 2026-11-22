@@ -7144,6 +7144,26 @@ select:has(option[value=""]:checked){color:#B3BCC9!important}
 .nf-bar button:hover{background:#F9FAFB}
 .nf-bar button.red{color:#DC2626;border-color:#FAD4D4}
 .nf-bar button:disabled{opacity:.45;cursor:default}
+/* Eski sekme görünümü, ortalı gün başlığı, renkli okunmuş kart */
+.nf-toggle{margin:0;padding:0 16px 12px!important;background:#fff;border-bottom:1px solid #E5E7EB}
+.nf-toggle{display:flex}
+.nf-toggle>button{border:0!important}
+.nf-toggle{gap:0!important}
+.nf-toggle-in{display:flex;flex:1;gap:4px;padding:3px;background:#E8ECF2;border-radius:12px}
+.nf-toggle-in button{flex:1;height:32px;border:0!important;border-radius:9px;background:none!important;color:#5B6475!important;font-size:13px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.nf-toggle-in button.on{background:#fff!important;color:#14243C!important;box-shadow:0 1px 3px #0F1F3D1f}
+.nf-toggle-in button em{font-style:normal;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#D5DBE5;color:#4B5563;font-size:11px;font-weight:700;display:grid;place-items:center}
+.nf-toggle-in button.on em{background:#3158C9;color:#fff}
+.nf-day{display:flex!important;align-items:center;gap:12px;margin:16px 8px 10px!important;justify-content:center;text-align:center}
+.nf-day::before,.nf-day::after{content:"";flex:1;height:1px;background:#DDE3EC}
+.nf-card{border-left:3px solid #22A06B!important}
+.nf-row.unread .nf-card{border-left-color:#3158C9!important}
+.nf-row.sel .nf-card{border-left-width:3px!important}
+.nf-card b{color:#1F2937!important;font-weight:600!important}
+.nf-row.unread .nf-card b{font-weight:700!important;color:#111827!important}
+.nf-meta{color:#15803D!important;font-weight:600!important}
+.nf-row.unread .nf-meta{color:#3158C9!important}
+.nf-card p{color:#4B5563!important}
 .top-bell.nf-open{background:#EEF2FE!important;color:#3158C9!important}
 </style>
 <script>
@@ -7184,10 +7204,10 @@ function panel(){
   let html="",prev="";
   list.forEach((n,i)=>{const d=dayLabel(n.at),first=d!==prev,last=i===list.length-1||dayLabel(list[i+1].at)!==d;if(first)html+='<div class="nf-day">'+e(d)+'</div>';prev=d;const sel=N.sel.has(n.id);
     html+='<div class="nf-row'+(n.read?"":" unread")+(sel?" sel":"")+(first?" first":"")+(last?" last":"")+'"><time>'+hm(n.at)+'</time><button class="nf-node" data-nf="sel" data-v="'+e(n.id)+'" aria-label="Seç"></button>'+
-      '<div class="nf-card" data-nf="go" data-v="'+e(n.id)+'" tabindex="0"><b>'+e(n.title)+'</b>'+(n.body?'<p>'+e(n.body)+'</p>':"")+'<div class="nf-meta">'+rel(n.at)+'</div>'+
+      '<div class="nf-card" data-nf="go" data-v="'+e(n.id)+'" tabindex="0"><b>'+e(n.title)+'</b>'+(n.body?'<p>'+e(n.body)+'</p>':"")+'<div class="nf-meta">'+(n.read?"Okundu · ":"")+rel(n.at)+'</div>'+
       '<div class="nf-acts">'+(n.read?"":'<button class="rd" data-nf="read" data-v="'+e(n.id)+'">Okundu</button>')+'<button class="del" data-nf="del" data-v="'+e(n.id)+'">Sil</button></div></div></div>';});
   return '<div class="nf-top"><div><h2>Bildirimler</h2><small>'+(u?u+" okunmamış bildirim":"Hepsini okudun")+'</small></div>'+(u?'<button class="nf-allread" data-nf="allread">Tümünü okundu say</button>':"")+'<button class="nf-x" data-nf="close" aria-label="Kapat">✕</button></div>'+
-    '<div class="nf-toggle"><button class="'+(N.tab==="unread"?"on":"")+'" data-nf="tab" data-v="unread">Okunmamış<em>'+u+'</em></button><button class="'+(N.tab==="read"?"on":"")+'" data-nf="tab" data-v="read">Okunmuş<em>'+r+'</em></button></div>'+
+    '<div class="nf-toggle"><div class="nf-toggle-in"><button class="'+(N.tab==="unread"?"on":"")+'" data-nf="tab" data-v="unread">Okunmamış<em>'+u+'</em></button><button class="'+(N.tab==="read"?"on":"")+'" data-nf="tab" data-v="read">Okunmuş<em>'+r+'</em></button></div></div>'+
     '<div class="nf-list">'+(html||'<div class="nf-empty"><b style="color:#14243C">'+(N.tab==="unread"?"Okunmamış bildirim yok":"Okunmuş bildirim yok")+'</b>'+(N.tab==="unread"?"Tüm bildirimleri okudun.":"")+'</div>')+'</div>'+
     (list.length&&N.sel.size?'<div class="nf-bar"><span>'+N.sel.size+' seçildi</span><button data-nf="all">'+(allSel?"Seçimi kaldır":"Tümünü seç")+'</button><button data-nf="bread" '+(N.tab==="unread"?"":"disabled")+'>Okundu yap</button><button class="red" data-nf="bdel">Sil</button></div>':"");
 }
