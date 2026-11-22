@@ -6346,6 +6346,30 @@ if(location.hash.startsWith("#is2"))readRoute();else renderNav();
 .ik2-drawer.m2 .m2-prob em{color:#3158C9!important}
 .ik2-drawer.m2 .m2-item.late{background:#fff}
 .ik2-drawer.m2 .m2-item.late .m2-ir small{color:#D23F4A;font-weight:700}
+.op2 .progress-steps b{background:#3158C9!important}
+.op2 .lane .lane-step{background:#fff!important;color:#475569!important;border-color:#CBD5E1!important}
+.o2-drop{display:flex;align-items:center;gap:14px;padding:18px;border:1.5px dashed #C9D4EA;border-radius:19px;background:#fff;cursor:pointer;transition:border-color .12s,background .12s}
+.o2-drop:hover,.o2-drop.over{border-color:#3158C9;background:#F5F8FF}
+.o2-drop>div{flex:1;min-width:0}.o2-drop b{display:block;font-size:14px;color:#141B2D}.o2-drop small{display:block;margin-top:2px;font-size:12.5px;color:#6B7489}
+.o2-noteform{display:grid;gap:10px}
+.o2-noteform textarea{width:100%;box-sizing:border-box;resize:vertical;min-height:80px;padding:12px 14px;border:1px solid #E4E9F0;border-radius:12px;font:inherit;font-size:13.5px;background:#FBFCFE}
+.o2-noteform textarea:focus{outline:none;border-color:#3158C9;box-shadow:0 0 0 3px #3158C922;background:#fff}
+.o2-noteform>div{display:flex;justify-content:flex-end}
+.ik2-drawer.m2 .ik2-hero .ik2-chip{--t:#475569!important}
+.ik2-drawer.m2 .ik2-hero .ik2-chip:first-child{--t:#24418C!important}
+.ik2-drawer.m2 .ik2-tabs{overflow-x:auto;flex-wrap:nowrap!important;scrollbar-width:none}
+.ik2-drawer.m2 .ik2-tabs button{white-space:nowrap}
+.op2 .dash-tag{--t:#3158C9!important}
+.op2 .ik2-kpi{--t:#3158C9!important}
+.op2 .urgent-flag{background:#F1F4F9!important;color:#475569!important}
+@media (max-width:720px){
+  .ik2-drawer.m2 .ik2-hero{padding:14px!important}
+  .ik2-drawer.m2 .ik2-dbody{padding:12px!important}
+  .ik2-drawer.m2 .o2-stage{overflow-x:auto;border-radius:12px}
+  .ik2-drawer.m2 .o2-stage button{min-width:104px;flex:none}
+  .o2-drop{flex-wrap:wrap}.o2-drop .ik2-btn{width:100%;justify-content:center}
+  .ik2-drawer.m2 .ik2-dfoot{flex-wrap:wrap}
+}
 .o2-stage{display:flex;gap:0;margin:0 0 14px;background:#fff;border:1px solid #E6E9F0;border-radius:12px;overflow:hidden}
 .o2-stage button{flex:1;min-width:0;height:44px;border:0;background:#fff;color:#6B7489;font-size:12px;font-weight:700;position:relative;padding:0 6px 0 16px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%);margin-left:-10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .o2-stage button:first-child{margin-left:0;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%)}
@@ -6403,13 +6427,13 @@ const kpi=(label,val,sub,tone)=>'<div class="ik2-kpi" style="--t:'+tone+'"><smal
 
 /* ═════════ Tanımlar ═════════ */
 const STAGES=[
- {id:"new",name:"Yeni",prob:10,color:"#64748B",rot:7,crit:["Müşteri ve iletişim kişisi kayıtlı","Fırsat kaynağı belirlendi"]},
- {id:"qual",name:"Nitelendirme",prob:20,color:"#0EA5E9",rot:10,crit:["Bütçe var (B)","Karar verici belli (A)","İhtiyaç doğrulandı (N)","Zamanlama net (T)"]},
- {id:"needs",name:"İhtiyaç analizi",prob:35,color:"#4F46E5",rot:14,crit:["Keşif toplantısı yapıldı","Ürün kalemleri belirlendi","Demo yapıldı"]},
- {id:"quote",name:"Teklif",prob:55,color:"#7C3AED",rot:14,crit:["Teklif oluşturuldu","İndirim onayı alındı (gerekiyorsa)","Teklif müşteriye gönderildi"]},
- {id:"nego",name:"Pazarlık",prob:75,color:"#D97706",rot:10,crit:["Ticari şartlar konuşuldu","Hukuki/sözleşme incelemesi başladı","Satın alma onay süreci biliniyor"]},
- {id:"won",name:"Kazanıldı",prob:100,color:"#12936A",rot:0,crit:["Teklif kabul edildi","Sözleşme imzalandı"]},
- {id:"lost",name:"Kaybedildi",prob:0,color:"#D23F4A",rot:0,crit:[]}
+ {id:"new",name:"Yeni",prob:10,color:"#94A3B8",rot:7,crit:["Müşteri ve iletişim kişisi kayıtlı","Fırsat kaynağı belirlendi"]},
+ {id:"qual",name:"Nitelendirme",prob:20,color:"#7C8DB5",rot:10,crit:["Bütçe var (B)","Karar verici belli (A)","İhtiyaç doğrulandı (N)","Zamanlama net (T)"]},
+ {id:"needs",name:"İhtiyaç analizi",prob:35,color:"#5A72AC",rot:14,crit:["Keşif toplantısı yapıldı","Ürün kalemleri belirlendi","Demo yapıldı"]},
+ {id:"quote",name:"Teklif",prob:55,color:"#3D5AA3",rot:14,crit:["Teklif oluşturuldu","İndirim onayı alındı (gerekiyorsa)","Teklif müşteriye gönderildi"]},
+ {id:"nego",name:"Pazarlık",prob:75,color:"#24418C",rot:10,crit:["Ticari şartlar konuşuldu","Hukuki/sözleşme incelemesi başladı","Satın alma onay süreci biliniyor"]},
+ {id:"won",name:"Kazanıldı",prob:100,color:"#1F7A55",rot:0,crit:["Teklif kabul edildi","Sözleşme imzalandı"]},
+ {id:"lost",name:"Kaybedildi",prob:0,color:"#A23B44",rot:0,crit:[]}
 ];
 const stg=id=>STAGES.find(s=>s.id===id)||STAGES[0];
 const OPEN_IDS=["new","qual","needs","quote","nego"];
@@ -6417,7 +6441,7 @@ const FCAT=[["Taahhüt","#12936A"],["En iyi senaryo","#4F46E5"],["Huni","#94A3B8
 const LOSS=["Fiyat","Rakip tercih edildi","Bütçe iptal edildi","Zamanlama ertelendi","Ürün uyumu yetersiz","Karar verici değişti","İletişim kesildi"];
 const SOURCES=["Web sitesi","Referans","Fuar","Bayi","Soğuk arama","LinkedIn","Mevcut müşteri"];
 const COMPETITORS=["Logo","Mikro","SAP Business One","Netsis","Yerel yazılım evi"];
-const ACT_TYPES=[["call","Arama","phone","#0EA5E9"],["meet","Toplantı","people","#4F46E5"],["mail","E-posta","mail","#64748B"],["demo","Demo","chart","#7C3AED"],["task","Görev","check","#D97706"]];
+const ACT_TYPES=[["call","Arama","phone","#3158C9"],["meet","Toplantı","people","#3158C9"],["mail","E-posta","mail","#3158C9"],["demo","Demo","chart","#3158C9"],["task","Görev","check","#3158C9"]];
 const actOf=id=>ACT_TYPES.find(a=>a[0]===id)||ACT_TYPES[0];
 const ROLES=[["Karar verici","#D23F4A"],["Ekonomik onaylayıcı","#D97706"],["Teknik değerlendirici","#4F46E5"],["Kullanıcı","#0EA5E9"],["İç destekçi (şampiyon)","#12936A"]];
 const PRODUCTS=[
@@ -6640,8 +6664,8 @@ function enrichO(o,i){
   o.history=h.sort((x,y)=>x.at.localeCompare(y.at));
 }
 function drawer(id){
-  const o=O(id);if(!o)return "";const s=stg(o.stage),a=acc(o.account),tab=V.dtab,ct=contactOf(o);
-  const tabs=[["summary","Özet"],["process","Satış süreci"],["lines","Ürünler"],["quotes","Teklifler ("+o.quotes.length+")"],["acts","Aktiviteler ("+o.acts.length+")"],["people","Karar kişileri"],["comp","Rakipler"],["history","Geçmiş"]];
+  const o=O(id);if(!o)return "";seedFiles(o,S.opps.indexOf(o));const s=stg(o.stage),a=acc(o.account),tab=V.dtab,ct=contactOf(o);
+  const tabs=[["summary","Özet"],["process","Satış süreci"],["lines","Ürünler"],["quotes","Teklifler ("+o.quotes.length+")"],["acts","Aktiviteler ("+o.acts.length+")"],["people","Karar kişileri"],["comp","Rakipler"],["files","Ekler ("+o.files.length+")"],["notes","Notlar ("+o.notes2.length+")"],["history","Geçmiş"]];
   const stepIdx=STAGES.findIndex(x=>x.id===o.stage);
   const bar='<div class="o2-stage">'+STAGES.filter(x=>x.id!=="lost").map((x,i)=>'<button data-o="stage" data-v="'+x.id+'" style="--c:'+x.color+'" class="'+(o.stage==="lost"?(i<=4?"lost":""):i<stepIdx?"past":i===stepIdx?"now":"")+'" title="'+x.name+' · %'+x.prob+'">'+(i<stepIdx&&o.stage!=="lost"?"✓ ":"")+x.name+'</button>').join("")+'</div>';
   const sec=(title,icon,tone,inner,sub,right)=>'<section class="m2-sec"><header><span class="m2-ti" style="--a:'+tone+'">'+ic(icon,19)+'</span><div><b>'+title+'</b>'+(sub?'<small>'+sub+'</small>':"")+'</div>'+(right||"")+'</header>'+inner+'</section>';
@@ -6669,6 +6693,8 @@ function drawer(id){
     case "comp":body=sec("Karşılaşılan rakipler","shield","#D23F4A",'<div class="m2-chips">'+COMPETITORS.map(c=>'<label class="w2-label" style="--t:'+(o.competitors.includes(c)?"#D23F4A":"#64748B")+';height:32px;padding:0 12px;gap:6px;cursor:pointer"><input type="checkbox" data-ocomp="'+esc(c)+'" '+(o.competitors.includes(c)?"checked":"")+'>'+esc(c)+'</label>').join("")+'</div>',o.competitors.length+" rakip seçili")+
       sec("Rakip karşılaştırması","chart","#4F46E5",o.competitors.map((c,k)=>item(tile("shield","#D23F4A"),esc(c),["Fiyatı düşük, mobil ve İK modülü zayıf","Yaygın kurulu tabanı var, özelleştirme yavaş","Kurumsal marka, lisans ve danışmanlık maliyeti yüksek","Muhasebe güçlü, saha süreçleri eksik","Esnek ama ölçeklenme ve destek riski var"][COMPETITORS.indexOf(c)],chip(["Yüksek","Orta","Düşük"][(k+o.code.length)%3]+" tehdit",["#D23F4A","#D97706","#12936A"][(k+o.code.length)%3]))).join(""))+
       sec("Rekabet notları","note","#12936A",row("award","Güçlü yanımız","Mobil saha ve İK modülleri tek platformda; yerel destek")+row("alert","Riskimiz","Lisans fiyatı rakiplerden yüksek görülebilir")+row("target","Önerilen yaklaşım","Toplam sahip olma maliyeti (TCO) karşılaştırması ve referans ziyareti"));break;
+    case "files":body='<label class="o2-drop"><input type="file" id="o2-file-in" multiple hidden><span class="m2-ti" style="--a:#3158C9">'+ic("upload",20)+'</span><div><b>Dosyaları buraya sürükleyin</b><small>veya bilgisayarınızdan seçin · PDF, Word, Excel, görsel</small></div><span class="ik2-btn">Dosya seç</span></label>'+(o.files.length?sec("Ekler","file","#3158C9",o.files.map(f=>item(tile(fileIcon(f.name),"#3158C9"),esc(f.name),fsize(f.size)+" · "+esc(f.who)+" · "+dlong(f.date),'<div class="m2-qa"><button class="ik2-btn sm" title="İndir">'+ic("download",13)+'</button><button class="ik2-btn sm" data-ofdel="'+f.id+'" title="Sil">'+ic("close",13)+'</button></div>')).join(""),o.files.length+" dosya"):'<p class="ik2-empty">Henüz ek yok.</p>');break;
+    case "notes":body='<form class="m2-sec m2-pad o2-noteform" data-onote><textarea name="text" rows="3" required placeholder="Fırsatla ilgili not yazın…"></textarea><div><button class="ik2-btn primary">'+ic("plus",14)+'Not ekle</button></div></form>'+sec("Notlar","note","#3158C9",o.notes2.map(n=>item(av(n.who),esc(n.who),esc(n.text),'<small>'+dlong(n.date)+'</small>')).join("")||'<p class="ik2-empty">Henüz not yok.</p>',o.notes2.length+" not");break;
     case "history":body=sec("Fırsat geçmişi","clock","#3158C9",'<div class="m2-tl">'+o.history.slice().reverse().map(h=>'<div><i></i><b>'+esc(h.what)+'</b><small>'+esc(h.who)+' · '+ago(h.at)+'</small></div>').join("")+'</div>',o.history.length+" kayıt");break;
     default:{const n=nextAct(o),p=s.prob;
       body=bar+(o.stage==="won"&&o.won?'<div class="ik2-alert info" style="margin:0 0 12px;background:#E7F6EF;color:#0E7A57">'+ic("check",16)+'<div><b>Kazanıldı · '+dlong(o.won.date)+'</b><br>Sipariş '+esc(o.won.order)+' · Sözleşme '+esc(o.won.contract)+' · Proje başlangıcı '+dlong(o.won.start)+' · Ödeme: '+esc(o.won.terms)+'</div></div>':"")+(o.stage==="lost"?'<div class="ik2-alert bad" style="margin:0 0 12px">'+ic("close",16)+'<div><b>Kaybedildi · '+esc(o.lossReason)+(o.lossComp?" · "+esc(o.lossComp):"")+'</b><br>'+esc(o.lossNote)+'</div></div>':"")+
@@ -6683,6 +6709,26 @@ function drawer(id){
     '<div class="ik2-hero"><span class="ik2-av lg" style="border-radius:16px;background:'+s.color+'">'+ic("target",26)+'</span><div style="min-width:0"><p style="margin:0 0 3px">'+esc(o.code)+' · '+esc(a.name)+'</p><h2>'+esc(o.name)+'</h2><div class="chips" style="margin-top:8px">'+chip(s.name,s.color)+chip(TL(amountOf(o)),"#141B2D")+chip(o.type,"#4F46E5")+(rotting(o)?'<span class="o2-rot">'+dd(o.lastAct,T)+' gündür temas yok</span>':"")+'</div></div><button class="ik2-x" data-o="close" aria-label="Kapat">'+ic("close",18)+'</button></div>'+
     '<nav class="ik2-tabs">'+tabs.map(([k,l])=>'<button data-o="dtab" data-v="'+k+'" class="'+(tab===k?"on":"")+'">'+l+'</button>').join("")+'</nav><div class="ik2-dbody">'+body+'</div><footer class="ik2-dfoot"><small>'+esc(o.owner)+' · '+ago(o.history[o.history.length-1].at)+' güncellendi</small>'+foot+'</footer></aside>';
 }
+const fileIcon=n=>/\.(png|jpe?g|gif|webp)$/i.test(n)?"image":/\.(xlsx?|csv)$/i.test(n)?"grid":"file";
+const fsize=b=>b>=1048576?(b/1048576).toLocaleString("tr-TR",{maximumFractionDigits:1})+" MB":Math.max(1,Math.round(b/1024))+" KB";
+function seedFiles(o,i){
+  if(!o.files)o.files=[["Teklif_"+o.code+"_v1.pdf",412e3],["Ihtiyac_analizi.docx",186e3],["Toplanti_notlari.pdf",94e3],["Fiyat_karsilastirma.xlsx",58e3]].slice(0,2+(i%3)).map(([n,s],k)=>({id:"F"+i+k,name:n,size:s,who:o.owner,date:shift(o.created,6+k*7)}));
+  if(!o.notes2)o.notes2=[{id:"N"+i+"a",who:o.owner,date:shift(o.created,3),text:"Müşteri mevcut sistemden memnun değil; özellikle raporlama ve mobil erişim istiyor."},{id:"N"+i+"b",who:REPS[(i+1)%REPS.length].name,date:shift(o.created,12),text:"Satın alma onayı için genel müdür imzası gerekiyor, bütçe Q1'de netleşecek."}];
+}
+document.addEventListener("click",ev=>{
+  const del=ev.target.closest("[data-ofdel]");if(del&&V.layer?.type==="opp"){const o=O(V.layer.id);o.files=o.files.filter(f=>f.id!==del.dataset.ofdel);logO(o,"Bir eki sildi");save("Ek silindi.");refresh();return;}
+  const pick=ev.target.closest("[data-ofpick]");if(pick){document.getElementById("o2-file-in")?.click();}
+});
+function addFiles(list){
+  if(V.layer?.type!=="opp"||!list?.length)return;const o=O(V.layer.id);
+  [...list].slice(0,10).forEach((f,k)=>{o.files.unshift({id:"F"+Date.now()+k,name:f.name,size:f.size,who:ME,date:T});});
+  logO(o,list.length+" ek yükledi");save(list.length+" ek eklendi.");refresh();
+}
+document.addEventListener("change",ev=>{if(ev.target.id==="o2-file-in"){addFiles(ev.target.files);ev.target.value="";}});
+document.addEventListener("dragover",ev=>{const z=ev.target.closest?.(".o2-drop");if(z){ev.preventDefault();z.classList.add("over");}});
+document.addEventListener("dragleave",ev=>{ev.target.closest?.(".o2-drop")?.classList.remove("over");});
+document.addEventListener("drop",ev=>{const z=ev.target.closest?.(".o2-drop");if(z){ev.preventDefault();z.classList.remove("over");addFiles(ev.dataTransfer.files);}});
+document.addEventListener("submit",ev=>{const f=ev.target;if(f.dataset?.onote===undefined||V.layer?.type!=="opp")return;ev.preventDefault();const t=new FormData(f).get("text").trim();if(!t)return;const o=O(V.layer.id);o.notes2.unshift({id:"N"+Date.now(),who:ME,date:T,text:t});logO(o,"Not ekledi");save("Not eklendi.");refresh();});
 function qActions(o,q){
   const k=o.id+"|"+q.id;
   if(q.status==="Taslak")return '<button class="ik2-btn sm" data-o="qsend" data-v="'+k+'">'+ic("mail",13)+'Gönder</button>';
