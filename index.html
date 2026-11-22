@@ -7139,6 +7139,17 @@ select:has(option[value=""]:checked){color:#B3BCC9!important}
 .nf-bar button.on{color:#3158C9}.nf-bar button.red{color:#D23F4A}
 .nf-bar button:disabled{opacity:.4;cursor:default;background:none}
 .nf-bar i{width:1px;height:22px;background:#E3E8F0}
+.nf-card{padding:9px 12px!important;border-radius:16px!important}
+.nf-card b{font-size:13.5px!important;line-height:1.3!important}
+.nf-card p{margin-top:2px!important;font-size:12px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nf-meta{margin-top:4px!important}
+.nf-row{padding-bottom:8px!important}
+.nf-row time{padding-top:8px!important}
+.nf-node{margin-top:10px!important}
+.nf-row.first::before{top:17px!important}.nf-row.last::before{height:17px!important}
+.nf-acts{position:absolute!important;top:7px;right:8px;margin:0!important;padding:0!important;border:0!important;max-height:none!important;overflow:visible!important;opacity:0}
+.nf-card:hover .nf-acts{opacity:1}
+.nf-card:hover b{padding-right:110px!important}
 .top-bell.nf-open{background:#EEF2FE!important;color:#3158C9!important}
 </style>
 <script>
@@ -7179,7 +7190,7 @@ function panel(){
   let html="",prev="";
   list.forEach((n,i)=>{const d=dayLabel(n.at),first=d!==prev,last=i===list.length-1||dayLabel(list[i+1].at)!==d;if(first)html+='<div class="nf-day">'+e(d)+'</div>';prev=d;const sel=N.sel.has(n.id);
     html+='<div class="nf-row'+(n.read?"":" unread")+(sel?" sel":"")+(first?" first":"")+(last?" last":"")+'"><time>'+hm(n.at)+'</time><button class="nf-node" data-nf="sel" data-v="'+e(n.id)+'" aria-label="Seç"></button>'+
-      '<div class="nf-card" data-nf="go" data-v="'+e(n.id)+'" tabindex="0"><b>'+e(n.title)+'</b>'+(n.body?'<p>'+e(n.body)+'</p>':"")+'<div class="nf-meta"><span>'+(n.read?"Okundu":"Okunmadı")+' · '+rel(n.at)+'</span><span class="mod">'+e(n.mod)+'</span></div>'+
+      '<div class="nf-card" data-nf="go" data-v="'+e(n.id)+'" tabindex="0"><b>'+e(n.title)+'</b>'+(n.body?'<p>'+e(n.body)+'</p>':"")+'<div class="nf-meta"><span>'+(n.read?"Okundu":"Okunmadı")+' · '+rel(n.at)+'</span></div>'+
       '<div class="nf-acts">'+(n.read?"":'<button class="rd" data-nf="read" data-v="'+e(n.id)+'">Okundu</button>')+'<button class="del" data-nf="del" data-v="'+e(n.id)+'">Sil</button></div></div></div>';});
   return '<div class="nf-top"><h2>Bildirimler</h2><button class="nf-x" data-nf="close">Kapat</button></div>'+
     '<div class="nf-toggle"><button class="'+(N.tab==="unread"?"on":"")+'" data-nf="tab" data-v="unread">Okunmamış<em>'+u+'</em></button><button class="'+(N.tab==="read"?"on":"")+'" data-nf="tab" data-v="read">Okunmuş<em>'+r+'</em></button></div>'+
