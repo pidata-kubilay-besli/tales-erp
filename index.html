@@ -6989,7 +6989,7 @@ taskRecord=function(row,events,isInline,stepAction,module="tasks"){
   const nComments=(row.comments||[]).length,nFiles=docsOf(row).length,act=isInline?"inline-tab":"tab";
   const tabs=[["info","Detay","grid",0],["comments","Yorumlar","chat",nComments],["files","Ekler","image",nFiles],["history","Geçmiş","clock",0],["other","Diğer","layers",0]];
   const nav='<nav class="mtabs" aria-label="İş bölümleri">'+tabs.map(([k,l,i,b])=>'<button type="button" class="mtab'+(recordTab===k?" on":"")+'" data-action="'+act+'" data-value="'+k+'" aria-pressed="'+(recordTab===k)+'"><span class="mtab-ico">'+svg(i,19)+(b?'<b>'+(b>99?"99+":b)+'</b>':"")+'</span><span>'+l+'</span></button>').join("")+'</nav>';
-  const ns=html.indexOf('<nav class="record-tabs"'),ne=ns<0?-1:html.indexOf("</nav>",ns);let out=ns<0||ne<0?html:html.slice(0,ns)+nav+html.slice(ne+6);
+  let out=html;
   if(!["comments","files","other"].includes(recordTab))return out;
   const body=recordTab==="comments"?comments(row):recordTab==="files"?files(row):other(row,events);
   const s=out.indexOf('<div class="panel-body">')+'<div class="panel-body">'.length,eIdx=out.lastIndexOf('</div><footer class="panel-actions">');
@@ -7044,6 +7044,9 @@ document.addEventListener("click",ev=>{const t=ev.target.closest('[data-action="
 #screen .calendar article.today>time{color:#3158C9!important}
 #screen .calendar .more-events{font-size:12px!important;color:#64748B!important;padding:2px 8px!important}
 </style><style id="form-clean">
+#screen[data-module="tasks"] .desk-identity .desk-symbol{width:34px!important;height:34px!important;border-radius:50%!important;background:#3158C9!important;color:#fff!important;border:0!important;box-shadow:0 2px 6px #3158C93d!important;display:grid!important;place-items:center}
+#screen[data-module="tasks"] .desk-identity .desk-symbol svg{color:#fff!important;width:16px;height:16px}
+
 /* Tüm formlar: belirgin çerçeve, soluk ipucu, ikon ve etiket */
 #modal .field,#inspector .field,.desk-editor .field,.dialog .field,.work-wizard .field,#inline-filter .filter-rule{border-color:#B9C3D3!important}
 #modal .field:hover,#inspector .field:hover,.dialog .field:hover{border-color:#9AA8BE!important}
