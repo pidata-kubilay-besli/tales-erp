@@ -8318,14 +8318,14 @@ function secCal(){
 function oppCard(o){const s=stg(o.stage),pct=o.prob;
   return '<button class="cy-opp" data-cy="opp" data-v="'+o.id+'"><div class="top"><span class="code">'+esc(o.code)+'</span><span class="cy-badge" style="--c:'+s[1]+'">'+esc(s[0])+'</span></div><div class="mid"><div><b>'+esc(o.name)+'</b><span class="cy-ir"><i>'+ic("building",12)+'</i>'+esc(o.cust)+'</span><span class="cy-ir"><i>'+ic("target",12)+'</i>'+esc(o.type)+'</span></div>'+ic("right",25)+'</div>'+
     '<div class="cy-foot"><div><span>'+ic("user",16)+'</span><div><small>Sorumlu</small><strong>'+esc(o.owner)+'</strong></div></div><i></i><div><span>'+ic("calendar",16)+'</span><div><small>Kapanış tarihi</small><strong>'+dt(o.close)+'</strong></div></div></div>'+
-    (pct?'<div class="cy-prog" style="--pc:'+(pct>=70?"#22C55E":pct>=40?"#F59E0B":"#EF4444")+'"><div>'+[1,2,3,4,5].map(k=>'<i class="'+(k*20<=pct+10?"on":"")+'"></i>').join("")+'</div><small>%'+pct+'</small></div>':"")+'</button>';}
+    (pct?'<div class="cy-prog" style="--pc:'+(pct>=70?"#10B981":pct>=50?"#F59E0B":"#EF4444")+'"><div><i style="background:#EF4444"></i><i style="'+(pct>=50?"background:#F59E0B":"")+'"></i><i style="'+(pct>=70?"background:#10B981":"")+'"></i></div><small>%'+pct+'</small></div>':"")+'</button>';}
 function search(){return '<label class="c2-search">'+ic("search",17)+'<input id="cy-q" value="'+esc(V.q)+'" placeholder="Ara"></label>';}
 const hit=s=>!V.q||s.toLocaleLowerCase("tr").includes(V.q.toLocaleLowerCase("tr"));
 function secOpps(){return search()+'<div class="cy-l">'+S.opps.filter(o=>hit(o.name+o.cust+o.code)).map(oppCard).join("")+'</div>';}
 function secCust(){return search()+'<div class="c2-list cy-l">'+S.customers.filter(c=>hit(c.name+c.code)).map((c,i)=>'<button class="c2-card" data-cy="cust" data-v="'+c.id+'"><span class="c2-av" style="background:'+AVC[i%4]+'">'+letter(c.name)+'</span><span class="c2-cb"><span class="c2-top"><span class="c2-code">'+esc(c.code)+'</span><span class="c2-seg">'+esc(c.seg)+'</span></span><span class="c2-name"><b>'+esc(c.name)+'</b>'+ic("right",13)+'</span><span class="c2-meta">'+ic("user",18)+esc(c.sor)+'</span><span class="c2-meta">'+ic("phone",18)+esc(c.gsm)+'</span></span></button>').join("")+'</div>';}
 function secPerson(){return search()+'<div class="cy-l">'+S.people.filter(p=>hit(p.name+p.cust)).map((p,i)=>'<button class="cy-person" data-cy="person" data-v="'+p.id+'"><span class="av" style="background:'+AVC[i%4]+'">'+letter(p.name)+'</span><div><b>'+esc(p.name)+'</b><span class="ttl">'+esc(p.title)+'</span><span class="r">'+ic("mail",16)+esc(p.email)+'</span><span class="r">'+ic("phone",16)+esc(p.gsm)+'</span></div>'+ic("right",20)+'</button>').join("")+'</div>';}
 function secKind(kind){const m=SECS.find(s=>s[0]===kind),L=S.events.filter(x=>x.kind===kind).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)),days=[...new Set(L.map(x=>x.date))];
-  return '<div class="cy-sh" style="--c:'+m[2]+'"><span>'+ic(m[3],18)+'</span><b>'+m[1]+'</b><button data-cy="form" data-v="'+kind+'">'+ic("plus",20)+'</button></div>'+(V.layout==="grid"?'<div class="cy-l">'+L.map(x=>item({...x,cust:(x.date===T?"Bugün":dt(x.date))+" · "+x.cust},m)).join("")+'</div>':days.map(d=>'<div class="c2-day">'+(d===T?"Bugün":dt(d))+'</div><div class="cy-l">'+L.filter(x=>x.date===d).map(x=>item(x,m)).join("")+'</div>').join(""));}
+  return '<div class="cy-sh" style="--c:'+m[2]+'"><span>'+ic(m[3],18)+'</span><b>'+m[1]+'</b><button data-cy="form" data-v="'+kind+'">'+ic("plus",20)+'</button></div>'+(V.layout==="grid"?'<div class="cy-days">'+days.map(d=>{const g=L.filter(x=>x.date===d),dd=new Date(d);return '<section class="cy-dcard" style="--c:'+m[2]+'"><header><span class="dn"><b>'+d.slice(8)+'</b><small>'+new Intl.DateTimeFormat("tr-TR",{month:"short"}).format(dd)+'</small></span><div><b>'+(d===T?"Bugün":new Intl.DateTimeFormat("tr-TR",{weekday:"long"}).format(dd))+'</b><small>'+g.length+" "+m[1].toLocaleLowerCase("tr").replace(/lar$|ler$/,"")+'</small></div></header>'+g.map(x=>'<button class="cy-drow" data-cy="ev" data-v="'+x.id+'"><time>'+x.time+'</time><i></i><div><b>'+esc(x.title)+'</b><small>'+esc(x.cust)+" · "+esc(x.who)+'</small></div>'+ic("right",18)+'</button>').join("")+'</section>';}).join("")+'</div>':days.map(d=>'<div class="c2-day">'+(d===T?"Bugün":dt(d))+'</div><div class="cy-l">'+L.filter(x=>x.date===d).map(x=>item(x,m)).join("")+'</div>').join(""));}
 function secKpi(){const st=STG.map(s=>({l:s[0],v:S.opps.filter(o=>o.stage===s[0]).length,c:s[1]}));
   const own=team.map(t=>({name:t,lead:'<span>'+esc(t)+'</span>',a:S.opps.filter(o=>o.owner===t).length})).filter(x=>x.a);
   const won=S.opps.filter(o=>o.stage==="Kazanıldı").reduce((n,o)=>n+amount(o),0),pipe=S.opps.filter(o=>!["Kazanıldı","Kaybedildi"].includes(o.stage)).reduce((n,o)=>n+amount(o),0);
@@ -8617,5 +8617,21 @@ html body .cy-lay button.on{background:#fff;color:#3158C9;box-shadow:0 1px 3px #
 @media (max-width:820px){html body .cy-grid .cy-l{grid-template-columns:1fr}html body .cy-lay{display:none}}
 </style>
 <style id="cy-prog-c">html body .cy-prog>div i.on{background:var(--pc)!important}html body .cy-prog small{color:var(--pc)!important;font-weight:800}</style>
+<style id="cy-days">
+html body .cy-days{display:block;columns:2;column-gap:12px}html body .cy-days>.cy-dcard{break-inside:avoid;display:inline-block;width:100%;margin:0 0 12px}
+html body .cy-dcard{background:#fff;border:1px solid #E8ECF3;border-radius:16px;box-shadow:0 2px 8px #0F172A0a;overflow:hidden}
+html body .cy-dcard header{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid #EEF1F6;background:linear-gradient(180deg,#fff,#FAFBFD)}
+html body .cy-dcard .dn{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;align-content:center;background:color-mix(in srgb,var(--c) 10%,#fff);color:var(--c);line-height:1}
+html body .cy-dcard .dn b{font-size:17px;font-weight:800}html body .cy-dcard .dn small{font-size:10px;font-weight:700;text-transform:uppercase;margin-top:2px}
+html body .cy-dcard header>div b{display:block;font-size:14.5px;color:#0F172A;text-transform:capitalize}html body .cy-dcard header>div small{display:block;margin-top:2px;font-size:12px;color:#94A3B8}
+html body .cy-drow{display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;border:0;border-bottom:1px solid #F1F3F7;background:#fff;font:inherit;text-align:left;cursor:pointer}
+html body .cy-drow:last-child{border-bottom:0}html body .cy-drow:hover{background:#F8FAFF}
+html body .cy-drow time{width:42px;font-size:13px;font-weight:800;color:#0F172A}
+html body .cy-drow i{width:3px;align-self:stretch;border-radius:2px;background:var(--c)}
+html body .cy-drow>div{flex:1;min-width:0}html body .cy-drow b{display:block;font-size:13.5px;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}html body .cy-drow small{display:block;margin-top:2px;font-size:12px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body .cy-drow>svg{color:#C5CEDB;flex:none}
+@media (max-width:820px){html body .cy-days{columns:1}}
+</style>
+<style id="cy-prog3">html body .cy-prog>div{gap:6px!important}html body .cy-prog>div i{height:6px!important;border-radius:4px!important}</style>
 </body>
 </html>
