@@ -6829,5 +6829,193 @@ if(location.hash.startsWith("#opp2"))readRoute();else renderNav();
 #is2-layer [data-w="qc"]{background:#F4F5FA!important;border-color:#F4F5FA!important;color:#4F46E5!important}
 </style>
 
+<style id="mt-style">
+/* ══════════════════════════════════════════════════════════════════════
+   İŞ TAKİP DETAYI — mobil uygulamanın Yorumlar / Ekler / Diğer ekranları
+   (work_list_comment_sections · work_additional_list · work_list_other_page)
+   ══════════════════════════════════════════════════════════════════════ */
+.mt-compose{display:grid;gap:8px;margin-bottom:16px;padding:12px;border:1px solid #E3E8F0;border-radius:18px;background:#fff;box-shadow:0 6px 16px #0F1F3D0d}
+.mt-compose textarea{width:100%;min-height:62px;border:0!important;outline:0;resize:vertical;font:inherit;font-size:14px;background:transparent!important;box-shadow:none!important;padding:4px 2px}
+.mt-compose footer{display:flex;align-items:center;gap:8px;border-top:1px solid #EEF1F5;padding-top:8px}
+.mt-compose label.mt-cust{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#4A5568;font-weight:600;cursor:pointer}
+.mt-compose input[type=checkbox],.mt-addform input[type=checkbox],.mt-rec input[type=checkbox]{width:16px!important;height:16px!important;min-height:0!important;padding:0!important;margin:0;border-radius:4px!important;accent-color:#3158C9;flex:none}
+.mt-compose .mt-attach{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border-radius:10px;background:#F3F5F9;color:#4A5568;font-size:12.5px;font-weight:650;cursor:pointer}
+.mt-compose .mt-send{margin-left:auto;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border:0;border-radius:10px;background:#3158C9;color:#fff;font-weight:700;font-size:13px}
+.mt-feed{display:grid;gap:12px}
+.mt-row{display:flex;align-items:flex-start;gap:10px}
+.mt-row.me{flex-direction:row-reverse}
+.mt-row.me .mt-card{margin-left:14px}.mt-row:not(.me) .mt-card{margin-right:14px}
+.mt-av{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:800;font-size:13px;margin-top:2px;box-shadow:0 0 0 3px #fff}
+.mt-card{flex:1;min-width:0;border-radius:18px;border:1px solid #E3E8F0;background:#fff;box-shadow:0 6px 16px #0F1F3D0d;padding:10px 0 12px 14px;position:relative}
+.mt-card.me{background:#F4F6FF;border-color:#C9D6F5}
+.mt-card .h{display:flex;align-items:center;gap:6px;padding-right:4px}
+.mt-card .h b{font-size:14px;color:#14243C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt-you{padding:1.5px 6px;border-radius:6px;background:#3158C91a;color:#3158C9;font-size:11px;font-weight:800}
+.mt-card .h small{margin-left:auto;color:#8592A6;font-size:12px;white-space:nowrap}
+.mt-more{width:34px;height:30px;border:0;background:none;color:#8592A6;display:grid;place-items:center;border-radius:8px}
+.mt-more:hover{background:#0000000a}
+.mt-card p{margin:4px 14px 0 0;font-size:14px;line-height:1.55;color:#2D3B52;white-space:pre-wrap}
+.mt-card p mark{background:#3158C91a;color:#3158C9;border-radius:4px;padding:0 3px;font-weight:650}
+.mt-card hr{border:0;border-top:1px solid #EEF1F5;margin:10px 14px 8px 0}
+.mt-card.me hr{border-top-color:#3158C926}
+.mt-card .f{display:flex;align-items:center;gap:6px;padding-right:14px;color:#8592A6;font-size:12px;font-variant-numeric:tabular-nums}
+.mt-cust-pill{margin-left:auto;display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;background:#1B9C6B1a;color:#1B9C6B;font-size:11px;font-weight:700}
+.mt-menu{position:absolute;right:8px;top:38px;z-index:5;min-width:160px;padding:6px;background:#fff;border:1px solid #E3E8F0;border-radius:12px;box-shadow:0 12px 28px #0F1F3D24}
+.mt-menu button{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border:0;background:none;border-radius:8px;font-size:13px;font-weight:600;color:#2D3B52;text-align:left}
+.mt-menu button:hover{background:#F3F5F9}.mt-menu button.red{color:#D23F4A}
+.mt-filecomment{display:inline-flex;align-items:center;gap:10px;margin:6px 14px 0 0;padding:8px 10px;border:1px solid #E3E8F0;border-radius:12px;background:#fff}
+.mt-filecomment b{font-size:13px}.mt-filecomment small{display:block;color:#8592A6;font-size:11.5px}
+.mt-ftype{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--t) 13%,#fff);color:var(--t)}
+/* Ekler (Belgeler) */
+.mt-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.mt-chips button{height:32px;padding:0 12px;border-radius:999px;border:1px solid #E3E8F0;background:#fff;color:#4A5568;font-size:12.5px;font-weight:650}
+.mt-chips button.on{background:#14243C;border-color:#14243C;color:#fff}
+.mt-chips button em{font-style:normal;opacity:.7;margin-left:4px}
+.mt-docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.mt-doc{display:grid;gap:8px;padding:12px;border:1px solid #E3E8F0;border-radius:16px;background:#fff;box-shadow:0 4px 12px #0F1F3D0a;text-decoration:none;color:inherit}
+.mt-doc:hover{border-color:#BFCDE8}
+.mt-doc .thumb{height:84px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--t) 9%,#fff);color:var(--t)}
+.mt-doc b{font-size:13px;color:#14243C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt-doc small{font-size:11.5px;color:#8592A6}
+.mt-doc.add{place-items:center;align-content:center;border-style:dashed;color:#3158C9;font-weight:700;font-size:13px;cursor:pointer;min-height:150px;background:#F8FAFF}
+/* Diğer: menü karoları ve alt ekranlar */
+.mt-menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mt-tile{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid #E3E8F0;border-radius:18px;background:#fff;box-shadow:0 6px 16px #0F1F3D0d;text-align:left;font:inherit;cursor:pointer;transition:border-color .15s,transform .15s}
+.mt-tile:hover{border-color:color-mix(in srgb,var(--t) 40%,#E3E8F0);transform:translateY(-1px)}
+.mt-tile .i{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--t) 13%,#fff);color:var(--t)}
+.mt-tile b{font-size:14.5px;color:#14243C;flex:1}
+.mt-tile .c{min-width:26px;height:24px;padding:0 8px;border-radius:999px;display:grid;place-items:center;background:color-mix(in srgb,var(--t) 13%,#fff);color:var(--t);font-size:12px;font-weight:800}
+.mt-tile>svg{color:#A0AEC0}
+.mt-back{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px 0 8px;margin-bottom:12px;border:1px solid #E3E8F0;border-radius:10px;background:#fff;color:#2D3B52;font-weight:700;font-size:13px}
+.mt-subhead{display:flex;align-items:center;gap:8px;margin:0 0 10px}
+.mt-subhead h3{margin:0;font-size:15px;color:#14243C}
+.mt-subhead em{font-style:normal;margin-left:auto;font-size:12px;color:#8592A6}
+.mt-rec{display:grid;gap:6px;padding:12px 14px;margin-bottom:10px;border:1px solid #E3E8F0;border-radius:16px;background:#fff;box-shadow:0 4px 12px #0F1F3D0a;text-align:left;font:inherit;width:100%;cursor:pointer}
+.mt-rec:hover{border-color:#BFCDE8}
+.mt-rec .o{font:700 11px/1 ui-monospace,Consolas,monospace;color:#8592A6;letter-spacing:.03em}
+.mt-rec b{font-size:14px;color:#14243C}
+.mt-rec .r{display:flex;align-items:center;gap:6px;font-size:12.5px;color:#4A5568}
+.mt-rec .r svg{color:#8592A6}
+.mt-rec .tail{display:flex;align-items:center;gap:8px;margin-top:2px}
+.mt-rec.done b{text-decoration:line-through;color:#8592A6}
+.mt-strip{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;align-items:center;padding:14px 6px;border:1px solid #E3E8F0;border-radius:16px;background:#fff;margin-bottom:12px;text-align:center}
+.mt-strip i{width:1px;height:30px;background:#E3E8F0}
+.mt-strip small{display:block;font-size:11.5px;color:#8592A6;font-weight:600}
+.mt-strip b{font-size:17px;color:#14243C}
+.mt-usage{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.mt-usage .bar{flex:1;height:8px;border-radius:9px;background:#EEF1F5;overflow:hidden}
+.mt-usage .bar i{display:block;height:100%;border-radius:9px;background:var(--t)}
+.mt-usage b{font-size:12.5px;color:var(--t)}
+.mt-status{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:750;background:color-mix(in srgb,var(--t) 12%,#fff);color:var(--t)}
+.mt-addform{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:8px;align-items:end;padding:12px;border:1px dashed #C9D3E3;border-radius:16px;background:#F8FAFF;margin-bottom:12px}
+.mt-addform label{display:grid;gap:4px;font-size:11.5px;font-weight:650;color:#4A5568}
+.mt-addform input{height:36px;border:1px solid #D9E0EA!important;border-radius:10px!important;padding:0 10px;font:inherit;font-size:13px;background:#fff!important}
+.mt-addform .chk{display:flex;align-items:center;gap:6px;height:36px}
+.mt-addform button{height:36px;padding:0 14px;border:0;border-radius:10px;background:#3158C9;color:#fff;font-weight:700}
+@media(max-width:640px){.mt-menu-grid{grid-template-columns:1fr}.mt-addform{grid-template-columns:1fr 1fr}}
+</style>
+<script>
+"use strict";
+(()=>{
+const ME=team[0];
+const MT={other:"",fileFilter:"all",menu:""};
+const tone=name=>personTone(name);
+const mAv=name=>{const t=tone(name);return '<span class="mt-av" style="background:color-mix(in srgb,'+t+' 14%,#fff);color:'+t+'">'+e(initials(name))+'</span>';};
+const fmtFull=(d,tm)=>{const x=asDate(d);return String(x.getDate()).padStart(2,"0")+"."+String(x.getMonth()+1).padStart(2,"0")+"."+x.getFullYear()+" · "+(tm||"10:00");};
+const rel=(d,tm)=>{const t=new Date(d+"T"+(tm||"10:00")+":00"),m=Math.max(1,Math.round((Date.now()-t)/6e4));return m<60?m+" dk önce":m<1440?Math.round(m/60)+" saat önce":m<43200?Math.round(m/1440)+" gün önce":Math.round(m/43200)+" ay önce";};
+const ftype=n=>{const x=String(n).split(".").pop().toLowerCase();return ["pdf"].includes(x)?["pdf","PDF","file","#D23F4A"]:["jpg","jpeg","png","webp","heic","gif"].includes(x)?["img","Görsel","image","#7C3AED"]:["doc","docx","txt","rtf"].includes(x)?["doc","Belge","note","#3158C9"]:["xls","xlsx","csv"].includes(x)?["xls","Tablo","chart","#1B9C6B"]:["other","Diğer","file","#64748B"];};
+const rerender=()=>{if(popup)renderPopup();else{const d=$("#inspector");if(d)d.innerHTML=inspectorContent();}};
+const hhmm=i=>String(9+(i*3)%8).padStart(2,"0")+":"+String((i*17)%60).padStart(2,"0");
+
+/* ─── Yorumlar ─── */
+function comments(row){
+  const list=row.comments||[];
+  const card=(c,i)=>{const me=c.author===ME,tm=c.time||hhmm(i),isFile=!!c.file;
+    const body=isFile?(()=>{const t=ftype(c.file);return '<div class="mt-filecomment"><span class="mt-ftype" style="--t:'+t[3]+'">'+svg(t[2],17)+'</span><div><b>'+e(c.file)+'</b><small>'+t[1]+(c.size?" · "+e(c.size):"")+'</small></div></div>';})():'<p>'+e(c.text).replace(/@([A-ZÇĞİÖŞÜ][a-zçğıöşü]+ [A-ZÇĞİÖŞÜ][a-zçğıöşü]+)/g,'<mark>@$1</mark>')+'</p>';
+    return '<div class="mt-row'+(me?" me":"")+'">'+mAv(c.author)+'<div class="mt-card'+(me?" me":"")+'"><div class="h"><b>'+e(c.author)+'</b>'+(me?'<span class="mt-you">Siz</span>':"")+'<small>'+rel(c.date,tm)+'</small><button class="mt-more" data-mt="cmenu" data-v="'+i+'" aria-label="İşlemler">'+svg("more",18)+'</button></div>'+body+'<hr><div class="f">'+svg("calendar",13)+fmtFull(c.date,tm)+(c.cust?'<span class="mt-cust-pill">'+svg("review",12)+'Müşteri görür</span>':"")+'</div>'+
+      (MT.menu===String(i)?'<div class="mt-menu"><button data-mt="ccopy" data-v="'+i+'">'+svg("file",15)+'Kopyala</button><button data-mt="creply" data-v="'+i+'">'+svg("chat",15)+'Yanıtla</button>'+(me?'<button class="red" data-mt="cdel" data-v="'+i+'">'+svg("close",15)+'Sil</button>':"")+'</div>':"")+'</div></div>';};
+  return '<form class="mt-compose" data-form="mt-comment" data-task="'+e(row.id)+'"><textarea name="text" maxlength="2000" placeholder="Yorum yaz… (@ ile kişi etiketle)" aria-label="Yorum"></textarea><footer><label class="mt-cust"><input type="checkbox" name="cust"> Müşteri görsün</label><label class="mt-attach">'+svg("upload",15)+'Dosya ekle<input type="file" data-mt-file="'+e(row.id)+'" hidden></label><button class="mt-send">'+svg("arrow",15)+'Gönder</button></footer></form>'+
+    '<div class="mt-feed">'+(list.length?list.map((c,i)=>[c,i]).reverse().map(([c,i])=>card(c,i)).join(""):'<p class="mempty">'+svg("chat",26)+'Henüz yorum yok.</p>')+'</div>';
+}
+
+/* ─── Ekler (Belgeler) ─── */
+function docsOf(row){
+  const real=(row.attachments||[]).map(f=>({name:f.name,size:f.size?(Math.max(1,Math.ceil(f.size/1024))+" KB"):"",who:f.who||ME,date:f.date||day(),data:f.data}));
+  return real.length?real:demoFiles(row,"tasks").map(x=>({name:x.n,size:x.size,who:x.who,date:x.date,data:""}));
+}
+function files(row){
+  const all=docsOf(row),types=[["all","Tümü"],["img","Görsel"],["pdf","PDF"],["doc","Belge"],["xls","Tablo"]];
+  const list=all.filter(f=>MT.fileFilter==="all"||ftype(f.name)[0]===MT.fileFilter);
+  return '<div class="mt-subhead"><h3>Belgeler</h3><em>'+all.length+' dosya</em></div><div class="mt-chips">'+types.map(([k,l])=>'<button data-mt="ffilter" data-v="'+k+'" class="'+(MT.fileFilter===k?"on":"")+'">'+l+'<em>'+(k==="all"?all.length:all.filter(f=>ftype(f.name)[0]===k).length)+'</em></button>').join("")+'</div>'+
+    '<div class="mt-docs"><label class="mt-doc add">'+svg("upload",24)+'Dosya ekle<small style="font-weight:500">Görsel, PDF, belge · en fazla 1 MB</small><input type="file" data-mt-file="'+e(row.id)+'" data-attach-only="1" hidden multiple></label>'+
+    list.map(f=>{const t=ftype(f.name);return '<a class="mt-doc" style="--t:'+t[3]+'" '+(f.data?'href="'+e(f.data)+'" download="'+e(f.name)+'"':'href="#" data-mt="nofile"')+'><span class="thumb">'+svg(t[2],30)+'</span><b title="'+e(f.name)+'">'+e(f.name)+'</b><small>'+t[1]+(f.size?" · "+e(f.size):"")+'</small><small>'+e(f.who)+' · '+e(dateText(f.date))+'</small></a>';}).join("")+'</div>'+(list.length?"":'<p class="mempty">Bu türde dosya yok.</p>');
+}
+
+/* ─── Diğer ─── */
+const statusTone=s=>({[stages[0]]:"#8E9AAD",[stages[1]]:"#4361EE",[stages[2]]:"#5B5BD6",[stages[3]]:"#1B9C6B"})[s]||"#64748B";
+function relatedOf(row){return db.tasks.filter(t=>t.id!==row.id&&t.project===row.project).slice(0,4);}
+function recordsOf(row){
+  if(!row.workLog){const n=(Number(String(row.id).replace(/\D/g,""))||3)%5+2;row.workLog=Array.from({length:n},(_,i)=>({date:shift(row.start||day(),i),start:hhmm(i),min:[90,120,45,180,60,150][i%6],over:i===n-1&&n>4,who:i%3===2?team[(i+2)%team.length]:row.owner||ME,note:["Analiz ve hazırlık","Geliştirme","Test","Müşteri görüşmesi","Düzeltme","Dokümantasyon"][i%6]}));}
+  return row.workLog;
+}
+function planOf(row){return row.planMin||((((Number(String(row.id).replace(/\D/g,""))||1)%4)+2)*240);}
+function other(row,events){
+  const checks=row.checklist||[],rel=relatedOf(row),recs=recordsOf(row),spent=recs.reduce((n,r)=>n+r.min,0),plan=planOf(row);
+  const hm=m=>(m>=60?Math.floor(m/60)+" sa ":"")+(m%60?m%60+" dk":m>=60?"":"0 dk");
+  const back='<button class="mt-back" data-mt="other" data-v="">'+svg("left",16)+'Diğer</button>';
+  if(MT.other==="related")return back+'<div class="mt-subhead"><h3>İlgili işler</h3><em>'+rel.length+' iş</em></div>'+(rel.map(t=>'<button class="mt-rec" data-action="open" data-value="tasks|'+e(t.id)+'"><span class="o">'+e(t.code)+'</span><b>'+e(t.name)+'</b><span class="r">'+svg("flag",14)+'Aşama: '+e(t.status)+'</span><span class="tail">'+avatar(t.owner)+'<small style="color:#8592A6">'+e(t.owner)+' · '+e(dateText(t.end))+'</small></span></button>').join("")||'<p class="mempty">İlgili iş yok.</p>');
+  if(MT.other==="sub")return back+'<div class="mt-subhead"><h3>Alt işler</h3><em>'+checks.filter(c=>c.done).length+' / '+checks.length+' tamamlandı</em></div>'+checks.map((c,i)=>'<label class="mt-rec'+(c.done?" done":"")+'" style="cursor:pointer"><span class="o">'+e(row.code)+'.'+(i+1)+'</span><b><input type="checkbox" data-check-index="'+i+'" data-task="'+e(row.id)+'" '+(c.done?"checked":"")+' style="margin-right:8px;accent-color:#1B9C6B">'+e(c.title)+'</b><span class="r">'+svg("flag",14)+'Aşama: '+(c.done?"Tamamlandı":"Açık")+'</span></label>').join("")+'<form class="mt-addform" style="grid-template-columns:1fr auto" data-form="checklist" data-task="'+e(row.id)+'"><label>Yeni alt iş<input name="title" required maxlength="140" placeholder="Alt iş başlığı"></label><button>Ekle</button></form>';
+  if(MT.other==="time"){const d=plan-spent,over=d<0,ratio=Math.min(1.5,spent/Math.max(1,plan)),t=over?"#D23F4A":ratio>.8?"#D98B21":"#1B9C6B";
+    return back+'<div class="mt-subhead"><h3>Süre</h3><span class="mt-status" style="--t:'+(over?"#D23F4A":"#1B9C6B")+'">'+(over?"Süre aşıldı":"Süre içinde")+'</span></div><div class="mt-strip"><div><small>Planlanan</small><b>'+hm(plan)+'</b></div><i></i><div><small>Harcanan</small><b>'+hm(spent)+'</b></div><i></i><div><small>'+(over?"Sapma":"Kalan")+'</small><b style="color:'+(over?"#D23F4A":"#14243C")+'">'+hm(Math.abs(d))+'</b></div></div><div class="mt-usage" style="--t:'+t+'"><div class="bar"><i style="width:'+Math.min(100,ratio*100)+'%"></i></div><b>%'+Math.round(spent/Math.max(1,plan)*100)+'</b></div>'+
+      '<div class="mt-subhead"><h3>Kişi bazında</h3></div>'+[...new Set(recs.map(r=>r.who))].map(w=>{const m=recs.filter(r=>r.who===w).reduce((n,r)=>n+r.min,0);return '<div class="mt-rec" style="cursor:default"><span class="tail">'+avatar(w)+'<b style="flex:1">'+e(w)+'</b><b>'+hm(m)+'</b></span><div class="mt-usage" style="margin:0;--t:#3158C9"><div class="bar"><i style="width:'+(m/spent*100)+'%"></i></div><b>%'+Math.round(m/spent*100)+'</b></div></div>';}).join("");}
+  if(MT.other==="activity"){const ev=events.slice().sort((a,b)=>new Date(b.time)-new Date(a.time));return back+'<div class="mt-subhead"><h3>Aktivite</h3><em>'+ev.length+' kayıt</em></div>'+ev.map(x=>'<div class="mt-rec" style="cursor:default"><span class="tail"><span class="mt-ftype" style="--t:'+timelineTone(x.verb)+'">'+svg(timelineIcon(x.verb),16)+'</span><span style="flex:1;min-width:0"><b style="display:block">'+e(x.verb)+'</b><small style="color:#8592A6">'+e(x.name||"")+'</small></span><small style="color:#8592A6;white-space:nowrap">'+e(timelineRelative(new Date(x.time).getTime(),Date.now()))+'</small></span></div>').join("");}
+  if(MT.other==="records")return back+'<div class="mt-subhead"><h3>İş kayıtları</h3><em>Toplam '+hm(spent)+'</em></div><form class="mt-addform" data-form="mt-record" data-task="'+e(row.id)+'"><label>Tarih<input type="date" name="date" value="'+day()+'" required></label><label>Başlangıç<input type="time" name="start" value="09:00" required></label><label>Süre (dk)<input type="number" name="min" min="5" step="5" value="60" required></label><label>Not<input name="note" placeholder="Yapılan iş"></label><span style="display:grid;gap:4px"><span class="chk"><input type="checkbox" name="over" id="mt-over"><label for="mt-over" style="display:inline;font-size:12.5px">Fazla mesai</label></span></span><button style="grid-column:1/-1;justify-self:end">Kayıt ekle</button></form>'+
+    recs.slice().reverse().map(r=>'<div class="mt-rec" style="cursor:default"><span class="tail"><span class="mt-ftype" style="--t:'+(r.over?"#7C3AED":"#3158C9")+'">'+svg(r.over?"pending":"clock",16)+'</span><span style="flex:1;min-width:0"><b style="display:block">'+(r.over?"Fazla mesai":"Çalışma")+' · '+e(r.note)+'</b><small style="color:#8592A6">'+e(dateText(r.date))+' · '+e(r.start)+' · '+e(r.who)+'</small></span><b>'+hm(r.min)+'</b></span></div>').join("");
+  const tiles=[["related","İlgili işler","work","#4361EE",rel.length],["sub","Alt işler","flow","#1B9C6B",checks.length],["time","Süre","clock","#3158C9",null],["activity","Aktivite","chart","#64748B",events.length],["records","İş kayıtları","settings","#D23F4A",recs.length]];
+  return '<div class="mt-menu-grid">'+tiles.map(([k,l,i,t,c])=>'<button class="mt-tile" style="--t:'+t+'" data-mt="other" data-v="'+k+'"><span class="i">'+svg(i,22)+'</span><b>'+l+'</b>'+(c!==null?'<span class="c">'+c+'</span>':"")+svg("right",16)+'</button>').join("")+'</div>';
+}
+
+/* ─── Mevcut İş Takip detayına bağlama ─── */
+const baseTaskRecord=taskRecord;
+taskRecord=function(row,events,isInline,stepAction,module="tasks"){
+  const html=baseTaskRecord(row,events,isInline,stepAction,module);
+  if(module!=="tasks"||!["comments","files","other"].includes(recordTab))return html;
+  if(!events.length)events=demoEvents(row,module);
+  const body=recordTab==="comments"?comments(row):recordTab==="files"?files(row):other(row,events);
+  const s=html.indexOf('<div class="panel-body">')+'<div class="panel-body">'.length,eIdx=html.lastIndexOf('</div><footer class="panel-actions">');
+  return s>23&&eIdx>s?html.slice(0,s)+body+html.slice(eIdx):html;
+};
+document.addEventListener("click",ev=>{
+  const el=ev.target.closest("[data-mt]");if(!el)return;
+  const a=el.dataset.mt,v=el.dataset.v||"",form=el.closest(".task-record");
+  const row=rowOf("tasks",(popup&&popup.module==="tasks"?popup.id:inspector));
+  switch(a){
+    case "other":ev.preventDefault();MT.other=v;rerender();break;
+    case "ffilter":MT.fileFilter=v;rerender();break;
+    case "cmenu":MT.menu=MT.menu===v?"":v;rerender();break;
+    case "ccopy":{const c=row?.comments?.[Number(v)];if(c)navigator.clipboard?.writeText(c.text||c.file||"");MT.menu="";rerender();showSnackbar("Yorum kopyalandı.");break;}
+    case "creply":{const c=row?.comments?.[Number(v)];MT.menu="";rerender();const ta=document.querySelector('form[data-form="mt-comment"] textarea');if(ta&&c){ta.value="@"+c.author+" ";ta.focus();}break;}
+    case "cdel":{if(row){row.comments.splice(Number(v),1);MT.menu="";persist("Yorum silindi.");rerender();}break;}
+    case "nofile":ev.preventDefault();showSnackbar("Örnek dosya; indirilecek içerik yok.");break;
+  }
+});
+document.addEventListener("submit",ev=>{
+  const f=ev.target;
+  if(f.dataset?.form==="mt-comment"){ev.preventDefault();ev.stopImmediatePropagation();const r=rowOf("tasks",f.dataset.task),v=Object.fromEntries(new FormData(f));if(!r||!String(v.text||"").trim())return;const n=new Date();(r.comments??=[]).push({author:ME,date:day(),time:String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0"),text:v.text.trim(),cust:!!v.cust});persist("Yorum eklendi.");rerender();}
+  if(f.dataset?.form==="mt-record"){ev.preventDefault();ev.stopImmediatePropagation();const r=rowOf("tasks",f.dataset.task),v=Object.fromEntries(new FormData(f));recordsOf(r).push({date:v.date,start:v.start,min:Number(v.min),over:!!v.over,who:ME,note:v.note||"Çalışma"});persist("İş kaydı eklendi.");rerender();}
+},true);
+document.addEventListener("change",async ev=>{
+  const inp=ev.target;if(!inp.dataset?.mtFile)return;
+  const r=rowOf("tasks",inp.dataset.mtFile),files=[...inp.files];if(!r||!files.length)return;
+  if(files.reduce((n,f)=>n+f.size,0)>1048576){showSnackbar("En fazla 1 MB dosya ekleyebilirsin.");return;}
+  const read=f=>new Promise((ok,no)=>{const rd=new FileReader();rd.onload=()=>ok(rd.result);rd.onerror=no;rd.readAsDataURL(f);});
+  for(const f of files){const data=await read(f);(r.attachments??=[]).push({name:f.name,size:f.size,data,who:ME,date:day()});if(!inp.dataset.attachOnly){const n=new Date();(r.comments??=[]).push({author:ME,date:day(),time:String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0"),file:f.name,size:Math.max(1,Math.ceil(f.size/1024))+" KB"});}}
+  persist(files.length+" dosya eklendi.");rerender();
+});
+/* Sekme değişince alt ekran ve menü sıfırlansın */
+document.addEventListener("click",ev=>{const t=ev.target.closest('[data-action="tab"],[data-action="inline-tab"],[data-action="open"]');if(t){MT.menu="";if(t.dataset.value!=="other")MT.other="";}},true);
+})();
+</script>
+
 </body>
 </html>
