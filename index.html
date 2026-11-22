@@ -7203,5 +7203,21 @@ badge();
 })();
 </script>
 
+<style id="form-compact">
+/* Detay pencereleri: gri gövde yok */
+.record-panel .panel-body,.desk-record .panel-body,.task-record .panel-body{background:#fff!important}
+.record-panel .tl-card,.record-panel .detail-group,.record-panel .editor-card,.record-panel .mt-rec,.record-panel .mt-card:not(.me){border:1px solid #E3E8F0!important}
+#modal .tl-day,#inspector .tl-day,#screen .tl-day,#is2-layer .tl-day,#ik2-layer .tl-day,#op2-layer .tl-day{box-shadow:none!important;background:transparent!important;border:0!important;outline:0!important}
+.tl-day>h3,.tl-day>h3 small{background:transparent!important;box-shadow:none!important}
+
+/* Formlar: mavi ön ikon, kompakt alanlar */
+.field .field-icon{background:#EEF3FF!important;color:#3158C9!important;opacity:1!important;width:30px!important;height:30px!important;min-width:30px!important;border-radius:9px!important}
+.field .field-icon svg{color:#3158C9!important;opacity:1!important;width:16px!important;height:16px!important}
+#modal .field,#inspector .field,.dialog .field,.desk-editor .field,.work-wizard .field,#inline-filter .field{min-height:0!important;padding-top:6px!important;padding-bottom:6px!important;column-gap:10px!important;row-gap:0!important}
+.field label{font-size:11px!important;line-height:1.2!important;margin:0!important}
+.field input:not([type=checkbox]):not([type=radio]):not([type=file]),.field select{height:24px!important;min-height:0!important;line-height:24px!important;padding-top:0!important;padding-bottom:0!important;font-size:13.5px!important}
+.field textarea{min-height:44px!important;padding-top:2px!important}
+.form-rows,.form-grid{gap:8px!important}
+</style>
 </body>
 </html>
