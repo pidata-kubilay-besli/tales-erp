@@ -7208,6 +7208,11 @@ badge();
 </script>
 
 <style id="form-compact">
+/* İş Takip detayı: tüm sekmelerde gri zemin, yalnız çerçeve */
+#modal .task-record .detail-group,#inspector .task-record .detail-group,#modal .task-record .mt-card:not(.me),#inspector .task-record .mt-card:not(.me),#modal .task-record .mt-doc:not(.add),#inspector .task-record .mt-doc:not(.add),#modal .task-record .mt-compose,#inspector .task-record .mt-compose,#modal .task-record .task-checks,#inspector .task-record .task-checks,#modal .task-record .editor-card,#inspector .task-record .editor-card,#modal .task-record .mfile,#inspector .task-record .mfile,#modal .task-record .mother-tile,#inspector .task-record .mother-tile{background:#F5F7FA!important;border:1px solid #E1E6EE!important;box-shadow:none!important}
+#modal .task-record .detail-group .info-row:hover,#inspector .task-record .detail-group .info-row:hover{background:#EDF1F6!important}
+#modal .task-record .mt-doc .thumb,#inspector .task-record .mt-doc .thumb{background:#fff!important}
+
 /* İş Takip Geçmiş ve Diğer: gri zemin, yalnız çerçeve, gölge yok */
 #modal .task-record .tl-card,#inspector .task-record .tl-card,#modal .task-record .mt-rec,#inspector .task-record .mt-rec,#modal .task-record .mt-tile,#inspector .task-record .mt-tile,#modal .task-record .mt-strip,#inspector .task-record .mt-strip,#modal .task-record .mt-addform,#inspector .task-record .mt-addform{background:#F5F7FA!important;border:1px solid #E1E6EE!important;box-shadow:none!important}
 #modal .task-record .tl-card:hover,#inspector .task-record .tl-card:hover,#modal .task-record .mt-rec:hover,#inspector .task-record .mt-rec:hover,#modal .task-record .mt-tile:hover,#inspector .task-record .mt-tile:hover{transform:none!important;box-shadow:none!important;border-color:#C9D2DF!important}
