@@ -7270,5 +7270,57 @@ badge();
 .field textarea{min-height:44px!important;padding-top:2px!important}
 .form-rows,.form-grid{gap:8px!important}
 </style>
+<style id="responsive">
+/* ══════════════════════════════════════════════════════════════════════
+   MOBİL VE TABLET UYUMU (en sonda; önceki kuralları dar ekranda ezer)
+   ══════════════════════════════════════════════════════════════════════ */
+@media (max-width:900px){
+  .ik2 .ik2-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .ik2 .ik2-kpis .ik2-kpi{border-right:0!important;border-bottom:1px solid #EEF0F4!important}
+  .dash-grid,.ik2-cols{grid-template-columns:minmax(0,1fr)!important}
+  .ik2-cols>*{grid-column:1/-1!important}
+  .ik2-drawer{width:100%!important}
+}
+@media (max-width:720px){
+  .page,.ik2{padding-left:12px!important;padding-right:12px!important}
+  /* Sekme çubukları: tek satır, parmakla kaydırılır */
+  .ik2 .ik2-nav,.work-tabs,.studio-tabs,.record-tabs,.ik2-tabs,.nf-toggle-in{flex-wrap:nowrap!important;overflow-x:auto!important;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .ik2 .ik2-nav::-webkit-scrollbar,.work-tabs::-webkit-scrollbar,.record-tabs::-webkit-scrollbar{display:none}
+  .ik2 .ik2-nav a{flex:none}
+  /* Formlar tek sütun */
+  .form-rows,.form-grid,.ik2-fields,.gform-grid,.gcards,.gcard dl,.ik2-facts,.desk-editor .form-rows,.grouped-form .form-rows,.dialog .form-grid,.mt-menu-grid,.ik2-preview{grid-template-columns:minmax(0,1fr)!important}
+  .form-rows>*,.form-grid>*,.ik2-fields>*{grid-column:1/-1!important}
+  .ik2-facts div:nth-child(-n+2){border-top:1px solid #F0F2F7}.ik2-facts div:first-child{border-top:0}
+  /* Pencere altı: tek satır */
+  .panel-actions,.ik2-dfoot{flex-wrap:nowrap!important;gap:8px!important;padding:10px 12px!important}
+  .panel-actions small,.ik2-dfoot small{display:none!important}
+  .panel-actions .btn,.ik2-dfoot .ik2-btn{flex:1 1 0;justify-content:center;min-width:0}
+  /* Pencereler tam ekrana yakın */
+  .dialog.desk-modal,.dialog.drawer,.ik2-dialog{width:calc(100vw - 16px)!important;max-height:calc(100dvh - 16px)!important}
+  /* Liste satırlarında butonlar alta */
+  .ik2-row{flex-wrap:wrap}
+  .ik2-row .end{width:100%;justify-content:flex-end;padding-left:42px}
+  .ik2-head{align-items:flex-start!important}
+  .ik2-head h1{font-size:1.5rem!important}
+  .dash-hello{flex-direction:column;align-items:flex-start!important}
+  /* Kanban: sütun ekran genişliğinde, kaydırınca yerine oturur */
+  .studio-board,.w2-kb,.opp-board,.w2-board{grid-template-columns:repeat(var(--cols,7),82vw)!important;scroll-snap-type:x mandatory}
+  .studio-board>*,.w2-kb>*,.opp-board>*,.w2-board>*{scroll-snap-align:start}
+  /* İş kaydı ve alt iş formları */
+  .mt-addform>label,.mt-addform>label.sm,.mt-addform>label.grow{flex:1 1 100%!important}
+  .mt-strip{grid-template-columns:1fr 1px 1fr 1px 1fr}
+  .mt-row .mt-card{margin:0!important}
+  /* Bildirim paneli ekran genişliğinde */
+  .nf-pop{left:8px!important;right:8px!important;width:auto!important;max-height:calc(100dvh - 76px)!important}
+  /* Üst çubuk */
+  .top-me,.top-actions kbd{display:none!important}
+  .top-actions .search-trigger{min-width:0!important}
+  /* Tablolar yatay kayar */
+  .ik2-tablewrap,.table-scroll{overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+}
+@media (max-width:330px){
+  .ik2 .ik2-kpis{grid-template-columns:minmax(0,1fr)!important}
+}
+</style>
 </body>
 </html>
