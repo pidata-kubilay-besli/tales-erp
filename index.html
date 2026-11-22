@@ -6854,6 +6854,10 @@ if(location.hash.startsWith("#opp2"))readRoute();else renderNav();
 .mt-subhead em+.mt-addbtn{margin-left:10px}
 .mt-rec .r svg,.mt-rec .tail small svg{width:12px!important;height:12px!important;padding:5px;box-sizing:content-box;border-radius:50%;background:#EEF3FF;color:#3158C9!important;flex:none;vertical-align:middle}
 .mt-rec .r{gap:8px!important}
+.mt-drop{display:grid;justify-items:center;gap:6px;margin-bottom:16px;padding:22px 16px;border:2px dashed #BFD0F5;border-radius:18px;background:#F5F8FF;color:#3158C9;text-align:center;cursor:pointer;transition:background .15s,border-color .15s}
+.mt-drop:hover,.mt-drop.over{background:#EAF1FF;border-color:#3158C9}
+.mt-drop b{font-size:14px;color:#14243C}.mt-drop small{font-size:12px;color:#6B7A90}
+.mt-drop-btn{margin-top:4px;display:inline-flex;align-items:center;height:34px;padding:0 16px;border-radius:10px;background:#3158C9;color:#fff;font-size:13px;font-weight:700}
 .mt-compose .mt-attach{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border-radius:10px;background:#F3F5F9;color:#4A5568;font-size:12.5px;font-weight:650;cursor:pointer}
 .mt-compose .mt-send{margin-left:auto;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border:0;border-radius:10px;background:#3158C9;color:#fff;font-weight:700;font-size:13px}
 .mt-feed{display:grid;gap:12px}
@@ -6956,13 +6960,13 @@ function comments(row){
 /* ─── Ekler (Belgeler) ─── */
 function docsOf(row){
   const real=(row.attachments||[]).map(f=>({name:f.name,size:f.size?(Math.max(1,Math.ceil(f.size/1024))+" KB"):"",who:f.who||ME,date:f.date||day(),data:f.data}));
-  return real.length?real:demoFiles(row,"tasks").map(x=>({name:x.n,size:x.size,who:x.who,date:x.date,data:""}));
+  return real.reverse().concat(demoFiles(row,"tasks").map(x=>({name:x.n,size:x.size,who:x.who,date:x.date,data:""})));
 }
 function files(row){
   const all=docsOf(row),types=[["all","Tümü"],["img","Görsel"],["pdf","PDF"],["doc","Belge"],["xls","Tablo"]];
   const list=all.filter(f=>MT.fileFilter==="all"||ftype(f.name)[0]===MT.fileFilter);
-  return '<div class="mt-subhead"><h3>Belgeler</h3><em>'+all.length+' dosya</em></div><div class="mt-chips">'+types.map(([k,l])=>'<button data-mt="ffilter" data-v="'+k+'" class="'+(MT.fileFilter===k?"on":"")+'">'+l+'<em>'+(k==="all"?all.length:all.filter(f=>ftype(f.name)[0]===k).length)+'</em></button>').join("")+'</div>'+
-    '<div class="mt-docs"><label class="mt-doc add">'+svg("upload",24)+'Dosya ekle<small style="font-weight:500">Görsel, PDF, belge · en fazla 1 MB</small><input type="file" data-mt-file="'+e(row.id)+'" data-attach-only="1" hidden multiple></label>'+
+  return '<label class="mt-drop" data-mt-drop>'+svg("upload",26)+'<b>Dosyaları buraya sürükleyip bırak</b><small>veya bilgisayarından seç · Görsel, PDF, belge, tablo · en fazla 1 MB</small><span class="mt-drop-btn">Dosya seç</span><input type="file" data-mt-file="'+e(row.id)+'" data-attach-only="1" hidden multiple></label>'+'<div class="mt-subhead"><h3>Belgeler</h3><em>'+all.length+' dosya</em></div><div class="mt-chips">'+types.map(([k,l])=>'<button data-mt="ffilter" data-v="'+k+'" class="'+(MT.fileFilter===k?"on":"")+'">'+l+'<em>'+(k==="all"?all.length:all.filter(f=>ftype(f.name)[0]===k).length)+'</em></button>').join("")+'</div>'+
+    '<div class="mt-docs">'+
     list.map(f=>{const t=ftype(f.name);return '<a class="mt-doc" style="--t:'+t[3]+'" '+(f.data?'href="'+e(f.data)+'" download="'+e(f.name)+'"':'href="#" data-mt="nofile"')+'><span class="thumb">'+svg(t[2],30)+'</span><b title="'+e(f.name)+'">'+e(f.name)+'</b><small>'+t[1]+(f.size?" · "+e(f.size):"")+'</small><small>'+e(f.who)+' · '+e(dateText(f.date))+'</small></a>';}).join("")+'</div>'+(list.length?"":'<p class="mempty">Bu türde dosya yok.</p>');
 }
 
@@ -7038,6 +7042,9 @@ document.addEventListener("change",async ev=>{
   for(const f of files){const data=await read(f);(r.attachments??=[]).push({name:f.name,size:f.size,data,who:ME,date:day()});if(!inp.dataset.attachOnly){const n=new Date();(r.comments??=[]).push({author:ME,date:day(),time:String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0"),file:f.name,size:Math.max(1,Math.ceil(f.size/1024))+" KB"});}}
   persist(files.length+" dosya eklendi.");rerender();
 });
+document.addEventListener("dragover",ev=>{const z=ev.target.closest?.("[data-mt-drop]");document.querySelectorAll(".mt-drop.over").forEach(x=>x!==z&&x.classList.remove("over"));if(z){ev.preventDefault();z.classList.add("over");}});
+document.addEventListener("dragleave",ev=>{const z=ev.target.closest?.("[data-mt-drop]");if(z&&!z.contains(ev.relatedTarget))z.classList.remove("over");});
+document.addEventListener("drop",ev=>{const z=ev.target.closest?.("[data-mt-drop]");if(!z)return;ev.preventDefault();z.classList.remove("over");const inp=z.querySelector("input[type=file]");if(!inp||!ev.dataTransfer.files.length)return;inp.files=ev.dataTransfer.files;inp.dispatchEvent(new Event("change",{bubbles:true}));});
 /* Sekme değişince alt ekran ve menü sıfırlansın */
 document.addEventListener("click",ev=>{const t=ev.target.closest('[data-action="tab"],[data-action="inline-tab"],[data-action="open"]');if(t){MT.menu="";if(t.dataset.value!=="other")MT.other="";}},true);
 })();
@@ -7088,150 +7095,125 @@ select:has(option[value=""]:checked){color:#B3BCC9!important}
 
 <style id="notif-style">
 /* ══════════════════════════════════════════════════════════════════════
-   BİLDİRİM PANELİ — üst çubuktaki zile basınca açılan açılır pencere
-   (mobil notifications_list: zaman çizelgesi, okunmamış mavimsi kart)
+   BİLDİRİMLER — mobil notifications_list düzeni, web'de ikonsuz
+   (sekmeler · gün başlığı · saat / düğüm / çizgi · 20px kart · alt çubuk)
    ══════════════════════════════════════════════════════════════════════ */
-.nf-pop{position:fixed;z-index:90;width:min(440px,calc(100vw - 20px));max-height:min(640px,calc(100vh - 90px));display:flex;flex-direction:column;background:#fff;border:1px solid #E3E8F0;border-radius:18px;box-shadow:0 24px 60px #0F1F3D33,0 2px 6px #0F1F3D14;overflow:hidden;animation:nfIn .16s cubic-bezier(.22,1,.36,1)}
+.nf-pop{position:fixed;z-index:90;width:min(440px,calc(100vw - 20px));height:min(660px,calc(100vh - 90px));display:flex;flex-direction:column;background:#F3F5F9;border:1px solid #DDE3EC;border-radius:22px;box-shadow:0 24px 60px #0F1F3D33,0 2px 6px #0F1F3D14;overflow:hidden;animation:nfIn .16s cubic-bezier(.22,1,.36,1)}
 @keyframes nfIn{from{opacity:0;transform:translateY(-6px) scale(.985)}}
-.nf-pop::before{content:"";position:absolute;top:-7px;right:var(--arrow,24px);width:12px;height:12px;background:#fff;border-left:1px solid #E3E8F0;border-top:1px solid #E3E8F0;transform:rotate(45deg)}
-.nf-head{display:flex;align-items:center;gap:8px;padding:14px 16px 10px}
-.nf-head h2{margin:0;font-size:16px;font-weight:780;color:#14243C}
-.nf-head .cnt{min-width:22px;height:20px;padding:0 7px;border-radius:999px;background:#D23F4A;color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center}
-.nf-head button{margin-left:auto;border:0;background:none;color:#3158C9;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:5px;padding:6px 8px;border-radius:8px;cursor:pointer}
-.nf-head button:hover{background:#EEF3FF}
-.nf-head button:disabled{color:#A0AEC0;cursor:default;background:none}
-.nf-tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin:0 16px 10px;padding:4px;background:#F1F4F8;border-radius:12px}
-.nf-tabs button{height:32px;border:0;border-radius:9px;background:none;color:#5B6475;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
-.nf-tabs button.on{background:#fff;color:#14243C;box-shadow:0 1px 3px #0F1F3D1f}
-.nf-tabs button em{font-style:normal;font-size:11px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#E3E8F0;color:#4A5568;display:grid;place-items:center}
-.nf-tabs button.on em{background:#3158C9;color:#fff}
-.nf-list{flex:1;overflow-y:auto;padding:0 12px 10px;overscroll-behavior:contain}
-.nf-day{margin:6px 4px 8px;font-size:11px;font-weight:800;letter-spacing:.06em;color:#8592A6;text-transform:uppercase}
-.nf-row{display:grid;grid-template-columns:42px 18px 1fr;align-items:start;position:relative;padding-bottom:10px}
-.nf-row::before{content:"";position:absolute;left:50px;top:20px;bottom:-2px;width:2px;background:#E9EDF3}
-.nf-row.last::before{display:none}
-.nf-row time{font-size:11.5px;font-weight:700;color:#8592A6;padding-top:12px;font-variant-numeric:tabular-nums}
-.nf-node{width:12px;height:12px;border-radius:50%;margin:13px 0 0 3px;background:#fff;border:2px solid #CBD5E1;position:relative;z-index:1}
-.nf-row.unread .nf-node{border-color:#3158C9;background:#3158C9;box-shadow:0 0 0 4px #3158C926}
-.nf-card{display:grid;grid-template-columns:36px 1fr;gap:10px;padding:10px 10px 10px 10px;border:1px solid #E3E8F0;border-radius:14px;background:#fff;cursor:pointer;position:relative;transition:border-color .15s,box-shadow .15s}
-.nf-card:hover{border-color:#BFCDE8;box-shadow:0 4px 12px #0F1F3D12}
-.nf-row.unread .nf-card{background:#F2F6FF;border-color:#BFD0F5}
-.nf-ico{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:color-mix(in srgb,var(--t) 13%,#fff);color:var(--t)}
-.nf-card b{display:block;font-size:13.5px;line-height:1.35;color:#14243C;font-weight:650;padding-right:52px}
-.nf-row.unread .nf-card b{font-weight:780}
-.nf-card p{margin:3px 0 0;font-size:12.5px;line-height:1.45;color:#4A5568}
-.nf-meta{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11.5px;color:#8592A6}
-.nf-meta .mod{padding:1px 7px;border-radius:6px;background:#F1F4F8;color:#4A5568;font-weight:650}
-.nf-acts{position:absolute;top:6px;right:6px;display:flex;gap:2px;opacity:0;transition:opacity .15s}
-.nf-card:hover .nf-acts,.nf-card:focus-within .nf-acts{opacity:1}
-.nf-acts button{width:28px;height:28px;border:0;border-radius:8px;background:#fff;color:#64748B;display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 2px #0F1F3D14}
-.nf-acts button:hover{color:#3158C9;background:#EEF3FF}
-.nf-acts button.del:hover{color:#D23F4A;background:#FDEDEE}
-.nf-empty{display:grid;justify-items:center;gap:8px;padding:38px 16px;color:#8592A6;font-size:13px;text-align:center}
-.nf-empty span{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:#F1F4F8;color:#94A3B8}
-.nf-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 16px;border-top:1px solid #EEF1F5;background:#FAFBFD}
-.nf-foot a,.nf-foot button{border:0;background:none;color:#3158C9;font-size:12.5px;font-weight:700;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
-/* Zaman çizelgesi ve ikon yok: onay kutulu sade liste */
-.nf-row{grid-template-columns:30px 1fr!important;align-items:center!important;padding-bottom:8px!important}
-.nf-row::before,.nf-row time,.nf-node,.nf-ico{display:none!important}
-.nf-card{grid-template-columns:1fr!important}
-.nf-check{display:grid;place-items:center;width:30px;height:30px;cursor:pointer;flex:none}
-.nf-check input{width:17px!important;height:17px!important;margin:0;accent-color:#3158C9;cursor:pointer}
-.nf-row.sel .nf-card{border-color:#3158C9!important;box-shadow:0 0 0 2px #3158C922}
-.nf-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#3158C9;margin-right:7px;vertical-align:1px}
-.nf-head .nf-check{margin-left:-6px}
-.nf-bulk{background:#EEF3FF;border-bottom:1px solid #D8E2F7}
-.nf-bulk h2{font-size:14.5px!important;color:#3158C9!important}
-.nf-bulk button{margin-left:0!important}.nf-bulk button:first-of-type{margin-left:auto!important}
-.nf-bulk button.red{color:#D23F4A}.nf-bulk button.red:hover{background:#FDEDEE}
-.nf-day{margin-left:34px!important}
-.nf-pop{background:#E9EDF3!important}
-.nf-pop::before{background:#E9EDF3!important}
-.nf-pop .nf-tabs{background:#DDE3EC!important}
-.nf-pop .nf-foot{background:#E9EDF3!important;border-top-color:#E3E8F0!important}
-.nf-pop .nf-card{background:#fff;border-color:#E3E8F0}
-.nf-pop .nf-row.unread .nf-card{background:#fff!important;border-color:#C9D7F2!important}
-.nf-pop .nf-row .nf-card{background:#fff!important}
+.nf-top{display:flex;align-items:center;gap:8px;padding:14px 16px 6px}
+.nf-top h2{margin:0;font-size:17px;font-weight:800;color:#14243C}
+.nf-top .nf-x{margin-left:auto;height:30px;padding:0 12px;border:0;border-radius:10px;background:#fff;color:#4A5568;font-size:12.5px;font-weight:700;cursor:pointer;box-shadow:0 1px 2px #0F1F3D14}
+.nf-toggle{display:flex;margin:6px 14px 4px;padding:4px;background:#fff;border:1px solid #E3E8F0;border-radius:14px}
+.nf-toggle button{flex:1;height:36px;border:0;border-radius:10px;background:none;color:#8592A6;font-size:13px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.nf-toggle button.on{color:#3158C9;font-weight:700;background:#EEF3FF}
+.nf-toggle button em{font-style:normal;min-width:20px;height:18px;padding:0 6px;border-radius:999px;background:#E3E8F0;color:#4A5568;font-size:11px;font-weight:800;display:grid;place-items:center}
+.nf-toggle button.on em{background:#3158C9;color:#fff}
+.nf-list{flex:1;overflow-y:auto;padding:6px 12px 86px 10px;overscroll-behavior:contain}
+.nf-day{display:flex;align-items:center;gap:8px;margin:12px 0 10px 4px;font-size:12px;font-weight:800;color:#14243C}
+.nf-day::after{content:"";flex:1;height:1px;background:#DDE3EC}
+.nf-row{position:relative;display:grid;grid-template-columns:36px 22px 1fr;align-items:start;padding-bottom:12px}
+.nf-row::before{content:"";position:absolute;left:46px;top:0;bottom:0;width:2px;background:#DCE3EC}
+.nf-row.first::before{top:20px}.nf-row.last::before{bottom:auto;height:20px}.nf-row.first.last::before{display:none}
+.nf-row time{padding-top:11px;text-align:right;font-size:12.5px;font-weight:800;color:#14243C;font-variant-numeric:tabular-nums}
+.nf-node{position:relative;z-index:1;justify-self:center;margin-top:13px;width:14px;height:14px;box-sizing:border-box;border-radius:50%;background:#fff;border:3px solid #22A06B;cursor:pointer;padding:0;transition:background .16s,border-color .16s}
+.nf-row.unread .nf-node{border-color:#3158C9}
+.nf-row.sel .nf-node{background:#3158C9;border-color:#3158C9;box-shadow:0 0 0 3px #3158C933}
+.nf-card{position:relative;padding:12px 14px;border-radius:20px;border:1px solid #D5DCE6;background:#fff;box-shadow:0 4px 12px #0F1F3D0a;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.nf-row.unread .nf-card{background:#EAF1FF;border-color:#B9CEF7;box-shadow:0 4px 12px #3158C914}
+.nf-row.sel .nf-card{border:1.4px solid #3158C9}
+.nf-card:hover{box-shadow:0 6px 16px #0F1F3D14}
+.nf-card b{display:block;font-size:14px;line-height:1.35;letter-spacing:-.1px;color:#14243C;font-weight:500;padding-right:4px}
+.nf-row.unread .nf-card b{font-weight:700}
+.nf-card p{margin:3px 0 0;font-size:12.5px;line-height:1.4;color:#5B6475}
+.nf-meta{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11.5px;font-weight:500;color:#8592A6}
+.nf-row.unread .nf-meta{color:#3158C9;font-weight:700}
+.nf-meta .mod{margin-left:auto;padding:1px 8px;border-radius:999px;background:#ffffffb3;border:1px solid #E3E8F0;color:#5B6475;font-weight:600}
+.nf-acts{display:flex;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed #D5DCE6;opacity:0;max-height:0;overflow:hidden;transition:opacity .15s}
+.nf-card:hover .nf-acts{opacity:1;max-height:40px}
+.nf-acts button{height:26px;padding:0 10px;border:0;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;color:#fff}
+.nf-acts .rd{background:#3158C9}.nf-acts .del{background:#D23F4A}
+.nf-empty{display:grid;justify-items:center;gap:6px;padding:52px 16px;color:#8592A6;font-size:13px;text-align:center}
+.nf-bar{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;padding:4px 6px;background:#fff;border:1px solid #E3E8F0;border-radius:40px;box-shadow:0 10px 28px #0F1F3D24}
+.nf-bar button{min-width:96px;height:36px;padding:0 12px;border:0;border-radius:24px;background:none;color:#2D3B52;font-size:12.5px;font-weight:700;cursor:pointer}
+.nf-bar button:hover{background:#F3F5F9}
+.nf-bar button.on{color:#3158C9}.nf-bar button.red{color:#D23F4A}
+.nf-bar button:disabled{opacity:.4;cursor:default;background:none}
+.nf-bar i{width:1px;height:22px;background:#E3E8F0}
 .top-bell.nf-open{background:#EEF2FE!important;color:#3158C9!important}
 </style>
 <script>
 "use strict";
 (()=>{
 const KEY="tales-notif-v1";
-const TYPES={approval:["Onay bekliyor","check","#D98B21"],comment:["Yorum","chat","#3158C9"],mention:["Bahsedildin","user","#7C3AED"],assign:["Atama","work","#0EA5E9"],deadline:["Teslim tarihi","clock","#D23F4A"],leave:["İzin","calendar","#1B9C6B"],system:["Sistem","settings","#64748B"],sales:["Satış","target","#DB2777"]};
 const now=Date.now(),H=36e5;
 function seed(){
   const items=[
-    ["approval","Satın alma onay süreci onayınızı bekliyor","Süreç: Satın alma onay süreci · Talep eden Elif Arslan","Süreçler","#workflows?view=inbox",.4],
-    ["mention","Mert Yıldız sizi bir yorumda andı","“@Deniz Kaya test ortamında kontrol edebilir misin?” · İŞ-003","İş Takip","#tasks",1.2],
-    ["deadline","2 işin teslim tarihi geçti","Kasım kapanış kontrolü ve Rapor şablonları gecikmede","İş Takip","#tasks?view=list&late=1",2.5],
-    ["leave","Burak Demir yıllık izin talebi oluşturdu","25–29 Kas · 5 iş günü · yerine bakacak Selin Aydın","İzin Talepleri","#leave",3.4],
-    ["comment","Ece Şahin İŞ-012'ye yorum yazdı","“Parça değişimi tamamlandı, test aşamasında.”","İş Takip","#tasks",5],
-    ["assign","Size yeni bir iş atandı","İŞ-018 · Test ortamı sürüm notlarını yaz · Teslim 27 Kas","İş Takip","#tasks",7],
-    ["sales","Teklif TKF-26-214 müşteri tarafından kabul edildi","Kuzey Teknoloji · ERP lisans genişletme · ₺184.200","Fırsatlarım","#opp2?s=quotes",20],
-    ["approval","%18 indirimli teklif onay bekliyor","TKF-26-226 · Orion Sağlık · Hasta randevu entegrasyonu","Fırsatlarım","#opp2?s=quotes",26],
-    ["comment","Selin Aydın İŞ-004'e dosya ekledi","Ekran_tasarimi.png · 880 KB","İş Takip","#tasks",30],
-    ["leave","Mazeret izniniz onaylandı","19 Kas · 1 gün · Elif Arslan onayladı","İzin Talepleri","#leave",50],
-    ["system","Haftalık bakım işi oluşturuldu","Her pazartesi 09:00 tekrarlanan iş otomatik açıldı","İş Takibi 2.0","#is2?s=list",56],
-    ["assign","Burak Demir sizi İŞ-007'nin takipçisi yaptı","PDKS alan değişikliği formu","İş Takip","#tasks",76],
-    ["system","Sistem bakımı tamamlandı","Pazar 02:00–03:00 arası planlı bakım sona erdi","Sistem","#home",98]
+    ["Satın alma onay süreci onayınızı bekliyor","Talep eden Elif Arslan","Süreçler","#workflows?view=inbox",.4],
+    ["Mert Yıldız sizi bir yorumda andı","“@Deniz Kaya test ortamında kontrol edebilir misin?” · İŞ-003","İş Takip","#tasks",1.2],
+    ["2 işin teslim tarihi geçti","Kasım kapanış kontrolü ve Rapor şablonları gecikmede","İş Takip","#tasks?view=list&late=1",2.5],
+    ["Burak Demir yıllık izin talebi oluşturdu","25–29 Kas · 5 iş günü","İzin","#leave",3.4],
+    ["Ece Şahin İŞ-012'ye yorum yazdı","“Parça değişimi tamamlandı, test aşamasında.”","İş Takip","#tasks",5],
+    ["Size yeni bir iş atandı","İŞ-018 · Test ortamı sürüm notlarını yaz","İş Takip","#tasks",7],
+    ["Teklif TKF-26-214 kabul edildi","Kuzey Teknoloji · ₺184.200","Fırsatlar","#opp2?s=quotes",20],
+    ["%18 indirimli teklif onay bekliyor","TKF-26-226 · Orion Sağlık","Fırsatlar","#opp2?s=quotes",26],
+    ["Selin Aydın İŞ-004'e dosya ekledi","Ekran_tasarimi.png","İş Takip","#tasks",30],
+    ["Mazeret izniniz onaylandı","19 Kas · 1 gün","İzin","#leave",50],
+    ["Haftalık bakım işi oluşturuldu","Tekrarlanan iş otomatik açıldı","İş Takibi 2.0","#is2?s=list",56],
+    ["Burak Demir sizi İŞ-007'nin takipçisi yaptı","PDKS alan değişikliği formu","İş Takip","#tasks",76],
+    ["Sistem bakımı tamamlandı","Planlı bakım sona erdi","Sistem","#home",98]
   ];
-  return {v:1,items:items.map(([type,title,body,mod,href,hAgo],i)=>({id:"N"+(i+1),type,title,body,mod,href,at:new Date(now-hAgo*H).toISOString(),read:i>=6&&i!==7}))};
+  return {v:2,items:items.map(([title,body,mod,href,hAgo],i)=>({id:"N"+(i+1),title,body,mod,href,at:new Date(now-hAgo*H).toISOString(),read:i>=6&&i!==7}))};
 }
 let S;try{S=JSON.parse(localStorage.getItem(KEY)||"null");}catch{S=null;}
-if(!S||S.v!==1)S=seed();
+if(!S||S.v!==2)S=seed();
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch{}};
 const unread=()=>S.items.filter(n=>!n.read).length;
 const N={open:false,tab:"unread",sel:new Set()};
 const rel=iso=>{const m=Math.max(1,Math.round((Date.now()-new Date(iso))/6e4));return m<60?m+" dk önce":m<1440?Math.round(m/60)+" saat önce":Math.round(m/1440)+" gün önce";};
 const hm=iso=>{const d=new Date(iso);return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");};
-const dayLabel=iso=>{const d=new Date(iso),t=new Date();const k=x=>x.toDateString();if(k(d)===k(t))return "Bugün";const y=new Date(t);y.setDate(t.getDate()-1);if(k(d)===k(y))return "Dün";return new Intl.DateTimeFormat("tr-TR",{day:"numeric",month:"long",weekday:"long"}).format(d);};
+const dayLabel=iso=>{const d=new Date(iso),t=new Date(),k=x=>x.toDateString();if(k(d)===k(t))return "Bugün";const y=new Date(t);y.setDate(t.getDate()-1);if(k(d)===k(y))return "Dün";return new Intl.DateTimeFormat("tr-TR",{day:"numeric",month:"long",weekday:"long"}).format(d);};
+const visible=()=>S.items.filter(n=>N.tab==="unread"?!n.read:n.read).sort((a,b)=>b.at.localeCompare(a.at));
 
 function panel(){
-  const list=S.items.filter(n=>N.tab==="all"||(N.tab==="unread"?!n.read:n.read)).sort((a,b)=>b.at.localeCompare(a.at));
-  const groups=[];for(const n of list){const g=dayLabel(n.at);let x=groups.find(y=>y[0]===g);if(!x){x=[g,[]];groups.push(x);}x[1].push(n);}
-  const u=unread(),r=S.items.length-u;
-  const row=(n,last)=>{const t=TYPES[n.type]||TYPES.system,sel=N.sel.has(n.id);return '<div class="nf-row'+(n.read?"":" unread")+(sel?" sel":"")+'"><label class="nf-check" title="Seç"><input type="checkbox" data-nf-sel="'+e(n.id)+'" '+(sel?"checked":"")+' aria-label="Bildirimi seç"></label><div class="nf-card" data-nf="go" data-v="'+e(n.id)+'" tabindex="0"><div><b>'+(n.read?"":'<i class="nf-dot"></i>')+e(n.title)+'</b><p>'+e(n.body)+'</p><div class="nf-meta"><span class="mod">'+e(n.mod)+'</span>'+e(t[0])+' · '+hm(n.at)+' · '+rel(n.at)+'</div></div>'+
-    '<span class="nf-acts"><button data-nf="toggle" data-v="'+e(n.id)+'" title="'+(n.read?"Okunmadı olarak işaretle":"Okundu olarak işaretle")+'" aria-label="'+(n.read?"Okunmadı yap":"Okundu yap")+'">'+svg(n.read?"mail":"check",15)+'</button><button class="del" data-nf="del" data-v="'+e(n.id)+'" title="Sil" aria-label="Sil">'+svg("close",15)+'</button></span></div></div>';};
-  const vis=list.map(n=>n.id),allSel=vis.length&&vis.every(id=>N.sel.has(id));
-  return (N.sel.size?'<div class="nf-head nf-bulk"><label class="nf-check" title="Tümünü seç"><input type="checkbox" data-nf-all '+(allSel?"checked":"")+' aria-label="Görünenlerin tümünü seç"></label><h2>'+N.sel.size+' seçildi</h2><button data-nf="bread">'+svg("check",14)+'Okundu yap</button><button data-nf="bunread">'+svg("mail",14)+'Okunmadı yap</button><button data-nf="bdel" class="red">'+svg("close",14)+'Sil</button></div>':'<div class="nf-head"><label class="nf-check" title="Tümünü seç"><input type="checkbox" data-nf-all aria-label="Görünenlerin tümünü seç" '+(vis.length?"":"disabled")+'></label><h2>Bildirimler</h2>'+(u?'<span class="cnt">'+u+'</span>':"")+'<button data-nf="allread" '+(u?"":"disabled")+'>'+svg("check",14)+'Tümünü okundu say</button></div>')+
-    '<div class="nf-tabs" role="tablist">'+[["unread","Okunmamış",u],["read","Okunmuş",r],["all","Tümü",S.items.length]].map(([k,l,c])=>'<button role="tab" aria-selected="'+(N.tab===k)+'" class="'+(N.tab===k?"on":"")+'" data-nf="tab" data-v="'+k+'">'+l+'<em>'+c+'</em></button>').join("")+'</div>'+
-    '<div class="nf-list">'+(groups.length?groups.map(([g,items])=>'<div class="nf-day">'+e(g)+'</div>'+items.map((n,i)=>row(n,i===items.length-1)).join("")).join(""):'<div class="nf-empty"><span>'+svg(N.tab==="unread"?"check":"bell",24)+'</span><b style="color:#14243C">'+(N.tab==="unread"?"Okunmamış bildirim yok":"Bildirim yok")+'</b>'+(N.tab==="unread"?"Hepsini okudun. Eski bildirimler “Okunmuş” sekmesinde.":"")+'</div>')+'</div>'+
-    '<div class="nf-foot"><button data-nf="clearread">'+svg("close",13)+'Okunmuşları temizle</button><a href="#workflows?view=inbox" data-nf="close">Onay kutusuna git '+svg("right",13)+'</a></div>';
+  const list=visible(),u=unread(),r=S.items.length-u,allSel=list.length&&list.every(n=>N.sel.has(n.id));
+  let html="",prev="";
+  list.forEach((n,i)=>{const d=dayLabel(n.at),first=d!==prev,last=i===list.length-1||dayLabel(list[i+1].at)!==d;if(first)html+='<div class="nf-day">'+e(d)+'</div>';prev=d;const sel=N.sel.has(n.id);
+    html+='<div class="nf-row'+(n.read?"":" unread")+(sel?" sel":"")+(first?" first":"")+(last?" last":"")+'"><time>'+hm(n.at)+'</time><button class="nf-node" data-nf="sel" data-v="'+e(n.id)+'" aria-label="Seç"></button>'+
+      '<div class="nf-card" data-nf="go" data-v="'+e(n.id)+'" tabindex="0"><b>'+e(n.title)+'</b>'+(n.body?'<p>'+e(n.body)+'</p>':"")+'<div class="nf-meta"><span>'+(n.read?"Okundu":"Okunmadı")+' · '+rel(n.at)+'</span><span class="mod">'+e(n.mod)+'</span></div>'+
+      '<div class="nf-acts">'+(n.read?"":'<button class="rd" data-nf="read" data-v="'+e(n.id)+'">Okundu</button>')+'<button class="del" data-nf="del" data-v="'+e(n.id)+'">Sil</button></div></div></div>';});
+  return '<div class="nf-top"><h2>Bildirimler</h2><button class="nf-x" data-nf="close">Kapat</button></div>'+
+    '<div class="nf-toggle"><button class="'+(N.tab==="unread"?"on":"")+'" data-nf="tab" data-v="unread">Okunmamış<em>'+u+'</em></button><button class="'+(N.tab==="read"?"on":"")+'" data-nf="tab" data-v="read">Okunmuş<em>'+r+'</em></button></div>'+
+    '<div class="nf-list">'+(html||'<div class="nf-empty"><b style="color:#14243C">'+(N.tab==="unread"?"Okunmamış bildirim yok":"Okunmuş bildirim yok")+'</b>'+(N.tab==="unread"?"Tüm bildirimleri okudun.":"")+'</div>')+'</div>'+
+    (list.length?'<div class="nf-bar"><button class="'+(allSel?"on":"")+'" data-nf="all">'+(allSel?"Seçimi kaldır":"Tümünü seç")+'</button><i></i><button data-nf="bread" '+(N.sel.size&&N.tab==="unread"?"":"disabled")+'>Okundu yap</button><i></i><button class="red" data-nf="bdel" '+(N.sel.size?"":"disabled")+'>Sil'+(N.sel.size?" ("+N.sel.size+")":"")+'</button></div>':"");
 }
 function el(){let p=document.getElementById("nf-pop");if(!p){p=document.createElement("div");p.id="nf-pop";p.className="nf-pop";p.setAttribute("role","dialog");p.setAttribute("aria-label","Bildirimler");document.body.appendChild(p);}return p;}
 function bell(){return [...document.querySelectorAll(".top-bell")].find(a=>/Bildirim/.test(a.getAttribute("title")||""));}
-function place(){const p=document.getElementById("nf-pop"),b=bell();if(!p||!b)return;const r=b.getBoundingClientRect(),w=p.offsetWidth;let left=Math.min(window.innerWidth-w-10,r.right-w+18);left=Math.max(10,left);p.style.left=left+"px";p.style.top=(r.bottom+12)+"px";p.style.setProperty("--arrow",Math.max(16,Math.min(w-28,(r.left+r.width/2)-left-6))+"px");}
-function draw(){if(!N.open)return;const p=el();p.innerHTML=panel();place();}
-function open(){N.open=true;N.tab=unread()?"unread":"all";draw();bell()?.classList.add("nf-open");}
+function place(){const p=document.getElementById("nf-pop"),b=bell();if(!p||!b)return;const r=b.getBoundingClientRect(),w=p.offsetWidth;let left=Math.min(window.innerWidth-w-10,r.right-w+18);left=Math.max(10,left);p.style.left=left+"px";p.style.top=(r.bottom+12)+"px";}
+function draw(){if(!N.open)return;const p=el(),st=p.querySelector(".nf-list")?.scrollTop||0;p.innerHTML=panel();const l=p.querySelector(".nf-list");if(l)l.scrollTop=st;place();}
+function open(){N.open=true;N.sel.clear();N.tab=unread()?"unread":"read";draw();bell()?.classList.add("nf-open");}
 function close(){N.open=false;N.sel.clear();document.getElementById("nf-pop")?.remove();bell()?.classList.remove("nf-open");}
 function badge(){const b=bell();if(!b)return;const u=unread();let dot=b.querySelector(".bell-dot");if(!u){dot?.remove();}else{if(!dot){dot=document.createElement("span");dot.className="bell-dot";b.appendChild(dot);}dot.textContent=u>99?"99+":u;}b.setAttribute("aria-label","Bildirimler"+(u?" ("+u+" okunmamış)":""));if(N.open)b.classList.add("nf-open");}
 
 document.addEventListener("click",ev=>{
   const b=ev.target.closest(".top-bell");
   if(b&&/Bildirim/.test(b.getAttribute("title")||"")){ev.preventDefault();ev.stopPropagation();N.open?close():open();return;}
-  const sb=ev.target.closest("[data-nf-sel],[data-nf-all],.nf-check");
-  if(sb&&ev.target.closest("#nf-pop")){ev.stopPropagation();const inp=sb.matches("input")?sb:sb.querySelector("input");if(!inp||ev.target!==inp)return;
-    if(inp.dataset.nfSel!==undefined){inp.checked?N.sel.add(inp.dataset.nfSel):N.sel.delete(inp.dataset.nfSel);}
-    else{const ids=S.items.filter(n=>N.tab==="all"||(N.tab==="unread"?!n.read:n.read)).map(n=>n.id);if(inp.checked)ids.forEach(i=>N.sel.add(i));else N.sel.clear();}
-    draw();return;}
   const t=ev.target.closest("[data-nf]");
   if(!t){if(N.open&&!ev.target.closest("#nf-pop"))close();return;}
+  ev.preventDefault();ev.stopPropagation();
   const a=t.dataset.nf,v=t.dataset.v,n=S.items.find(x=>x.id===v);
-  if(a!=="close")ev.preventDefault();ev.stopPropagation();
   switch(a){
     case "tab":N.tab=v;N.sel.clear();draw();break;
-    case "bread":S.items.forEach(x=>{if(N.sel.has(x.id))x.read=true;});N.sel.clear();save();draw();badge();break;
-    case "bunread":S.items.forEach(x=>{if(N.sel.has(x.id))x.read=false;});N.sel.clear();save();draw();badge();break;
+    case "sel":N.sel.has(v)?N.sel.delete(v):N.sel.add(v);draw();break;
+    case "all":{const ids=visible().map(x=>x.id),all=ids.every(i=>N.sel.has(i));N.sel.clear();if(!all)ids.forEach(i=>N.sel.add(i));draw();break;}
+    case "read":if(n){n.read=true;save();draw();badge();}break;
+    case "del":S.items=S.items.filter(x=>x.id!==v);N.sel.delete(v);save();draw();badge();break;
+    case "bread":{const c=N.sel.size;S.items.forEach(x=>{if(N.sel.has(x.id))x.read=true;});N.sel.clear();save();draw();badge();showSnackbar(c+" bildirim okundu olarak işaretlendi.");break;}
     case "bdel":{const c=N.sel.size;S.items=S.items.filter(x=>!N.sel.has(x.id));N.sel.clear();save();draw();badge();showSnackbar(c+" bildirim silindi.");break;}
-    case "toggle":if(n){n.read=!n.read;save();draw();badge();}break;
-    case "del":S.items=S.items.filter(x=>x.id!==v);save();draw();badge();break;
-    case "allread":S.items.forEach(x=>x.read=true);save();N.tab="read";draw();badge();showSnackbar("Tüm bildirimler okundu olarak işaretlendi.");break;
-    case "clearread":{const c=S.items.filter(x=>x.read).length;S.items=S.items.filter(x=>!x.read);save();draw();badge();showSnackbar(c?c+" okunmuş bildirim temizlendi.":"Temizlenecek okunmuş bildirim yok.");break;}
-    case "go":if(n){n.read=true;save();close();badge();location.hash=n.href;}break;
+    case "go":if(N.sel.size){N.sel.has(v)?N.sel.delete(v):N.sel.add(v);draw();break;}if(n){n.read=true;save();close();badge();location.hash=n.href;}break;
     case "close":close();break;
   }
 },true);
+document.addEventListener("contextmenu",ev=>{const c=ev.target.closest?.("#nf-pop .nf-card");if(!c)return;ev.preventDefault();const v=c.dataset.v;N.sel.has(v)?N.sel.delete(v):N.sel.add(v);draw();});
 document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&N.open){close();bell()?.focus();}if(ev.key==="Enter"&&ev.target.matches?.(".nf-card"))ev.target.click();});
 window.addEventListener("resize",place);window.addEventListener("scroll",()=>N.open&&place(),true);
 const baseTop=renderTop;renderTop=function(){baseTop();badge();};
