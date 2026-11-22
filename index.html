@@ -8489,7 +8489,7 @@ window.mobileProjRecord=function(module,row,isInline){const dv=(k)=>{const v=dis
   const start=row.start||shift(day(),-40),end=row.end||shift(day(),50);
   const owner=dv("owner")||row.owner||w(0);
   let body;
-  if(recordTab==="comments")body=row.mpComments.slice().reverse().map(c=>'<div class="mp-cm">'+avatar(c.author)+'<div><header><b>'+e(c.author)+'</b><small>'+e(dateText(c.date))+'</small></header><p>'+e(c.text)+'</p></div></div>').join("")+'<form class="mp-cbox" data-mpform="'+module+'|'+row.id+'"><textarea name="t" required placeholder="Yorum yaz…"></textarea><button>Gönder</button></form>';
+  if(recordTab==="comments")body='<form class="mp-cbox" data-mpform="'+module+'|'+row.id+'"><textarea name="t" required placeholder="Yorum yaz…"></textarea><button>Gönder</button></form>'+row.mpComments.slice().reverse().map(c=>'<div class="mp-cm">'+avatar(c.author)+'<div><header><b>'+e(c.author)+'</b><small>'+e(dateText(c.date))+'</small></header><p>'+e(c.text)+'</p></div></div>').join("");
   else if(recordTab==="files"){window.EKR=render;window.EKADD=a=>{row.mpFiles.unshift(...a);persist&&persist(a.length+" dosya eklendi.");render();};body=mobileEkler(row.mpFiles);}
   else if(recordTab==="work")body=hrList(tasks.map(t=>({o:t.code,t:t.name,lines:[["flag","Aşama: "+t.status]],open:"tasks|"+t.id})))||'<p class="c2-empty">Kayıt bulunamadı</p>';
   else if(recordTab==="activities")body=hrList(["Proje başlangıç toplantısı","Saha keşfi","Malzeme teslimi","Ara değerlendirme","Müşteri sunumu"].map((n,k)=>({t:n,chip:[["Tamamlandı","#1B9C6B"],["Devam ediyor","#3158C9"],["Planlandı","#D97706"]][k%3],foot:["Tarih",dateText(shift(start,k*9))]})));
