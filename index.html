@@ -8284,6 +8284,45 @@ html body .sm-sheet{align-items:center;padding:24px}
 html body .sm-sheet>div{width:min(520px,100%);border-radius:20px;padding:20px;box-shadow:0 24px 60px #0F172A40}
 html body .sm-sheet>div::before{display:none}
 html body .sm-sheet h3{font-size:18px}
+html body .sm-acts{grid-template-columns:repeat(2,minmax(0,1fr))}
+html body .sm-main .sm-hero{display:block!important}
+html body .sm-main .sm-hero .sm-hr{display:block!important}
+html body .sm-main .sm-hero .sm-stats{padding:14px 20px 10px!important}
+html body .sm-main .sm-hero .sm-acts{padding:0 20px 20px!important}
+html body .sm-act{overflow:hidden}
+html body .sm-row b,html body .sm-grid b,html body .sm-fact b{overflow-wrap:anywhere;min-width:0}
+html body .sm-row .tx,html body .sm-grid>div{min-width:0}
+html body .sm-sheet>div:has(.lv-sum){width:min(620px,100%)}
+html body .sm-sheet>div{position:relative}
+html body .sm-x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:10px;border:1px solid #E3E8F0;background:#fff;color:#475569;display:grid;place-items:center;cursor:pointer}
+html body .sm-x:hover{background:#EEF3FF;color:#3158C9}
+html body .lv-sum{margin-top:12px;padding:18px;border-radius:22px;color:#fff;background:linear-gradient(135deg,#3F5BD6,#6A4FE0);box-shadow:0 8px 20px #3F5BD647}
+html body .lv-sum.neg{background:linear-gradient(135deg,#D9474C,#B8336A);box-shadow:0 8px 20px #D9474C47}
+html body .lv-top{display:flex;align-items:center;gap:18px}
+html body .lv-ring{width:104px;height:104px;flex:none;position:relative}
+html body .lv-ring>div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+html body .lv-ring b{font-size:28px;font-weight:900;line-height:1}
+html body .lv-ring small{margin-top:3px;font-size:12px;font-weight:700;opacity:.8}
+html body .lv-top>.lv-ring+div{min-width:0}
+html body .lv-sum h4{margin:0;font-size:17px;font-weight:800}
+html body .lv-sum p{margin:4px 0 0;font-size:12.5px;font-weight:700;opacity:.82}
+html body .lv-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+html body .lv-chips span{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:9px;background:#ffffff29;font-size:11.5px;font-weight:800}
+html body .lv-tr{display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 12px;border-radius:14px;background:#ffffff24;font-size:12.5px;font-weight:700}
+html body .lv-list{display:grid;gap:10px}
+html body .lv-per{padding:14px 16px}
+html body .lv-per.cur{border-color:#3158C959}
+html body .lv-ph{display:flex;align-items:center;gap:10px}
+html body .lv-ph>span{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:#94A3B81A;color:#94A3B8}
+html body .lv-per.cur .lv-ph>span{background:#3158C91A;color:#3158C9}
+html body .lv-ph b{flex:1;display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:800;color:#1E2A44}
+html body .lv-ph b svg{color:#94A3B8}
+html body .lv-bar{display:flex;height:9px;border-radius:6px;overflow:hidden;margin-top:14px}
+html body .lv-m{display:grid;grid-template-columns:repeat(4,1fr);margin-top:12px}
+html body .lv-m small{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;color:#94A3B8}
+html body .lv-m small i{width:7px;height:7px;border-radius:50%}
+html body .lv-m b{display:block;margin-top:3px;font-size:20px;font-weight:900;color:#1E2A44}
+html body .lv-m b.z{color:#CBD5E1}
 /* Web listeleri: tek çerçevede satırlar */
 html body .sm-main .sm-list:not([style]){display:block;margin-top:12px;background:#fff;border:1px solid #E6EAF1;border-radius:16px;box-shadow:0 4px 14px #0F172A0B;overflow:hidden}
 html body .sm-main .sm-list:not([style])>.sm-card{border:0;border-radius:0;box-shadow:none;background:transparent}
@@ -8400,18 +8439,35 @@ function tabBody(p,d,inf,leave){
       sec("Yabancı Diller","chat",C.amber,inf.lang.map(x=>'<div class="sm-row"><div class="tx"><b>'+esc(x.bol)+'</b><span class="sub">'+esc([x.yer,x.sert?"Sertifika: "+x.sert:""].filter(Boolean).join(" · "))+'</span></div>'+chip(x.der,C.blue)+'</div>').join(""))+'</div>';}
   }
 }
+// Yıllık izin hakkı: mobildeki özet kartı (halka) ve dönem kartları
+function leaveView(p,leave){
+  const avail=leave.earned+leave.carry,ratio=avail>0?Math.max(0,Math.min(1,leave.left/avail)):0,pos=leave.left>0;
+  const y=new Date().getFullYear(),st=p.start.slice(5);
+  const per=[{a:y+"-"+st,b:(y+1)+"-"+st,e:leave.earned,c:leave.carry,u:leave.used,r:leave.left},{a:(y-1)+"-"+st,b:y+"-"+st,e:14,c:2,u:12,r:leave.carry},{a:(y-2)+"-"+st,b:(y-1)+"-"+st,e:14,c:0,u:12,r:2}];
+  const fmt=d=>dt(d);
+  const L=2*Math.PI*47,ring='<div class="lv-ring"><svg viewBox="0 0 104 104" width="104" height="104" aria-hidden="true"><circle cx="52" cy="52" r="47" fill="none" stroke="#ffffff33" stroke-width="10"/>'+(ratio>0?'<circle cx="52" cy="52" r="47" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-dasharray="'+(L*ratio).toFixed(1)+' '+L.toFixed(1)+'" transform="rotate(-90 52 52)"/>':"")+'</svg><div><b>'+leave.left+'</b><small>gün</small></div></div>';
+  const sum='<div class="lv-sum'+(pos?"":" neg")+'"><div class="lv-top">'+ring+'<div><h4>Kalan İzin</h4>'+(avail>0?'<p>Toplam hak: '+avail+' gün</p>':"")+'<div class="lv-chips">'+(avail>0?'<span>'+ic("check",13)+leave.used+' kullanılan</span>':"")+'<span>'+ic("external",13)+fmt(p.start)+'</span></div></div></div>'+
+    (leave.carry?'<div class="lv-tr">'+ic("layers",17)+'Devir Miktarı: '+leave.carry+' gün · '+fmt(y+"-01-01")+'</div>':"")+'</div>';
+  const cols=[["Hak Edilen","e","#3158C9"],["Devredilen","c","#7C3AED"],["Kullanılan","u","#F59E0B"],["Kalan","r","#16A34A"]];
+  const card=(x,i)=>{const tot=Math.max(x.e+x.c,x.u+x.r),rest=tot-x.u-x.r;
+    return '<div class="sm-card lv-per'+(i?"":" cur")+'"><div class="lv-ph"><span>'+ic("calendar",18)+'</span><b>'+fmt(x.a)+' '+ic("right",14)+' '+fmt(x.b)+'</b>'+(i?"":chip("Güncel",C.blue))+'</div>'+
+    (tot>0?'<div class="lv-bar">'+(x.u?'<i style="flex:'+x.u+';background:#F59E0B"></i>':"")+(x.r?'<i style="flex:'+x.r+';background:#16A34A"></i>':"")+(rest>0?'<i style="flex:'+rest+';background:#E2E8F0"></i>':"")+'</div>':"")+
+    '<div class="lv-m">'+cols.map(([l,k,c])=>'<div><small><i style="background:'+c+'"></i>'+l+'</small><b class="'+(x[k]?"":"z")+'">'+x[k]+'</b></div>').join("")+'</div></div>';};
+  return '<h3>Yıllık İzin Hakkı</h3>'+sum+'<div class="sm-sh"><b>Dönemler</b><em>'+per.length+'</em></div><div class="lv-list">'+per.map(card).join("")+'</div>';
+}
 function sheet(){
   const p=people().find(x=>x.id===V.person);if(!V.sheet||!p)return "";
   const inf=info(p),leave=annualLeaveStats(p,day());let h;
-  if(V.sheet==="leave")h='<h3>Yıllık İzin Hakkı</h3>'+sec("Dönemler","calendar",C.leave,[["Hak Edilen",leave.earned],["Devredilen",leave.carry],["Kullanılan",leave.used],["Kalan",leave.left]].map(([l,v])=>'<div class="sm-row"><div class="tx"><small>'+l+'</small><b>'+v+' gün</b></div></div>').join(""));
+  if(V.sheet==="leave")h=leaveView(p,leave);
   else{const r=V.sheet==="reward",n=r?inf.reward:inf.penalty;h='<h3>'+(r?"Ödüller":"Cezalar")+'</h3>'+sec(r?"Ödül Puanı":"Ceza Puanı","award",r?C.reward:C.penalty,n?'<div class="sm-row"><div class="tx"><b>'+(r?"Proje teslimi":"Geç bildirim")+'</b><span class="sub">Gerekçe: '+(r?"Zamanında ve eksiksiz teslim":"Devamsızlık bildirimi gecikti")+'</span></div>'+chip(n+" puan",r?C.reward:C.penalty)+'</div>':"");}
-  return '<div class="sm-sheet" data-sm="close"><div>'+h+'</div></div>';
+  return '<div class="sm-sheet" data-sm="close"><div><button class="sm-x" data-sm="xclose" aria-label="Kapat">'+ic("close",18)+'</button>'+h+'</div></div>';
 }
 function page(){if(!V.person||!people().some(p=>p.id===V.person))V.person=people()[0]?.id||null;
   return '<div class="page sm-web"><header class="sm-top"><div><h1>Personel Paneli</h1><p>Birim ve personel seçerek özlük, takvim, zimmet, kariyer ve izin bilgilerini görün</p></div></header><div class="sm-split"><aside class="sm-side">'+listPage()+'</aside><section class="sm-main">'+(V.person?detailPage():'<div class="sm-card sm-empty">Personel seçin</div>')+'</section></div></div>'+sheet();}
 function refresh(){if(route!=="staffm")return;const f=document.activeElement?.id==="sm-q",pos=f?document.activeElement.selectionStart:0;screen.innerHTML=page();if(f){const i=document.getElementById("sm-q");i.focus();i.setSelectionRange(pos,pos);}}
 document.addEventListener("click",ev=>{if(route!=="staffm")return;const el=ev.target.closest("[data-sm]");if(!el)return;const a=el.dataset.sm,v=el.dataset.v||"";
   if(a==="close"){if(ev.target!==el)return;V.sheet=null;}
+  else if(a==="xclose"){V.sheet=null;}
   else if(a==="unit"){V.unit=v;V.q="";}
   else if(a==="person"){V.person=v;V.tab="genel";V.day=null;}
   else if(a==="back"){V.person=null;}
@@ -9029,6 +9085,22 @@ html body .wk-play:hover{background:#12936A;color:#fff}
 <style id="c2-gap">html body .c2-body>.m2-sec+.m2-sec{margin-top:12px!important}html body .m2-sec>.m2-row:last-child{padding-bottom:18px}</style>
 <style id="tools-right">html body .studio-tools>button:first-of-type{margin-left:auto!important}html body .studio-tools>button:last-child:not(:first-of-type){margin-left:0!important}html body .studio-tools>.studio-shortcuts{margin-right:0!important}</style>
 <style id="cy-add-right">html body .cy-sh .cy-add{margin-left:auto!important}</style>
+<style id="crm-web">
+/* CRM Yönetimi ve CRM (mobil): geniş ekranda tam genişlik, kartlar ızgarada */
+html body .c2{max-width:1480px!important}
+html body .c2 .cy-l,html body .c2 .c2-list:not(:has(>.c2-day)){display:grid!important;grid-template-columns:repeat(auto-fill,minmax(380px,1fr))!important;gap:14px!important;align-items:stretch}
+html body .c2 .cy-l>*,html body .c2 .c2-list:not(:has(>.c2-day))>*{margin:0!important}
+html body .c2:has(>.cy-cal){display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:20px;align-items:start}
+html body .c2:has(>.cy-cal)>:not(.cy-sec){grid-column:1/-1}
+html body .c2:has(>.cy-cal) .cy-l{grid-template-columns:1fr!important}
+@media (max-width:1100px){html body .c2:has(>.cy-cal){grid-template-columns:1fr}}
+/* Personel Paneli gibi: detay paneli üstte açılmaz, liste solda kalır, detay sağda yan yana */
+html body #c2-layer.open .c2-shade:has(+.c2-drawer){background:transparent!important;pointer-events:none!important;backdrop-filter:none!important}
+html body #c2-layer.open:has(.c2-drawer){pointer-events:none}
+html body #c2-layer.open .c2-drawer{pointer-events:auto;position:fixed!important;top:76px!important;right:24px!important;bottom:20px!important;left:auto!important;height:auto!important;width:min(44vw,680px)!important;max-width:none!important;border-radius:18px!important;border:1px solid #E3E8F0!important;box-shadow:0 10px 30px #0F172A1F!important;animation:none!important;transform:none!important}
+@media (min-width:1101px){html body:has(#c2-layer.open .c2-drawer) #screen .c2{margin-left:0!important;margin-right:calc(min(44vw,680px) + 28px)!important;max-width:none!important}}
+html body .c2-head h1{font-size:clamp(1.6rem,2.4vw,2.2rem)!important;font-weight:800!important;letter-spacing:-.02em;color:#14213D}
+</style>
 <style id="btn-system">
 /* Buton sistemi: tüm .btn türleri için ortak boyut, kontrast, hover/active/focus */
 html body .btn{border-radius:8px;transition:background-color .12s,border-color .12s,color .12s,box-shadow .12s;cursor:pointer}
