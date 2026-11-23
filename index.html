@@ -8039,8 +8039,16 @@ function secPlan(){
     (days.map(d=>{const g=L.filter(x=>x.date===d);return '<div class="c2-day">'+(d===T?"Bugün":dt(d))+'</div>'+g.map((x,k)=>{const c=C(x.cust),st=PSTATE.find(s=>s[0]===x.state);return '<div class="c2-tl'+(k===0?" first":"")+(k===g.length-1?" last":"")+'"><time>'+x.time+'</time><span class="dot" style="border-color:'+st[1]+'"></span><button class="c2-mc" data-c2="open" data-v="'+c.id+'"><div><span class="m">'+ic("calendar",14)+esc(x.type)+'<span style="margin-left:auto">'+chipC(x.state,st[1])+'</span></span><b>'+esc(x.title)+'</b><span class="p">'+ic("building",14)+esc(c.name)+'</span><span class="p">'+ic("user",14)+esc(x.who)+'</span></div>'+ic("right",22)+'</button></div>';}).join("");}).join("")||'<p class="c2-empty">Kayıt yok</p>')+
     '<button class="c2-fab" data-c2="form" data-v="plan" title="Plan ekle">'+ic("plus",24)+'</button>';
 }
-function secProjects(){return S.projects.map(p=>'<button class="c2-rc" data-c2="proj" data-v="'+p.id+'"><span class="o">'+esc(p.code)+'</span><div class="h"><div><b>'+esc(p.name)+'</b><span class="c2-ln"><i>'+ic("building",13)+'</i>'+esc(C(p.cust).name)+'</span><span class="c2-ln"><i>'+ic("flag",13)+'</i>Aşama: '+esc(p.stage)+'</span></div>'+ic("right",22)+'</div><div class="c2-ft"><div><span>'+ic("calendar",15)+'</span><div><small>Başlangıç</small><strong>'+dt(p.start)+'</strong></div></div><i></i><div><span>'+ic("check",15)+'</span><div><small>Bitiş</small><strong>'+dt(p.end)+'</strong></div></div></div></button>').join("");}
-function secSegments(){return S.segments.map(s=>'<button class="c2-rc" data-c2="segpick" data-v="'+esc(s.name)+'"><div class="h"><div><b>'+esc(s.name)+'</b><span class="c2-ln"><i>'+ic("note",13)+'</i>'+esc(s.desc)+'</span><span class="c2-ln"><i>'+ic("people",13)+'</i>'+s.count+' müşteri</span></div>'+ic("right",22)+'</div></button>').join("");}
+// Web tablosu: başlık satırı, ikon yok, satıra tıklanınca kayıt açılır
+function c2Table(heads,rows){return '<div class="c2-tw"><table class="c2-tbl"><thead><tr>'+heads.map(h=>'<th>'+h+'</th>').join("")+'</tr></thead><tbody>'+rows.join("")+'</tbody></table></div>';}
+const c2Days=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
+const c2Pill=(x,c)=>'<span class="c2-pill" style="--c:'+c+'">'+esc(x)+'</span>';
+function secProjects(){const SC={"Keşif":"#64748B","Teklif":"#3158C9","Sözleşme":"#7C3AED","Uygulama":"#D97706","Teslim":"#16A34A"};
+  return c2Table(["Kod","Proje","Müşteri","Şehir","Mahal","Alan","Bütçe","Aşama","Başlangıç","Bitiş"],S.projects.map(p=>'<tr data-c2="proj" data-v="'+p.id+'"><td class="k">'+esc(p.code)+'</td><td class="b">'+esc(p.name)+'</td><td>'+esc(C(p.cust).name)+'</td><td>'+esc(p.city||"-")+'</td><td>'+esc(p.locus||"-")+'</td><td>'+esc(p.area||"-")+'</td><td class="n">'+esc(p.budget||"-")+'</td><td>'+c2Pill(p.stage,SC[p.stage]||"#64748B")+'</td><td>'+dt(p.start)+'</td><td>'+dt(p.end)+'</td></tr>'));}
+function secProjectsOld(){return S.projects.map(p=>'<button class="c2-rc" data-c2="proj" data-v="'+p.id+'"><span class="o">'+esc(p.code)+'</span><div class="h"><div><b>'+esc(p.name)+'</b><span class="c2-ln"><i>'+ic("building",13)+'</i>'+esc(C(p.cust).name)+'</span><span class="c2-ln"><i>'+ic("flag",13)+'</i>Aşama: '+esc(p.stage)+'</span></div>'+ic("right",22)+'</div><div class="c2-ft"><div><span>'+ic("calendar",15)+'</span><div><small>Başlangıç</small><strong>'+dt(p.start)+'</strong></div></div><i></i><div><span>'+ic("check",15)+'</span><div><small>Bitiş</small><strong>'+dt(p.end)+'</strong></div></div></div></button>').join("");}
+function secSegments(){const tot=S.customers.length||1;
+  return c2Table(["Segment","Açıklama","Müşteri sayısı","Pay","Örnek müşteriler"],S.segments.map(s=>{const cs=S.customers.filter(c=>c.seg===s.name);return '<tr data-c2="segpick" data-v="'+esc(s.name)+'"><td class="b">'+esc(s.name)+'</td><td>'+esc(s.desc)+'</td><td class="n">'+s.count+'</td><td class="n">%'+Math.round(s.count/tot*100)+'</td><td class="m">'+esc(cs.slice(0,3).map(c=>c.name).join(", ")||"-")+'</td></tr>';}));}
+function secSegmentsOld(){return S.segments.map(s=>'<button class="c2-rc" data-c2="segpick" data-v="'+esc(s.name)+'"><div class="h"><div><b>'+esc(s.name)+'</b><span class="c2-ln"><i>'+ic("note",13)+'</i>'+esc(s.desc)+'</span><span class="c2-ln"><i>'+ic("people",13)+'</i>'+s.count+' müşteri</span></div>'+ic("right",22)+'</div></button>').join("");}
 function projDrawer(){
   const p=P(V.proj);if(!p)return "";const c=C(p.cust),t=V.ptab2||"detail";
   const tabs=[["detail","Detay","grid",0],["comment","Yorum","chat",p.comments.length],["files","Ekler","image",p.files.length],["other","Diğer","layers",0]];
@@ -8089,7 +8097,7 @@ function rcard(o,t,lines,foot){return '<div class="c2-rc">'+(o?'<span class="o">
 function page(){
   const tabs='<div class="c2-toggle wrap">'+[["customers","Müşteriler","people"],["plan","Görüşme planı","calendar"],["projects","Projeler","building"],["segments","Segmentler","tag"],["contracts","Sözleşmeler","file"]].map(([k,l,i])=>'<button class="'+(V.sec===k?"on":"")+'" data-c2="sec" data-v="'+k+'">'+ic(i,17)+l+'</button>').join("")+'</div>';
   const TT={plan:"Görüşme planı",projects:"Projeler",segments:"Segmentler"};if(TT[V.sec])return '<div class="c2"><div class="c2-head"><h1>'+TT[V.sec]+'</h1></div>'+tabs+'<div class="c2-list">'+(V.sec==="plan"?secPlan():V.sec==="projects"?secProjects():secSegments())+'</div></div>';
-  if(V.sec==="contracts")return '<div class="c2"><div class="c2-head"><h1>Sözleşmeler</h1></div>'+tabs+'<div class="c2-list">'+S.contracts.map(k=>rcard(esc(k.no),esc(k.name),[],["Başlangıç",dt(k.start),"Bitiş",dt(k.end)])).join("")+'</div></div>';
+  if(V.sec==="contracts")return '<div class="c2"><div class="c2-head"><h1>Sözleşmeler</h1></div>'+tabs+'<div class="c2-list">'+c2Table(["Sözleşme no","Hizmet","Müşteri","Başlangıç","Bitiş","Süre","Kalan","Durum"],S.contracts.map(k=>{const [hz,mu]=String(k.name).split(" · "),left=c2Days(T,k.end),act=k.start<=T&&k.end>=T;return '<tr><td class="k">'+esc(k.no)+'</td><td class="b">'+esc(hz)+'</td><td>'+esc(mu||"-")+'</td><td>'+dt(k.start)+'</td><td>'+dt(k.end)+'</td><td class="n">'+Math.round(c2Days(k.start,k.end)/30)+' ay</td><td class="n">'+(left>=0?left+" gün":"-")+'</td><td>'+c2Pill(act?"Aktif":k.start>T?"Başlamadı":"Sona erdi",act?"#16A34A":k.start>T?"#3158C9":"#94A3B8")+'</td></tr>';}))+'</div></div>';
   const q=V.q.toLocaleLowerCase("tr"),list=S.customers.filter(c=>(!q||(c.name+" "+c.code+" "+c.sor+" "+c.seg).toLocaleLowerCase("tr").includes(q)));
   return '<div class="c2"><div class="c2-head"><h1>Müşteri Kayıtları</h1><button class="c2-ibtn" data-c2="stats" title="Müşteri özeti">'+ic("chart",19)+'</button></div>'+tabs+
     (V.stats?stats(list):"")+
@@ -9101,26 +9109,20 @@ html body #c2-layer.open .c2-drawer{pointer-events:auto;position:fixed!important
 @media (min-width:1101px){html body:has(#c2-layer.open .c2-drawer) #screen .c2{margin-left:0!important;margin-right:calc(min(44vw,680px) + 28px)!important;max-width:none!important}}
 html body .c2-head h1{font-size:clamp(1.6rem,2.4vw,2.2rem)!important;font-weight:800!important;letter-spacing:-.02em;color:#14213D}
 </style>
-<style id="crm-rows">
-/* CRM (mobil) Projeler / Segmentler / Sözleşmeler: web'de tek çerçevede tablo gibi satırlar */
-html body .c2 .c2-list.c2-list:not(:has(>.c2-day)):has(>.c2-rc){display:block!important;grid-template-columns:none!important;gap:0!important;background:#fff;border:1px solid #E6EAF1;border-radius:16px;box-shadow:0 4px 14px #0F172A0B;overflow:hidden}
-html body .c2 .c2-list>.c2-rc{display:grid!important;grid-template-columns:130px minmax(0,1fr) auto;align-items:center;column-gap:20px;width:100%;margin:0!important;padding:13px 20px!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;text-align:left}
-html body .c2 .c2-list>.c2-rc+.c2-rc{border-top:1px solid #EEF1F6!important}
-html body .c2 .c2-list>button.c2-rc:hover{background:#F8FAFD!important}
-html body .c2 .c2-list>.c2-rc:not(:has(>.o)){grid-template-columns:minmax(0,1fr) auto}
-html body .c2 .c2-list>.c2-rc>.o{margin:0!important;align-self:center}
-html body .c2 .c2-list>.c2-rc>.h{grid-column:2;grid-row:1;display:flex;align-items:center;gap:16px;margin:0!important;min-width:0}
-html body .c2 .c2-list>.c2-rc:not(:has(>.o))>.h{grid-column:1/-1}
-html body .c2 .c2-list>.c2-rc>.h>div{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:6px 22px}
-html body .c2 .c2-list>.c2-rc>.h>div>b{flex:0 1 auto;min-width:260px;margin:0!important}
-html body .c2 .c2-list>.c2-rc>.h>div>.c2-ln{margin:0!important}
-html body .c2 .c2-list>.c2-rc>.h>svg{order:9;flex:none}
-html body .c2 .c2-list>.c2-rc:has(>.c2-ft)>.h>svg{display:none}
-html body .c2 .c2-list>.c2-rc>.c2-ft{grid-column:3;grid-row:1;margin:0!important;padding:0!important;border:0!important;background:transparent!important;display:flex;align-items:center;gap:18px}
-html body .c2 .c2-list>.c2-rc>.c2-ft>i{display:none}
-html body .c2 .c2-list>.c2-rc>.c2-ft>div{min-width:150px;display:flex;align-items:center;gap:10px}
-html body .c2 .c2-list>.c2-rc>.c2-ft small,html body .c2 .c2-list>.c2-rc>.c2-ft strong{white-space:nowrap;display:block}
-@media (max-width:900px){html body .c2 .c2-list>.c2-rc{grid-template-columns:1fr}html body .c2 .c2-list>.c2-rc>.h,html body .c2 .c2-list>.c2-rc>.c2-ft{grid-column:1;grid-row:auto}html body .c2 .c2-list>.c2-rc>.h>div>b{min-width:0}}
+<style id="c2-table">
+html body .c2 .c2-list.c2-list:has(>.c2-tw){display:block!important;grid-template-columns:none!important}
+html body .c2-tw{background:#fff;border:1px solid #E6EAF1;border-radius:14px;overflow:auto}
+html body .c2-tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+html body .c2-tbl th{position:sticky;top:0;background:#F8FAFC;text-align:left;padding:11px 14px;font-size:12px;font-weight:700;color:#64748B;border-bottom:1px solid #E6EAF1;white-space:nowrap}
+html body .c2-tbl td{padding:11px 14px;border-bottom:1px solid #EEF1F6;color:#334155;white-space:nowrap}
+html body .c2-tbl tbody tr:last-child td{border-bottom:0}
+html body .c2-tbl tr[data-c2]{cursor:pointer}
+html body .c2-tbl tbody tr:hover td{background:#F8FAFD}
+html body .c2-tbl td.k{color:#3158C9;font-weight:700}
+html body .c2-tbl td.b{font-weight:700;color:#1E2A44}
+html body .c2-tbl td.n{text-align:right;font-variant-numeric:tabular-nums}
+html body .c2-tbl td.m{white-space:normal;color:#64748B}
+html body .c2-pill{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:color-mix(in srgb,var(--c) 12%,#fff);color:var(--c);font-size:11.5px;font-weight:800}
 </style>
 <style id="btn-system">
 /* Buton sistemi: tüm .btn türleri için ortak boyut, kontrast, hover/active/focus */
