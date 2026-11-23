@@ -9101,6 +9101,27 @@ html body #c2-layer.open .c2-drawer{pointer-events:auto;position:fixed!important
 @media (min-width:1101px){html body:has(#c2-layer.open .c2-drawer) #screen .c2{margin-left:0!important;margin-right:calc(min(44vw,680px) + 28px)!important;max-width:none!important}}
 html body .c2-head h1{font-size:clamp(1.6rem,2.4vw,2.2rem)!important;font-weight:800!important;letter-spacing:-.02em;color:#14213D}
 </style>
+<style id="crm-rows">
+/* CRM (mobil) Projeler / Segmentler / Sözleşmeler: web'de tek çerçevede tablo gibi satırlar */
+html body .c2 .c2-list.c2-list:not(:has(>.c2-day)):has(>.c2-rc){display:block!important;grid-template-columns:none!important;gap:0!important;background:#fff;border:1px solid #E6EAF1;border-radius:16px;box-shadow:0 4px 14px #0F172A0B;overflow:hidden}
+html body .c2 .c2-list>.c2-rc{display:grid!important;grid-template-columns:130px minmax(0,1fr) auto;align-items:center;column-gap:20px;width:100%;margin:0!important;padding:13px 20px!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;text-align:left}
+html body .c2 .c2-list>.c2-rc+.c2-rc{border-top:1px solid #EEF1F6!important}
+html body .c2 .c2-list>button.c2-rc:hover{background:#F8FAFD!important}
+html body .c2 .c2-list>.c2-rc:not(:has(>.o)){grid-template-columns:minmax(0,1fr) auto}
+html body .c2 .c2-list>.c2-rc>.o{margin:0!important;align-self:center}
+html body .c2 .c2-list>.c2-rc>.h{grid-column:2;grid-row:1;display:flex;align-items:center;gap:16px;margin:0!important;min-width:0}
+html body .c2 .c2-list>.c2-rc:not(:has(>.o))>.h{grid-column:1/-1}
+html body .c2 .c2-list>.c2-rc>.h>div{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:6px 22px}
+html body .c2 .c2-list>.c2-rc>.h>div>b{flex:0 1 auto;min-width:260px;margin:0!important}
+html body .c2 .c2-list>.c2-rc>.h>div>.c2-ln{margin:0!important}
+html body .c2 .c2-list>.c2-rc>.h>svg{order:9;flex:none}
+html body .c2 .c2-list>.c2-rc:has(>.c2-ft)>.h>svg{display:none}
+html body .c2 .c2-list>.c2-rc>.c2-ft{grid-column:3;grid-row:1;margin:0!important;padding:0!important;border:0!important;background:transparent!important;display:flex;align-items:center;gap:18px}
+html body .c2 .c2-list>.c2-rc>.c2-ft>i{display:none}
+html body .c2 .c2-list>.c2-rc>.c2-ft>div{min-width:150px;display:flex;align-items:center;gap:10px}
+html body .c2 .c2-list>.c2-rc>.c2-ft small,html body .c2 .c2-list>.c2-rc>.c2-ft strong{white-space:nowrap;display:block}
+@media (max-width:900px){html body .c2 .c2-list>.c2-rc{grid-template-columns:1fr}html body .c2 .c2-list>.c2-rc>.h,html body .c2 .c2-list>.c2-rc>.c2-ft{grid-column:1;grid-row:auto}html body .c2 .c2-list>.c2-rc>.h>div>b{min-width:0}}
+</style>
 <style id="btn-system">
 /* Buton sistemi: tüm .btn türleri için ortak boyut, kontrast, hover/active/focus */
 html body .btn{border-radius:8px;transition:background-color .12s,border-color .12s,color .12s,box-shadow .12s;cursor:pointer}
