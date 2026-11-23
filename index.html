@@ -9102,11 +9102,12 @@ html body .c2:has(>.cy-cal){display:grid;grid-template-columns:repeat(3,minmax(0
 html body .c2:has(>.cy-cal)>:not(.cy-sec){grid-column:1/-1}
 html body .c2:has(>.cy-cal) .cy-l{grid-template-columns:1fr!important}
 @media (max-width:1100px){html body .c2:has(>.cy-cal){grid-template-columns:1fr}}
-/* Personel Paneli gibi: detay paneli üstte açılmaz, liste solda kalır, detay sağda yan yana */
-html body #c2-layer.open .c2-shade:has(+.c2-drawer){background:transparent!important;pointer-events:none!important;backdrop-filter:none!important}
-html body #c2-layer.open:has(.c2-drawer){pointer-events:none}
-html body #c2-layer.open .c2-drawer{pointer-events:auto;position:fixed!important;top:76px!important;right:24px!important;bottom:20px!important;left:auto!important;height:auto!important;width:min(44vw,680px)!important;max-width:none!important;border-radius:18px!important;border:1px solid #E3E8F0!important;box-shadow:0 10px 30px #0F172A1F!important;animation:none!important;transform:none!important}
-@media (min-width:1101px){html body:has(#c2-layer.open .c2-drawer) #screen .c2{margin-left:0!important;margin-right:calc(min(44vw,680px) + 28px)!important;max-width:none!important}}
+/* Kayıt detayları ortada açılan pencere (popup) */
+html body #c2-layer.open .c2-drawer{position:fixed!important;top:50%!important;left:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%)!important;width:min(880px,calc(100vw - 48px))!important;max-width:none!important;height:min(86vh,900px)!important;border-radius:20px!important;box-shadow:0 24px 60px #0F172A40!important;animation:c2Pop .16s ease-out!important}
+@keyframes c2Pop{from{opacity:0;transform:translate(-50%,-48%) scale(.98)}}
+html body #c2-layer.open .c2-shade{background:#0F172A66!important}
+html body .ik2-drawer,html body .dialog.drawer{top:50%!important;left:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%)!important;width:min(880px,calc(100vw - 48px))!important;height:auto!important;max-height:min(88vh,920px)!important;border-radius:20px!important;box-shadow:0 24px 60px #0F172A40!important;animation:c2Pop .16s ease-out!important}
+html body .ik2-drawer{height:min(86vh,900px)!important}
 html body .c2-head h1{font-size:clamp(1.6rem,2.4vw,2.2rem)!important;font-weight:800!important;letter-spacing:-.02em;color:#14213D}
 </style>
 <style id="c2-table">
