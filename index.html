@@ -8252,6 +8252,63 @@ html body .sm-sheet{position:fixed;inset:0;z-index:200;background:#0F172A55;disp
 html body .sm-sheet>div{width:min(560px,100%);max-height:80vh;overflow:auto;background:#F3F5F9;border-radius:24px 24px 0 0;padding:10px 16px 24px}
 html body .sm-sheet>div::before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:#CBD5E1;margin:0 auto 12px}
 html body .sm-sheet h3{margin:0 0 4px;font-size:16px;font-weight:800;color:#1E2A44}
+/* Web uyarlaması: iki sütun, ortada açılan pencere */
+html body .sm-web{max-width:1440px;margin:0 auto}
+html body .sm-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 0 18px}
+html body .sm-top h1{margin:0;font-size:clamp(1.6rem,2.4vw,2.2rem);font-weight:800;letter-spacing:-.02em;color:#14213D}
+html body .sm-top p{margin:4px 0 0;color:#64748B;font-size:14px}
+html body .sm-split{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:20px;align-items:start}
+html body .sm-web .sm-page{max-width:none;margin:0;padding:0}
+html body .sm-web .sm-bar{display:none}
+html body .sm-side{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;padding-bottom:12px}
+html body .sm-side .sm-sh:first-of-type{margin-top:14px}
+html body .sm-tile.on{background:#EEF3FF}
+html body .sm-tile.on::after{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:#3158C9}
+html body .sm-main .sm-card:first-child{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);align-items:center}
+html body .sm-main .sm-card:first-child .sm-prof{grid-column:1;padding:20px 20px 12px}
+html body .sm-main .sm-card:first-child .sm-facts{grid-column:1;padding:0 20px 20px}
+html body .sm-main .sm-card:first-child .sm-hr{display:none}
+html body .sm-main .sm-card:first-child .sm-stats{grid-column:2;grid-row:1;padding:20px 20px 0}
+html body .sm-main .sm-card:first-child .sm-acts{grid-column:2;grid-row:2;padding:0 20px 20px}
+html body .sm-av.lg{width:84px;height:84px;font-size:26px;border-radius:24px}
+html body .sm-prof h2{font-size:21px}
+html body .sm-seg{position:static;padding:16px 0 4px}
+html body .sm-seg>div{display:inline-grid;grid-template-columns:repeat(5,auto)}
+html body .sm-seg button{padding:0 18px;font-size:13.5px}
+html body .sm-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+html body .sm-cols .sm-sec:first-child{grid-row:span 2}
+html body .sm-main .sm-list{grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+html body .sm-main .sm-list[style]{grid-template-columns:1fr}
+html body .sm-week{max-width:720px}
+html body .sm-sheet{align-items:center;padding:24px}
+html body .sm-sheet>div{width:min(520px,100%);border-radius:20px;padding:20px;box-shadow:0 24px 60px #0F172A40}
+html body .sm-sheet>div::before{display:none}
+html body .sm-sheet h3{font-size:18px}
+/* Web listeleri: tek çerçevede satırlar */
+html body .sm-main .sm-list:not([style]){display:block;margin-top:12px;background:#fff;border:1px solid #E6EAF1;border-radius:16px;box-shadow:0 4px 14px #0F172A0B;overflow:hidden}
+html body .sm-main .sm-list:not([style])>.sm-card{border:0;border-radius:0;box-shadow:none;background:transparent}
+html body .sm-main .sm-list:not([style])>.sm-card+.sm-card{border-top:1px solid #EEF1F6}
+html body .sm-main .sm-list:not([style])>.sm-card:hover{background:#F8FAFD}
+html body .sm-main .sm-item{display:grid;grid-template-columns:minmax(260px,1.1fr) minmax(0,2fr);align-items:center;gap:6px 24px;padding:11px 18px}
+html body .sm-main .sm-item>.sm-head{align-items:center}
+html body .sm-main .sm-item .sm-ico{width:36px;height:36px;border-radius:11px}
+html body .sm-main .sm-item .sm-grid{grid-template-columns:repeat(4,minmax(0,1fr));margin:0}
+html body .sm-main .sm-item .sm-ar{grid-column:2;margin:0;grid-template-columns:repeat(2,140px);justify-content:end}
+html body .sm-main .sm-item>div[style]{grid-column:2;margin:0!important;justify-self:end}
+html body .sm-main .sm-item>.sm-head:only-child{grid-column:1/-1}
+html body .sm-main .sm-empty{padding:28px 18px}
+html body .sm-main .sm-tl .sm-item{display:block;padding:12px 16px}
+html body .sm-main .sm-tl .sm-item .sm-grid{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:8px}
+html body .sm-row{padding:10px 18px}
+html body .sm-sec>header{padding:12px 18px}
+html body .sm-sec>header span{width:32px;height:32px}
+html body .sm-cols .sm-sec{margin-top:12px}
+html body .sm-side .sm-tile{padding:9px 10px 9px 14px}
+html body .sm-side .sm-av,html body .sm-side .sm-unit{width:38px;height:38px}
+html body .sm-side .sm-tile+.sm-tile::before{left:66px}
+html body .sm-side .sm-sh{margin:14px 2px 6px}
+@media (max-width:1100px){html body .sm-main .sm-card:first-child{grid-template-columns:1fr}html body .sm-main .sm-card:first-child .sm-stats{grid-column:1;grid-row:auto;padding:0 12px 12px}html body .sm-main .sm-card:first-child .sm-acts{grid-column:1;grid-row:auto}}
+@media (max-width:900px){html body .sm-split{grid-template-columns:1fr}html body .sm-side{position:static;max-height:none}html body .sm-cols{grid-template-columns:1fr}html body .sm-seg>div{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}html body .sm-main .sm-item{grid-template-columns:1fr}html body .sm-main .sm-item .sm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}html body .sm-main .sm-item .sm-ar,html body .sm-main .sm-item>div[style]{grid-column:1;justify-self:start}}
 </style>
 <script id="sm-js">
 (()=>{
@@ -8288,7 +8345,7 @@ function listPage(){
   const sh=(t,n)=>'<div class="sm-sh"><b>'+t+'</b><em>'+n+'</em></div>';
   let body="";
   if(us.length)body+=sh("Birimler",us.length)+'<div class="sm-card">'+us.map(u=>'<button class="sm-tile" data-sm="unit" data-v="'+esc(u)+'"><span class="sm-unit">'+tree+'</span><div class="tx"><b><span>'+esc(u)+'</span></b><small>'+people().filter(p=>p.unit===u).length+' personel</small></div>'+chev+'</button>').join("")+'</div>';
-  if(ps.length)body+=sh(q?"Arama sonuçları":"Personeller",ps.length)+'<div class="sm-card">'+ps.map(p=>'<button class="sm-tile" data-sm="person" data-v="'+esc(p.id)+'">'+av(p)+'<div class="tx"><b><span>'+esc(p.name)+'</span>'+(isMgr(p)?'<i class="sm-chip" style="--c:'+C.amber+'">Sorumlu</i>':"")+'</b><small>'+esc(p.title||"")+'</small></div>'+chev+'</button>').join("")+'</div>';
+  if(ps.length)body+=sh(q?"Arama sonuçları":"Personeller",ps.length)+'<div class="sm-card">'+ps.map(p=>'<button class="sm-tile'+(p.id===V.person?" on":"")+'" data-sm="person" data-v="'+esc(p.id)+'">'+av(p)+'<div class="tx"><b><span>'+esc(p.name)+'</span>'+(isMgr(p)?'<i class="sm-chip" style="--c:'+C.amber+'">Sorumlu</i>':"")+'</b><small>'+esc(p.title||"")+'</small></div>'+chev+'</button>').join("")+'</div>';
   if(!body)body='<div class="sm-card sm-empty" style="margin-top:18px">Kayıt bulunamadı</div>';
   return '<div class="sm-page"><div class="sm-bar"><h1>Personel Paneli</h1></div><label class="sm-search">'+ic("search",18)+'<input id="sm-q" type="search" placeholder="Adı soyadı ile ara" value="'+esc(V.q)+'" autocomplete="off"></label>'+crumbs+body+'</div>';
 }
@@ -8338,9 +8395,9 @@ function tabBody(p,d,inf,leave){
     return '<div class="sm-list">'+(lv.length?lv.map(r=>{const n=Math.round((new Date(r.end)-new Date(r.start))/864e5)+1;return '<div class="sm-card sm-item"><div class="sm-head"><span class="sm-ico" style="--c:'+C.leave+'">'+ic("flag",20)+'</span><div class="tx"><b>'+esc(r.type)+'</b><small>'+dt(r.start)+' – '+dt(r.end)+'</small><em>Süre: '+n+' gün · '+esc(r.code)+'</em></div>'+chip(r.status,col(r.status))+'</div></div>';}).join(""):'<div class="sm-card sm-empty">Kayıt bulunamadı</div>')+'</div>';}
   default:{
     const rows=[["phone","GSM",inf.gsm],["phone","Telefon",inf.phone],["list","Dahili",inf.ext],["work","İş E-postası",inf.mail],["mail","Kişisel E-posta",inf.pmail],["home","Adres",inf.addr]].filter(r=>r[2]);
-    return sec("İletişim","phone",C.blue,rows.map(([i,l,v])=>'<div class="sm-row">'+ic(i,18)+'<div class="tx"><small>'+l+'</small><b>'+esc(v)+'</b></div></div>').join(""))+
+    return '<div class="sm-cols">'+sec("İletişim","phone",C.blue,rows.map(([i,l,v])=>'<div class="sm-row">'+ic(i,18)+'<div class="tx"><small>'+l+'</small><b>'+esc(v)+'</b></div></div>').join(""))+
       sec("Tahsil Bilgileri","award",C.violet,inf.edu.map(x=>'<div class="sm-row"><div class="tx"><b>'+esc(x.okul)+'</b><span class="sub">'+esc([x.fak,x.bol].filter(Boolean).join(" · "))+'</span><span class="sub" style="color:#64748B;font-weight:700">'+esc(x.tarih)+'</span></div>'+chip(x.der,C.blue)+'</div>').join(""))+
-      sec("Yabancı Diller","chat",C.amber,inf.lang.map(x=>'<div class="sm-row"><div class="tx"><b>'+esc(x.bol)+'</b><span class="sub">'+esc([x.yer,x.sert?"Sertifika: "+x.sert:""].filter(Boolean).join(" · "))+'</span></div>'+chip(x.der,C.blue)+'</div>').join(""));}
+      sec("Yabancı Diller","chat",C.amber,inf.lang.map(x=>'<div class="sm-row"><div class="tx"><b>'+esc(x.bol)+'</b><span class="sub">'+esc([x.yer,x.sert?"Sertifika: "+x.sert:""].filter(Boolean).join(" · "))+'</span></div>'+chip(x.der,C.blue)+'</div>').join(""))+'</div>';}
   }
 }
 function sheet(){
@@ -8350,12 +8407,13 @@ function sheet(){
   else{const r=V.sheet==="reward",n=r?inf.reward:inf.penalty;h='<h3>'+(r?"Ödüller":"Cezalar")+'</h3>'+sec(r?"Ödül Puanı":"Ceza Puanı","award",r?C.reward:C.penalty,n?'<div class="sm-row"><div class="tx"><b>'+(r?"Proje teslimi":"Geç bildirim")+'</b><span class="sub">Gerekçe: '+(r?"Zamanında ve eksiksiz teslim":"Devamsızlık bildirimi gecikti")+'</span></div>'+chip(n+" puan",r?C.reward:C.penalty)+'</div>':"");}
   return '<div class="sm-sheet" data-sm="close"><div>'+h+'</div></div>';
 }
-function page(){return (V.person?detailPage():listPage())+sheet();}
+function page(){if(!V.person||!people().some(p=>p.id===V.person))V.person=people()[0]?.id||null;
+  return '<div class="page sm-web"><header class="sm-top"><div><h1>Personel Paneli</h1><p>Birim ve personel seçerek özlük, takvim, zimmet, kariyer ve izin bilgilerini görün</p></div></header><div class="sm-split"><aside class="sm-side">'+listPage()+'</aside><section class="sm-main">'+(V.person?detailPage():'<div class="sm-card sm-empty">Personel seçin</div>')+'</section></div></div>'+sheet();}
 function refresh(){if(route!=="staffm")return;const f=document.activeElement?.id==="sm-q",pos=f?document.activeElement.selectionStart:0;screen.innerHTML=page();if(f){const i=document.getElementById("sm-q");i.focus();i.setSelectionRange(pos,pos);}}
 document.addEventListener("click",ev=>{if(route!=="staffm")return;const el=ev.target.closest("[data-sm]");if(!el)return;const a=el.dataset.sm,v=el.dataset.v||"";
   if(a==="close"){if(ev.target!==el)return;V.sheet=null;}
   else if(a==="unit"){V.unit=v;V.q="";}
-  else if(a==="person"){V.person=v;V.tab="genel";V.day=null;window.scrollTo(0,0);}
+  else if(a==="person"){V.person=v;V.tab="genel";V.day=null;}
   else if(a==="back"){V.person=null;}
   else if(a==="tab"){V.tab=v;}
   else if(a==="day"){V.day=v;}
