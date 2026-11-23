@@ -4746,7 +4746,7 @@ function staffPanelPage(){
   switch(current){
     case "takvim":
       panes=card("Devam (PDKS)","clock",grid(["Hareket","Tarih","Saat","Alan"],moves.map(r=>[open("pdks",r),e(dateText(r.date)),e(r.time||"—"),e(r.newArea||r.oldArea||"—")])),"staff-wide")+
-        card("İşler ve teslimler","work",grid(["İş","Proje","Aşama","Teslim"],jobs.map(r=>[open("tasks",r),e(rowOf("projects",r.project)?.name||"—"),pill(r.status),e(dateText(r.end))])),"staff-wide");
+        card("İşler ve teslimler","work",window.workCards(jobs),"staff-wide");
       break;
     case "zimmet":
       panes=card("Zimmetli varlıklar","box",grid(["Varlık","Envanter / plaka","Teslim"],gear.map(([n,c,d])=>[e(n),'<span class="code">'+e(c)+'</span>',e(dateText(d))])),"staff-wide");
@@ -4783,7 +4783,7 @@ function employeePanel(row,inline){
     case "job":content=facts([["Birim",row.unit],["Unvan",row.title],["Yönetici",demo.manager],["Çalışma modeli",demo.model]])+(role?open("roles",role):"");break;
     case "leave":content='<div class="employee-balances">'+[["Devreden",leave.carry],["Kazanılan",leave.earned],["Kullanılan",leave.used],["Kalan",leave.left]].map(([l,v])=>'<div><small>'+l+'</small><b>'+v+' gün</b></div>').join("")+'</div>'+grid(["Talep","Başlangıç","Bitiş","Durum"],linked("leave").map(r=>[open("leave",r),e(dateText(r.start)),e(dateText(r.end)),pill(r.status)]));break;
     case "attendance":content=grid(["Hareket","Tarih","Saat","Alan"],linked("pdks").map(r=>[open("pdks",r),e(dateText(r.date)),e(r.time),e(r.newArea||r.oldArea)]));break;
-    case "work":content=grid(["İş","Aşama","Teslim"],jobs.map(r=>[open("tasks",r),pill(r.status),e(dateText(r.end))]));break;
+    case "work":content=window.workCards(jobs);break;
     case "equipment":content=grid(["Varlık","Envanter no","Teslim"],(demo.equipment||[]).map(r=>r.map(e)));break;
     case "training":content=grid(["Eğitim","Durum","Tarih"],(demo.training||[]).map(([n,s,d])=>[e(n),pill(s),e(dateText(d))]));break;
     case "docs":content=grid(["Belge","Tarih","İşlem"],(demo.docs||[]).map(([n,d])=>[e(n),e(dateText(d)),'<a download="'+e(n)+'.txt" href="data:text/plain;charset=utf-8,'+encodeURIComponent(["TALES ERP · Örnek belge",n,row.name,row.code,d].join("\n"))+'">Örnek belgeyi indir</a>']));break;
@@ -8115,7 +8115,7 @@ function detail(c){
 function other(c){
   const back='<button class="c2-back" data-c2="other" data-v="">'+ic("left",16)+'Diğer</button>';
   if(V.other==="files"){window.EKR=paint;window.EKADD=a=>{c.files.unshift(...a);save();paint();};return back+mobileEkler(c.files);}
-  if(V.other==="works")return back+c.works.map(w=>rcard(esc(w.code),esc(w.title),[["flag","Aşama: "+esc(w.stage)]])).join("");
+  if(V.other==="works")return back+window.workCards(c.works.map(w=>({code:w.code,name:w.title,status:w.stage,type:"Görev"})));
   if(V.other==="history")return back+c.history.map(h=>rcard("",esc(h.what),[["user",esc(h.who)],["calendar",dt(h.date)]])).join("");
   const t=(k,l,i,col,n)=>'<button class="c2-tile" style="--t:'+col+'" data-c2="other" data-v="'+k+'"><span>'+ic(i,24)+'</span><b>'+l+(n!=null?'<em>'+n+'</em>':"")+'</b></button>';
   return '<div class="c2-tiles">'+t("files","Ekler","image","#3B5BDB",c.files.length)+t("works","İş listesi","work","#2F80ED",c.works.length)+t("history","Geçmiş","clock","#1B9C6B",null)+'</div>';
@@ -8490,12 +8490,13 @@ function demo(module,row){const s=seedOf(row),w=k=>team[(s+k)%team.length];
   return {s,w};}
 // İş listesi kartı: mobil "İşlerim" kartıyla aynı düzen (kod · kategori, başlık, açıklama, tür/aşama/öncelik, tarih + Başlat)
 function workCards(list){const today=new Date().toISOString().slice(0,10),pc={"Acil":"#D23F4A","Yüksek":"#EA8A2B","Normal":"#3158C9","Düşük":"#64748B"};
-  return '<div class="wk-list">'+list.map(t=>{const late=t.end&&t.end<today&&!/Tamam|Kapand/.test(t.status||"");
-    return '<div class="wk-card'+(late?" late":"")+'" role="button" tabindex="0" data-action="open" data-value="tasks|'+e(t.id)+'">'+
+  if(!list.length)return '<p class="c2-empty">Kayıt bulunamadı</p>';return '<div class="wk-list">'+list.map(t=>{const late=t.end&&t.end<today&&!/Tamam|Kapand/.test(t.status||"");
+    return '<div class="wk-card'+(late?" late":"")+'"'+(t.id?' role="button" tabindex="0" data-action="open" data-value="tasks|'+e(t.id)+'"':"")+'>'+
     '<div class="wk-top"><b>'+e(t.code)+'</b>'+(t.category?'<i></i><span>'+e(t.category+(t.subCategory?" / "+t.subCategory:""))+'</span>':"")+'</div>'+
     '<h4>'+e(t.name)+'</h4>'+(t.notes?'<p>'+e(t.notes)+'</p>':"")+
     '<div class="wk-meta">'+[["Tür",t.type,"work","#475569"],["Aşama",t.status,"layers","#3158C9"],["Öncelik",t.priority,"flag",pc[t.priority]||"#475569"]].filter(x=>x[1]).map(([l,v,i,c])=>'<span title="'+l+'" aria-label="'+l+': '+e(v)+'" style="--c:'+c+'">'+ic(i,14)+e(v)+'</span>').join("")+'</div>'+
     '<footer><span class="wk-date">'+ic("calendar",14)+e(dateText(t.end||t.start))+'</span><button type="button" class="wk-play" title="Başlat" aria-label="Başlat">'+ic("play",14)+'Başlat</button></footer></div>';}).join("")+'</div>';}
+window.workCards=workCards;
 function hrList(items){return items.map(x=>'<div class="c2-rc"'+(x.open?' data-action="open" data-value="'+x.open+'" style="cursor:pointer"':"")+'>'+(x.o?'<span class="o">'+e(x.o)+'</span>':"")+'<div class="h"><div><b>'+e(x.t)+'</b>'+(x.lines||[]).map(([i,v])=>'<span class="c2-ln"><i>'+ic(i,13)+'</i>'+e(v)+'</span>').join("")+'</div>'+(x.chip?'<span class="mp-chip" style="--c:'+x.chip[1]+'">'+e(x.chip[0])+'</span>':"")+ic("right",22)+'</div>'+(x.foot?'<div class="c2-ft"><div><span>'+ic("calendar",15)+'</span><div><small>'+x.foot[0]+'</small><strong>'+x.foot[1]+'</strong></div></div>'+(x.foot[2]?'<i></i><div><span>'+ic("check",15)+'</span><div><small>'+x.foot[2]+'</small><strong>'+x.foot[3]+'</strong></div></div>':"")+'</div>':"")+'</div>').join("");}
 window.mobileProjRecord=function(module,row,isInline){const dv=(k)=>{const v=display(module,row,k);return v&&v!=="—"&&v!=="-"?v:"";};
   const isP=module==="projects",{s,w}=demo(module,row),tasks=db.tasks.filter(t=>t.project===row.id||(!isP&&(seedOf(t)+s)%4===0)).slice(0,6);
