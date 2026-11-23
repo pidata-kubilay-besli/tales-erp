@@ -8676,7 +8676,7 @@ function secKpi(){const st=STG.map(s=>({l:s[0],v:S.opps.filter(o=>o.stage===s[0]
     '<div class="cy-kpi"><section><h3>Fırsat durumları</h3>'+(typeof vzDonut==="function"?vzDonut(st,String(S.opps.length),"fırsat"):"")+'</section><section><h3>Temsilci bazında</h3>'+(typeof vzHBars==="function"?vzHBars(own,[{k:"a",l:"Fırsat",c:"#2a78d6"}],Math.max(...own.map(x=>x.a))):"")+'</section><section><h3>Aktivite dağılımı</h3>'+(typeof vzDonut==="function"?vzDonut(SECS.map((m,i)=>({l:m[1],v:S.events.filter(x=>x.kind===m[0]).length,c:["#2a78d6","#eb6834","#1baf7a"][i]})),String(S.events.length),"aktivite"):"")+'</section></div>';}
 function page(){
   const body={cal:secCal,opps:secOpps,cust:secCust,person:secPerson,meet:()=>secKind("meet"),task:()=>secKind("task"),call:()=>secKind("call"),kpi:secKpi}[V.sec]();
-  const lay=V.layout||"list",lt=V.sec==="kpi"?"":'<div class="cy-lay"><button class="'+(lay==="list"?"on":"")+'" data-cy="layout" data-v="list" title="Liste">'+ic("list",17)+'</button><button class="'+(lay==="grid"?"on":"")+'" data-cy="layout" data-v="grid" title="İkili görünüm">'+ic("grid",17)+'</button></div>';
+  const lay=V.layout||"list",lt="";
   return '<div class="c2 '+(lay==="grid"?"cy-grid":"")+'"><div class="c2-head"><h1>CRM Yönetimi</h1>'+lt+'</div><div class="c2-toggle wrap">'+TABS.map(([k,l,i])=>'<button class="'+(V.sec===k?"on":"")+'" data-cy="sec" data-v="'+k+'">'+ic(i,17)+l+'</button>').join("")+'</div>'+body+'</div>';
 }
 /* ── Fırsat detayı ── */
