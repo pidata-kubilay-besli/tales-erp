@@ -8495,7 +8495,7 @@ function workCards(list){const today=new Date().toISOString().slice(0,10),pc={"A
     '<div class="wk-top"><b>'+e(t.code)+'</b>'+(t.category?'<i></i><span>'+e(t.category+(t.subCategory?" / "+t.subCategory:""))+'</span>':"")+'</div>'+
     '<h4>'+e(t.name)+'</h4>'+(t.notes?'<p>'+e(t.notes)+'</p>':"")+
     '<div class="wk-meta">'+[["Tür",t.type,"work","#475569"],["Aşama",t.status,"layers","#3158C9"],["Öncelik",t.priority,"flag",pc[t.priority]||"#475569"]].filter(x=>x[1]).map(([l,v,i,c])=>'<span title="'+l+'" aria-label="'+l+': '+e(v)+'" style="--c:'+c+'">'+ic(i,14)+e(v)+'</span>').join("")+'</div>'+
-    '<footer><span class="wk-date">'+ic("calendar",14)+e(dateText(t.end||t.start))+'</span><button type="button" class="wk-play" title="Başlat" aria-label="Başlat">'+ic("play",14)+'Başlat</button></footer></div>';}).join("")+'</div>';}
+    '<footer><span class="wk-date">'+ic("calendar",14)+e(dateText(t.end||t.start))+'</span><button type="button" class="wk-play" title="Başlat" aria-label="Başlat">'+'<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg>Başlat</button></footer></div>';}).join("")+'</div>';}
 window.workCards=workCards;
 function hrList(items){return items.map(x=>'<div class="c2-rc"'+(x.open?' data-action="open" data-value="'+x.open+'" style="cursor:pointer"':"")+'>'+(x.o?'<span class="o">'+e(x.o)+'</span>':"")+'<div class="h"><div><b>'+e(x.t)+'</b>'+(x.lines||[]).map(([i,v])=>'<span class="c2-ln"><i>'+ic(i,13)+'</i>'+e(v)+'</span>').join("")+'</div>'+(x.chip?'<span class="mp-chip" style="--c:'+x.chip[1]+'">'+e(x.chip[0])+'</span>':"")+ic("right",22)+'</div>'+(x.foot?'<div class="c2-ft"><div><span>'+ic("calendar",15)+'</span><div><small>'+x.foot[0]+'</small><strong>'+x.foot[1]+'</strong></div></div>'+(x.foot[2]?'<i></i><div><span>'+ic("check",15)+'</span><div><small>'+x.foot[2]+'</small><strong>'+x.foot[3]+'</strong></div></div>':"")+'</div>':"")+'</div>').join("");}
 window.mobileProjRecord=function(module,row,isInline){const dv=(k)=>{const v=display(module,row,k);return v&&v!=="—"&&v!=="-"?v:"";};
@@ -8739,7 +8739,7 @@ html body .wk-card.late .wk-date,html body .wk-card.late .wk-date svg{color:#D23
 html body .wk-play{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:999px;border:0;background:#E7F6EF;color:#12936A;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
 html body .wk-play:hover{background:#12936A;color:#fff}
 </style>
-<style id="c2-gap">html body .c2-body>.m2-sec+.m2-sec{margin-top:12px!important}</style>
+<style id="c2-gap">html body .c2-body>.m2-sec+.m2-sec{margin-top:12px!important}html body .m2-sec>.m2-row:last-child{padding-bottom:18px}</style>
 <style id="btn-system">
 /* Buton sistemi: tüm .btn türleri için ortak boyut, kontrast, hover/active/focus */
 html body .btn{border-radius:8px;transition:background-color .12s,border-color .12s,color .12s,box-shadow .12s;cursor:pointer}
