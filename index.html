@@ -8488,6 +8488,14 @@ function demo(module,row){const s=seedOf(row),w=k=>team[(s+k)%team.length];
   if(!row.mpComments)row.mpComments=[{author:w(1),date:shift(day(),-6),text:"Kapsam toplantısı yapıldı, gereksinimler netleşti."},{author:w(2),date:shift(day(),-3),text:"Takvim güncellendi, ilk teslim önümüzdeki hafta."},{author:w(0),date:shift(day(),-1),text:"Müşteri onayı alındı, devam ediyoruz."}];
   if(!row.mpFiles)row.mpFiles=[{name:"Kapsam_dokumani.pdf",size:"412 KB",who:w(1),date:shift(day(),-12)},{name:"Is_plani.xlsx",size:"88 KB",who:w(2),date:shift(day(),-8)},{name:"Saha_fotografi.jpg",size:"1,2 MB",who:w(3),date:shift(day(),-4)},{name:"Toplanti_notu.docx",size:"64 KB",who:w(0),date:shift(day(),-2)}];
   return {s,w};}
+// İş listesi kartı: mobil "İşlerim" kartıyla aynı düzen (kod · kategori, başlık, açıklama, tür/aşama/öncelik, tarih + Başlat)
+function workCards(list){const today=new Date().toISOString().slice(0,10),pc={"Acil":"#D23F4A","Yüksek":"#EA8A2B","Normal":"#3158C9","Düşük":"#64748B"};
+  return '<div class="wk-list">'+list.map(t=>{const late=t.end&&t.end<today&&!/Tamam|Kapand/.test(t.status||"");
+    return '<div class="wk-card'+(late?" late":"")+'" role="button" tabindex="0" data-action="open" data-value="tasks|'+e(t.id)+'">'+
+    '<div class="wk-top"><b>'+e(t.code)+'</b>'+(t.category?'<i></i><span>'+e(t.category+(t.subCategory?" / "+t.subCategory:""))+'</span>':"")+'</div>'+
+    '<h4>'+e(t.name)+'</h4>'+(t.notes?'<p>'+e(t.notes)+'</p>':"")+
+    '<div class="wk-meta">'+[["Tür",t.type,"work","#475569"],["Aşama",t.status,"layers","#3158C9"],["Öncelik",t.priority,"flag",pc[t.priority]||"#475569"]].filter(x=>x[1]).map(([l,v,i,c])=>'<span title="'+l+'" aria-label="'+l+': '+e(v)+'" style="--c:'+c+'">'+ic(i,14)+e(v)+'</span>').join("")+'</div>'+
+    '<footer><span class="wk-date">'+ic("calendar",14)+e(dateText(t.end||t.start))+'</span><button type="button" class="wk-play" title="Başlat" aria-label="Başlat">'+ic("play",14)+'Başlat</button></footer></div>';}).join("")+'</div>';}
 function hrList(items){return items.map(x=>'<div class="c2-rc"'+(x.open?' data-action="open" data-value="'+x.open+'" style="cursor:pointer"':"")+'>'+(x.o?'<span class="o">'+e(x.o)+'</span>':"")+'<div class="h"><div><b>'+e(x.t)+'</b>'+(x.lines||[]).map(([i,v])=>'<span class="c2-ln"><i>'+ic(i,13)+'</i>'+e(v)+'</span>').join("")+'</div>'+(x.chip?'<span class="mp-chip" style="--c:'+x.chip[1]+'">'+e(x.chip[0])+'</span>':"")+ic("right",22)+'</div>'+(x.foot?'<div class="c2-ft"><div><span>'+ic("calendar",15)+'</span><div><small>'+x.foot[0]+'</small><strong>'+x.foot[1]+'</strong></div></div>'+(x.foot[2]?'<i></i><div><span>'+ic("check",15)+'</span><div><small>'+x.foot[2]+'</small><strong>'+x.foot[3]+'</strong></div></div>':"")+'</div>':"")+'</div>').join("");}
 window.mobileProjRecord=function(module,row,isInline){const dv=(k)=>{const v=display(module,row,k);return v&&v!=="—"&&v!=="-"?v:"";};
   const isP=module==="projects",{s,w}=demo(module,row),tasks=db.tasks.filter(t=>t.project===row.id||(!isP&&(seedOf(t)+s)%4===0)).slice(0,6);
@@ -8501,11 +8509,11 @@ window.mobileProjRecord=function(module,row,isInline){const dv=(k)=>{const v=dis
   let body;
   if(recordTab==="comments"){const k=module+"|"+row.id;window.GC[k]=c=>{row.mpComments.push(c);render();persist&&persist("Yorum eklendi.");};body=mtCommentsView(row.mpComments,k);}
   else if(recordTab==="files"){window.EKR=render;window.EKADD=a=>{row.mpFiles.unshift(...a);persist&&persist(a.length+" dosya eklendi.");render();};body=mobileEkler(row.mpFiles);}
-  else if(recordTab==="work")body=hrList(tasks.map(t=>({o:t.code,t:t.name,lines:[["flag","Aşama: "+t.status]],open:"tasks|"+t.id})))||'<p class="c2-empty">Kayıt bulunamadı</p>';
+  else if(recordTab==="work")body=workCards(tasks)||'<p class="c2-empty">Kayıt bulunamadı</p>';
   else if(recordTab==="activities")body=hrList(["Proje başlangıç toplantısı","Saha keşfi","Malzeme teslimi","Ara değerlendirme","Müşteri sunumu"].map((n,k)=>({t:n,chip:[["Tamamlandı","#1B9C6B"],["Devam ediyor","#3158C9"],["Planlandı","#D97706"]][k%3],foot:["Tarih",dateText(shift(start,k*9))]})));
   else if(recordTab==="other"){const back='<button class="mp-back" data-mpo="">'+ic("left",16)+'Diğer</button>';
     const T=isP?[["work","İş listesi","work","#1B9C6B",tasks.length],["packs","Paketler","check","#2F80ED",3],["pay","Ödeme","money","#3B5BDB",4],["dist","Dağıtım","external","#8A94A6",null]]:[["act","Aktiviteler","chart","#3B5BDB",null],["hist","Geçmiş","clock","#1B9C6B",null],["dist","Dağıtım","external","#8A94A6",null],["op","Görüş / Onay","user","#2F80ED",null]];
-    const lists={work:()=>hrList(tasks.map(t=>({o:t.code,t:t.name,lines:[["flag","Aşama: "+t.status]],open:"tasks|"+t.id}))),packs:()=>hrList(["Altyapı paketi","Yazılım paketi","Eğitim paketi"].map((n,k)=>({o:"PKT-"+(101+k),t:n,lines:[["flag","İlerleme: %"+[80,45,10][k]]]}))),
+    const lists={work:()=>workCards(tasks),packs:()=>hrList(["Altyapı paketi","Yazılım paketi","Eğitim paketi"].map((n,k)=>({o:"PKT-"+(101+k),t:n,lines:[["flag","İlerleme: %"+[80,45,10][k]]]}))),
       pay:()=>hrList([1,2,3,4].map(k=>({t:k+". hakediş",lines:[["money",new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY",maximumFractionDigits:0}).format(120000+k*35000)]],chip:k<3?["Ödendi","#1B9C6B"]:["Bekliyor","#D97706"],foot:["Vade",dateText(shift(start,k*30))]}))),
       dist:()=>hrList([0,1,2].map(k=>({t:w(k+1),lines:[["mail",["Bilgi","Onay","Bilgi"][k]]]}))),act:()=>hrList(["Süreç başlatıldı","Belge yüklendi","Aşama değişti","Onaya gönderildi"].map((n,k)=>({t:n,lines:[["user",w(k)]],foot:["Tarih",dateText(shift(start,k*6))]}))),
       hist:()=>historyTimeline(typeof demoEvents==="function"?demoEvents(row,module):[]),op:()=>hrList([{t:w(2),lines:[["chat","Uygun, devam edilebilir."]],chip:["Onaylandı","#1B9C6B"]},{t:w(3),lines:[["chat","Bütçe kontrolü bekleniyor."]],chip:["Bekliyor","#D97706"]}])};
@@ -8708,6 +8716,28 @@ html body .cy-item time{font-size:16px!important}
 </style>
 <style id="cy-add2">html body .cy-sh{gap:10px!important}html body .cy-sh b{flex:none!important}html body .cy-sh .cy-cnt{font-style:normal;min-width:24px;height:22px;padding:0 7px;border-radius:999px;background:#E9EDF3;color:#475569;font-size:12px;font-weight:800;display:grid;place-items:center}html body .cy-sh .cy-add{width:auto!important;height:32px!important;padding:0 12px 0 8px!important;margin-left:4px;border-radius:999px!important;display:inline-flex!important;align-items:center;gap:6px;background:color-mix(in srgb,var(--c) 10%,#fff)!important;color:var(--c)!important;font:inherit;font-size:13px;font-weight:700;border:1px solid color-mix(in srgb,var(--c) 22%,#fff)!important}html body .cy-sh .cy-add:hover{transform:none!important;background:color-mix(in srgb,var(--c) 16%,#fff)!important}html body .cy-sh .cy-add svg{width:18px!important;height:18px!important}html body .cy-sec{max-width:none}</style>
 <style id="cy-odd">html body .cy-grid .cy-l>*:last-child:nth-child(odd){grid-column:1/-1}</style>
+<style id="wk-cards">
+html body .wk-list{display:grid;gap:12px}
+html body .wk-card{background:#fff;border:1px solid #E3E8F0;border-radius:16px;padding:16px 16px 14px;box-shadow:0 6px 16px #0F1F3D0D;cursor:pointer;transition:border-color .12s,box-shadow .12s}
+html body .wk-card:hover{border-color:#C9D6F5;box-shadow:0 8px 20px #0F1F3D14}
+html body .wk-card:focus-visible{outline:2px solid #3158C9;outline-offset:2px}
+html body .wk-card.late{border-color:#F3C4C8}
+html body .wk-top{display:flex;align-items:center;gap:8px;min-width:0;font-size:13px}
+html body .wk-top b{color:#3158C9;font-weight:700;flex:none}
+html body .wk-top i{width:4px;height:4px;border-radius:50%;background:#94A3B8;flex:none}
+html body .wk-top span{color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body .wk-card h4{margin:10px 0 0;font-size:16.5px;line-height:1.35;font-weight:700;letter-spacing:-.2px;color:#0F172A;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+html body .wk-card p{margin:6px 0 0;font-size:13.5px;line-height:1.45;color:#64748B;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+html body .wk-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+html body .wk-meta span{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:20px;background:#F6F8FB;border:1px solid #E3E8F0;font-size:12.5px;font-weight:600;color:#475569}
+html body .wk-meta span svg{color:var(--c)}
+html body .wk-card footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid #EEF1F6}
+html body .wk-date{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;color:#334155}
+html body .wk-date svg{color:#64748B}
+html body .wk-card.late .wk-date,html body .wk-card.late .wk-date svg{color:#D23F4A}
+html body .wk-play{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:999px;border:0;background:#E7F6EF;color:#12936A;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+html body .wk-play:hover{background:#12936A;color:#fff}
+</style>
 <style id="btn-system">
 /* Buton sistemi: tüm .btn türleri için ortak boyut, kontrast, hover/active/focus */
 html body .btn{border-radius:8px;transition:background-color .12s,border-color .12s,color .12s,box-shadow .12s;cursor:pointer}
