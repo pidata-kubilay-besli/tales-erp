@@ -3222,10 +3222,10 @@ function readRoute(){
   const [path,query]=location.hash.slice(1).split("?");
   route=routes.has(path)?path:path?"home":"tasks";
   const params=new URLSearchParams(query||"");
-  const requested=params.get("view"),modes=route==="tasks"?views.map(([id])=>id):route==="workflows"?["inbox","grid","list"]:["grid","list"];
+  const requested=params.get("view"),modes=route==="tasks"?views.map(([id])=>id):["grid","list"];
   if(route==="roles")modes.push("directory");
   if(route==="leave")modes.push("balance");
-  view=modes.includes(requested)?requested:route==="tasks"?"board":route==="projects"||specialistViews[route]?"grid":route==="workflows"?"inbox":"list";
+  view=modes.includes(requested)?requested:route==="tasks"?"board":route==="projects"||specialistViews[route]?"grid":"list";
   if(route==="roles"&&!requested&&!params.has("panel"))view="directory";
   if(route==="leave"&&!requested)view="list";
   term="";criteria={};if(route==="tasks"&&rowOf("projects",params.get("project")))criteria.project=params.get("project");
@@ -3331,7 +3331,7 @@ function reports(){
 function studioPage(){
   if(route==="tasks")return workPage();
   const config=modules[route],work=route==="tasks",portfolio=route==="projects",flow=route==="workflows";
-  const options=work?views:flow?[["inbox","İşlem kuyruğu","flow"],...views.filter(([id])=>["list","grid"].includes(id))]:views.filter(([id])=>["list","grid"].includes(id));
+  const options=work?views:views.filter(([id])=>["list","grid"].includes(id));
   if(route==="roles")options.unshift(["directory","Görev rehberi","flow"]);
   if(route==="leave")options.push(["balance","İzin panosu","chart"]);
   const viewName=(id,label)=>id==="grid"&&specialistViews[route]?specialistViews[route]:portfolio&&id==="grid"?"Portföy":work&&id==="board"?"Pano":label;
