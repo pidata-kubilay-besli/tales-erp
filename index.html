@@ -3238,7 +3238,7 @@ function readRoute(){
   }
   if(route==="definitions"&&modules.definitions.fields[2].options.includes(params.get("category")))criteria.category=params.get("category");
   page=1;sort={key:"",dir:1};popup=null;mobile=false;
-  split=params.has("panel")?params.get("panel")==="1":route==="roles"&&view==="list";inlineDraft=null;recordTab="info";
+  split=false&&view==="list";inlineDraft=null;recordTab="info";
   inspector=split?db[route]?.[0]?.id:null;
   if(route==="roles"&&params.get("tab")==="people")recordTab="people";
   if(route==="people"||route==="leave"||route==="pdks")expanded.add("hr");
@@ -3347,7 +3347,7 @@ function studioPage(){
   const typeSelect=route==="definitions"?'<label class="scope-select"><select aria-label="Tanım türü" id="definition-type"><option value="">Tüm tanım türleri</option>'+fieldOf(route,"category").options.map(x=>'<option '+(x===criteria.category?"selected":"")+'>'+e(x)+'</option>').join("")+'</select></label>':"";
   const overview=route==="people"?'<a class="hr-entry" href="#leave?view=balance">'+svg("chart",18)+' İzin ve bakiye panosu '+svg("right",14)+'</a>':route==="opportunities"&&typeof oppOverview==="function"?oppOverview():route==="finance"||route==="inventory"?moduleOverview():"";
   if(route==="leave"&&view==="balance")return '<div class="page studio-page hr-page"><header class="page-heading studio-heading"><div><p>İnsan Kaynakları</p><h1>İzin Talepleri</h1></div>'+newButton+'</header><nav class="studio-tabs hr-nav">'+tabs+'</nav>'+leaveDashboard()+'</div>';
-  const listTools=view==="list"?button("Sütunlar","columns",{value:route,icon:"list",kind:"secondary"})+button("Detay paneli","studio-split",{icon:"panel",kind:"secondary",extra:'aria-pressed="'+split+'"'})+iconButton("download","studio-export","CSV indir",route):"";
+  const listTools=view==="list"?button("Sütunlar","columns",{value:route,icon:"list",kind:"secondary"})+""+iconButton("download","studio-export","CSV indir",route):"";
   const inspectorPanel=split?'<aside class="inspector" id="inspector" aria-label="Kayıt detayı">'+inspectorContent()+'</aside>':"";
   return '<div class="page studio-page" data-route="'+e(route)+'" data-view="'+e(view)+'"><header class="page-heading studio-heading"><div><h1>'+e(titles[route]||config.label)+'</h1>'+(subtitle?'<p>'+e(subtitle)+'</p>':"")+'</div><div class="heading-actions">'+newButton+'</div></header>'+
     '<div class="studio-navigation"><nav class="studio-tabs" aria-label="'+e(config.label)+' görünümleri">'+tabs+'</nav>'+'</div>'+overview+
@@ -9108,6 +9108,7 @@ html body #c2-layer.open .c2-drawer{position:fixed!important;top:50%!important;l
 html body #c2-layer.open .c2-shade{background:#0F172A66!important}
 html body .ik2-drawer,html body .dialog.drawer{top:50%!important;left:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%)!important;width:min(880px,calc(100vw - 48px))!important;height:auto!important;max-height:min(88vh,920px)!important;border-radius:20px!important;box-shadow:0 24px 60px #0F172A40!important;animation:c2Pop .16s ease-out!important}
 html body .ik2-drawer{height:min(86vh,900px)!important}
+html body #c2-layer.open .c2-form{position:fixed!important;top:50%!important;left:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%)!important;width:min(600px,calc(100vw - 48px))!important;height:auto!important;max-height:min(88vh,900px)!important;border-radius:20px!important;box-shadow:0 24px 60px #0F172A40!important;animation:c2Pop .16s ease-out!important}
 html body .c2-head h1{font-size:clamp(1.6rem,2.4vw,2.2rem)!important;font-weight:800!important;letter-spacing:-.02em;color:#14213D}
 </style>
 <style id="c2-table">
