@@ -8514,13 +8514,14 @@ window.mobileProjRecord=function(module,row,isInline){const dv=(k)=>{const v=dis
     const hero='<div class="mp-hero"><div><span class="t">'+e((row.name||"?")[0])+'</span><div class="tx"><b>'+e(row.name||row.code)+'</b><small>'+e(row.code)+' · '+e(cari)+'</small></div><span class="mp-chip" style="--c:'+stc+'">'+e(cur)+'</span></div><footer>'+ic("calendar",17)+e(dateText(start))+' – '+e(dateText(end))+'</footer></div>';
     const next=opts[idx+1];
     body=hero+(isP?'<div class="mp-amt"><header><span>'+ic("money",19)+'</span><b>Finans bilgileri</b></header><div class="row">'+[["Bütçe","#3158C9",420000+s*1000],["Harcanan","#EA8A2B",180000+s*500],["Kalan","#1B9C6B",240000+s*500]].map(([l,c,v])=>'<div style="--c:'+c+'"><small>'+l+'</small><strong>'+new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY",maximumFractionDigits:0}).format(v)+'</strong></div>').join("")+'</div></div>'
-      :'<div class="mp-stagebtn"><button data-action="advance" data-value="'+e(next||"")+'" '+(next?"":"disabled")+'>'+ic("arrow",20)+'Aşama değiştir</button></div>')+
+      :(stageBtn=button("Aşama değiştir","advance",{icon:"arrow",value:next||"",kind:"secondary",extra:next?"":"disabled"}),""))+
       (isP?sec("Genel bilgiler","Tür, ilerleme, birim ve sorumlu","work","#3158C9",dr("Tür",e(dv("type")||"Uygulama projesi"))+dr("İlerleme",step(pct))+dr("Birim",e(dv("unit")||"Proje Yönetimi"))+dr("Sorumlu",e(owner)))+
             sec("Finans bilgileri","Süreç ve sözleşme","money","#1B9C6B",dr("Süreç",e(["Satış süreci","Kurulum süreci","Bakım süreci"][s%3]))+dr("Sözleşme türü",e(["Anahtar teslim","Birim fiyat","Götürü bedel"][s%3])))
           :sec("Genel bilgiler","İlerleme ve tür","flow","#3158C9",dr("İlerleme",step(pct))+dr("Tür",e(dv("type")||["Satın alma","Onay","İK"][s%3])))+
             sec("Detay bilgileri","Birim, sorumlu, dönem ve bütçe","note","#7C3AED",dr("Birim",e(dv("unit")||"Operasyon"))+dr("Sorumlu",e(owner))+dr("Dönem","2026 / Q"+(1+s%4))+dr("Bütçe",new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY",maximumFractionDigits:0}).format(85000+s*700))));
   }
-  return '<div class="record-panel desk-record task-record">'+deskHeader(module,row.name||row.code,row.code,isInline)+tabStrip(tabs,isInline,"Kayıt bölümleri")+'<div class="panel-body mp-body">'+body+'</div><footer class="panel-actions">'+(isLocked(module,row)?"":button("Düzenle","edit",{icon:"edit",value:module+"|"+row.id,kind:"primary"}))+'</footer></div>';
+  var stageBtn;
+  return '<div class="record-panel desk-record task-record">'+deskHeader(module,row.name||row.code,row.code,isInline)+tabStrip(tabs,isInline,"Kayıt bölümleri")+'<div class="panel-body mp-body">'+body+'</div><footer class="panel-actions">'+(stageBtn||"")+(isLocked(module,row)?"":button("Düzenle","edit",{icon:"edit",value:module+"|"+row.id,kind:"primary"}))+'</footer></div>';
 };
 const _rp=recordPopup;
 recordPopup=function(context=popup,isInline=false){if(context&&["projects","workflows"].includes(context.module)){const row=rowOf(context.module,context.id);if(row)return mobileProjRecord(context.module,row,isInline);}return _rp.apply(this,arguments);};
@@ -8596,8 +8597,8 @@ function decorate(){if(!["projects","workflows"].includes(route))return;
   document.querySelectorAll('#screen .queue-row').forEach(r=>{if(r.querySelector(".rb3"))return;const v=r.dataset.value||"";if(!v.includes("|"))return;const [m,id]=v.split("|");const last=r.lastElementChild;last&&last.insertAdjacentHTML("beforebegin",make(m,id));});}
 const _r=render;render=function(){const out=_r.apply(this,arguments);try{decorate();}catch(e){}return out;};
 new MutationObserver(()=>{try{decorate();}catch(e){}}).observe(document.getElementById("screen"),{childList:true,subtree:true});
-let menu=null;const closeMenu=()=>{menu?.remove();menu=null;};
-const openMenu=(el)=>{closeMenu();const v=el.dataset.v,isW=v.startsWith("workflows");const items=[["comments","Yorumlar","chat"],["files","Ekler","image"],[isW?"work":"activities",isW?"İş listesi":"Aktiviteler","list"],["other","Diğer","layers"]];
+let menu=null;const closeMenu=()=>{menu?.remove();menu=null;document.querySelectorAll('.rb[aria-expanded="true"]').forEach(x=>x.setAttribute("aria-expanded","false"));};
+const openMenu=(el)=>{closeMenu();el.setAttribute("aria-expanded","true");const v=el.dataset.v,isW=v.startsWith("workflows");const items=[["comments","Yorumlar","chat"],["files","Ekler","image"],[isW?"work":"activities",isW?"İş listesi":"Aktiviteler","list"],["other","Diğer","layers"]];
   menu=document.createElement("div");menu.className="rb-menu";menu.innerHTML=items.map(([k,l,i])=>'<button data-rbm="'+k+'" data-v="'+v+'">'+svg(i,16)+l+'</button>').join("")+'<hr><button data-rbm="copy" data-v="'+v+'">'+svg("file",16)+'Kodu kopyala</button>';
   document.body.appendChild(menu);const r=el.getBoundingClientRect();menu.style.top=Math.min(innerHeight-menu.offsetHeight-8,r.bottom+6)+"px";menu.style.left=Math.max(8,r.right-menu.offsetWidth)+"px";};
 const go=(el)=>{const a=el.dataset.rb,v=el.dataset.v;if(a==="more"){menu&&menu.dataset.for===v?closeMenu():(openMenu(el),menu.dataset.for=v);return;}if(a==="edit"){const t=document.createElement("button");t.dataset.action="edit";t.dataset.value=v;t.hidden=true;document.body.appendChild(t);t.click();t.remove();return;}
@@ -8707,5 +8708,25 @@ html body .cy-item time{font-size:16px!important}
 </style>
 <style id="cy-add2">html body .cy-sh{gap:10px!important}html body .cy-sh b{flex:none!important}html body .cy-sh .cy-cnt{font-style:normal;min-width:24px;height:22px;padding:0 7px;border-radius:999px;background:#E9EDF3;color:#475569;font-size:12px;font-weight:800;display:grid;place-items:center}html body .cy-sh .cy-add{width:auto!important;height:32px!important;padding:0 12px 0 8px!important;margin-left:4px;border-radius:999px!important;display:inline-flex!important;align-items:center;gap:6px;background:color-mix(in srgb,var(--c) 10%,#fff)!important;color:var(--c)!important;font:inherit;font-size:13px;font-weight:700;border:1px solid color-mix(in srgb,var(--c) 22%,#fff)!important}html body .cy-sh .cy-add:hover{transform:none!important;background:color-mix(in srgb,var(--c) 16%,#fff)!important}html body .cy-sh .cy-add svg{width:18px!important;height:18px!important}html body .cy-sec{max-width:none}</style>
 <style id="cy-odd">html body .cy-grid .cy-l>*:last-child:nth-child(odd){grid-column:1/-1}</style>
+<style id="btn-system">
+/* Buton sistemi: tüm .btn türleri için ortak boyut, kontrast, hover/active/focus */
+html body .btn{border-radius:8px;transition:background-color .12s,border-color .12s,color .12s,box-shadow .12s;cursor:pointer}
+html body .btn:active:not(:disabled){transform:translateY(1px)}
+html body .btn:disabled{opacity:.5;cursor:not-allowed}
+html body .btn:focus-visible{outline:2px solid #3158C9!important;outline-offset:2px!important}
+html body .btn.secondary{background:#fff;border:1px solid #CBD5E1;color:#334155;box-shadow:0 1px 2px #0F172A0D}
+html body .btn.secondary:hover:not(:disabled){background:#F1F5FB;border-color:#94A3B8;color:#1E293B}
+html body .btn.primary{box-shadow:0 1px 2px #0F172A1F}
+html body .btn.icon:hover:not(:disabled){background:#EEF3FF;color:#3158C9}
+/* Satır işlem butonları (Süreçler / Projeler listesi) */
+html body .rb3{gap:6px;flex:none}
+html body .rb3 .rb{width:32px;height:32px;border-radius:8px;border:1px solid #CBD5E1;background:#fff;color:#334155;box-shadow:0 1px 2px #0F172A14}
+html body .rb3 .rb:hover,html body .rb3 .rb[aria-expanded="true"]{background:#EEF3FF;color:#3158C9;border-color:#97ADE1}
+html body .rb3 .rb:active{transform:translateY(1px)}
+html body .rb3 .rb:focus-visible{outline:2px solid #3158C9;outline-offset:2px}
+html body .rb3 .rb[data-rb="more"]{background:#F1F5F9}
+html body .rb3 .rb[data-rb="more"]:hover,html body .rb3 .rb[data-rb="more"][aria-expanded="true"]{background:#3158C9;color:#fff;border-color:#3158C9}
+html body .rb3 .rb svg{width:17px;height:17px}
+</style>
 </body>
 </html>
