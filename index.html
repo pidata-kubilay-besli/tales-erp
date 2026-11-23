@@ -8264,12 +8264,12 @@ html body .sm-side{position:sticky;top:12px;max-height:calc(100vh - 24px);overfl
 html body .sm-side .sm-sh:first-of-type{margin-top:14px}
 html body .sm-tile.on{background:#EEF3FF}
 html body .sm-tile.on::after{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:#3158C9}
-html body .sm-main .sm-card:first-child{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);align-items:center}
-html body .sm-main .sm-card:first-child .sm-prof{grid-column:1;padding:20px 20px 12px}
-html body .sm-main .sm-card:first-child .sm-facts{grid-column:1;padding:0 20px 20px}
-html body .sm-main .sm-card:first-child .sm-hr{display:none}
-html body .sm-main .sm-card:first-child .sm-stats{grid-column:2;grid-row:1;padding:20px 20px 0}
-html body .sm-main .sm-card:first-child .sm-acts{grid-column:2;grid-row:2;padding:0 20px 20px}
+html body .sm-main .sm-hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);align-items:center}
+html body .sm-main .sm-hero .sm-prof{grid-column:1;padding:20px 20px 12px}
+html body .sm-main .sm-hero .sm-facts{grid-column:1;padding:0 20px 20px}
+html body .sm-main .sm-hero .sm-hr{display:none}
+html body .sm-main .sm-hero .sm-stats{grid-column:2;grid-row:1;padding:20px 20px 0}
+html body .sm-main .sm-hero .sm-acts{grid-column:2;grid-row:2;padding:0 20px 20px}
 html body .sm-av.lg{width:84px;height:84px;font-size:26px;border-radius:24px}
 html body .sm-prof h2{font-size:21px}
 html body .sm-seg{position:static;padding:16px 0 4px}
@@ -8307,7 +8307,7 @@ html body .sm-side .sm-tile{padding:9px 10px 9px 14px}
 html body .sm-side .sm-av,html body .sm-side .sm-unit{width:38px;height:38px}
 html body .sm-side .sm-tile+.sm-tile::before{left:66px}
 html body .sm-side .sm-sh{margin:14px 2px 6px}
-@media (max-width:1100px){html body .sm-main .sm-card:first-child{grid-template-columns:1fr}html body .sm-main .sm-card:first-child .sm-stats{grid-column:1;grid-row:auto;padding:0 12px 12px}html body .sm-main .sm-card:first-child .sm-acts{grid-column:1;grid-row:auto}}
+@media (max-width:1100px){html body .sm-main .sm-hero{grid-template-columns:1fr}html body .sm-main .sm-hero .sm-stats{grid-column:1;grid-row:auto;padding:0 12px 12px}html body .sm-main .sm-hero .sm-acts{grid-column:1;grid-row:auto}}
 @media (max-width:900px){html body .sm-split{grid-template-columns:1fr}html body .sm-side{position:static;max-height:none}html body .sm-cols{grid-template-columns:1fr}html body .sm-seg>div{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}html body .sm-main .sm-item{grid-template-columns:1fr}html body .sm-main .sm-item .sm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}html body .sm-main .sm-item .sm-ar,html body .sm-main .sm-item>div[style]{grid-column:1;justify-self:start}}
 </style>
 <script id="sm-js">
@@ -8354,7 +8354,7 @@ function detailPage(){
   const p=people().find(x=>x.id===V.person);if(!p){V.person=null;return listPage();}
   const d=personnelDemo[p.id]||{},inf=info(p),leave=annualLeaveStats(p,day());
   const role=typeof rowOf==="function"?rowOf("roles",p.role):null;
-  const head='<div class="sm-card"><div class="sm-prof">'+av(p,true)+'<div style="flex:1;min-width:0"><h2>'+esc(p.name)+'</h2><div class="sm-unitln">'+tree.replace(/21/g,"14")+esc(p.unit)+'</div><div class="sm-links"><span class="sm-link">'+ic("award",14)+esc(p.title)+'</span>'+(role&&role.name!==p.title?'<span class="sm-link">'+ic("work",14)+esc(role.name)+'</span>':"")+'</div></div></div>'+
+  const head='<div class="sm-card sm-hero"><div class="sm-prof">'+av(p,true)+'<div style="flex:1;min-width:0"><h2>'+esc(p.name)+'</h2><div class="sm-unitln">'+tree.replace(/21/g,"14")+esc(p.unit)+'</div><div class="sm-links"><span class="sm-link">'+ic("award",14)+esc(p.title)+'</span>'+(role&&role.name!==p.title?'<span class="sm-link">'+ic("work",14)+esc(role.name)+'</span>':"")+'</div></div></div>'+
     '<div class="sm-facts"><div class="sm-fact">'+ic("calendar",18)+'<div><small>Doğum Tarihi</small><b>'+dt(inf.birth)+' <i>('+age(inf.birth)+')</i></b></div></div><div class="sm-fact">'+ic("external",18)+'<div><small>İşe Giriş</small><b>'+dt(p.start)+' <i>'+years(p.start)+' yıl</i></b></div></div></div>'+
     '<div class="sm-hr"></div><div class="sm-stats">'+[["Kalan İzin",leave.left,"gün",leave.left>0?C.reward:C.penalty,"leave"],["Ödül Puanı",inf.reward,"",C.reward,"reward"],["Ceza Puanı",inf.penalty,"",C.penalty,"penalty"]].map(([l,v,u,c,k])=>'<button class="sm-stat" style="--c:'+c+'" data-sm="sheet" data-v="'+k+'"><small>'+l+chev.replace('width="20" height="20"','width="16" height="16"')+'</small><b>'+v+(u?' <i>'+u+'</i>':"")+'</b></button>').join("")+'</div>'+
     '<div class="sm-acts"><button class="sm-act" data-sm="toast" data-v="Arama başlatılıyor: '+esc(inf.gsm)+'">'+ic("phone",17)+'<span>'+esc(inf.gsm)+'</span></button><button class="sm-act" data-sm="toast" data-v="E-posta açılıyor: '+esc(inf.mail)+'">'+ic("mail",17)+'<span>'+esc(inf.mail)+'</span></button></div></div>';
